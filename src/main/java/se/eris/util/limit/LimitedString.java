@@ -34,7 +34,7 @@ public class LimitedString extends AbstractLimited<String> {
         return super.of(s);
     }
 
-    private LimitedString(@NotNull final List<Function<String, ValidationMessages>> limits, @NotNull final ValidationBehavior validationBehavior) {
+    private LimitedString(@NotNull final List<Function<String, ValidationErrors>> limits, @NotNull final ValidationBehavior validationBehavior) {
         super(limits, validationBehavior);
     }
 

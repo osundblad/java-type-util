@@ -43,14 +43,14 @@ public class StringRegexpLimitTest {
     public void validate_toLittle() {
         final Limit<String> limit = StringRegexpLimit.of(Pattern.compile("ab?c*d+"));
 
-        assertThat(limit.validate("d").hasMessages(), is(true));
+        assertThat(limit.validate("d").hasErrors(), is(true));
     }
 
     @Test
     public void validate_toMuch() {
         final Limit<String> limit = StringRegexpLimit.of(Pattern.compile("ab?c*d+"));
 
-        assertThat(limit.validate("aad").hasMessages(), is(true));
+        assertThat(limit.validate("aad").hasErrors(), is(true));
     }
 
 }

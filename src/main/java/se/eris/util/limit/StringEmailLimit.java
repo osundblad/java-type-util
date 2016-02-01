@@ -43,13 +43,12 @@ public class StringEmailLimit implements StringLimit {
     @NotNull
     private final StringLimit emailLimit = StringRegexpLimit.of(SIMPLE_EMAIL_PATTERN);
 
-    @NotNull
     @Override
-    public ValidationMessages validate(@NotNull final String emailAddress) {
-        if (emailLimit.validate(emailAddress).hasMessages()) {
-            return ValidationMessages.of("'" + emailAddress + "' is not a valid email address");
+    public @NotNull ValidationErrors validate(@NotNull final String emailAddress) {
+        if (emailLimit.validate(emailAddress).hasErrors()) {
+            return ValidationErrors.of("'" + emailAddress + "' is not a valid email address");
         }
-        return ValidationMessages.empty();
+        return ValidationErrors.empty();
     }
 
 }

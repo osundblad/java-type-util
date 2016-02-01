@@ -22,7 +22,7 @@ public interface ValidationBehavior {
     @NotNull
     ValidationBehavior instance();
 
-    void atValidation(@NotNull ValidationMessages messages);
+    void atValidation(@NotNull ValidationErrors messages);
 
     void afterValidation();
 

@@ -48,6 +48,7 @@ public abstract class BasicWrapper<T> {
     }
 
     @Override
+    @NotNull
     public String toString() {
         return this.getClass().getSimpleName() + "{" + type + "}";
     }

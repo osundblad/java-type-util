@@ -42,16 +42,15 @@ public class BigDecimalRangeLimit implements Limit<BigDecimal> {
         this.max = max;
     }
 
-    @NotNull
     @Override
-    public ValidationMessages validate(@NotNull final BigDecimal bigDecimal) {
+    public @NotNull ValidationErrors validate(@NotNull final BigDecimal bigDecimal) {
         if (bigDecimal.compareTo(min) == -1) {
-            return ValidationMessages.of(bigDecimal + " is less than min " + min);
+            return ValidationErrors.of(bigDecimal + " is less than min " + min);
         }
         if (bigDecimal.compareTo(max) == 1) {
-            return ValidationMessages.of(bigDecimal + " is greater than max " + max);
+            return ValidationErrors.of(bigDecimal + " is greater than max " + max);
         }
-        return ValidationMessages.empty();
+        return ValidationErrors.empty();
     }
 
 }

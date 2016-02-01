@@ -55,19 +55,18 @@ public class StringDateLimit implements StringLimit {
         this.datePeriod = datePeriod;
     }
 
-    @NotNull
     @Override
-    public ValidationMessages validate(@NotNull final String s) {
+    public @NotNull ValidationErrors validate(@NotNull final String s) {
         final LocalDate localDate;
         try {
             localDate = LocalDate.parse(s, dateFormat);
         } catch (final DateTimeParseException e) {
-            return ValidationMessages.of("'" + s + "' is not a valid date " + dateFormat.toFormat());
+            return ValidationErrors.of("'" + s + "' is not a valid date " + dateFormat.toFormat());
         }
         if (!datePeriod.isInPeriod(localDate)) {
-            return ValidationMessages.of("'" + s + "' is not in date period " + datePeriod.toString());
+            return ValidationErrors.of("'" + s + "' is not in date period " + datePeriod.toString());
         }
-        return ValidationMessages.empty();
+        return ValidationErrors.empty();
     }
 
 }

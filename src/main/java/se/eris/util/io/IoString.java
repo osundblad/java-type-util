@@ -24,9 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Todo:
- *  - Break out io, limit, and type into own project
- *  - Decide how to handle "" (empty String)
+ * Some trivial methods to parse input Strings that might be null.
  */
 @SuppressWarnings("WeakerAccess")
 public final class IoString {

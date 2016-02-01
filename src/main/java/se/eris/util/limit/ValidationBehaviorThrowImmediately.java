@@ -26,8 +26,8 @@ public class ValidationBehaviorThrowImmediately implements ValidationBehavior {
     }
 
     @Override
-    public void atValidation(@NotNull final ValidationMessages messages) {
-        if (messages.hasMessages()) {
+    public void atValidation(final @NotNull ValidationErrors messages) {
+        if (messages.hasErrors()) {
             throw new ValidationException(messages);
         }
     }

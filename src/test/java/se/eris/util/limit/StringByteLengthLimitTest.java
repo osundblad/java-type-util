@@ -34,17 +34,17 @@ public class StringByteLengthLimitTest {
 
     @Test
     public void validate_toShort() {
-        assertThat(StringByteLengthLimit.of(2, 4).validate("1").hasMessages(), is(true));
+        assertThat(StringByteLengthLimit.of(2, 4).validate("1").hasErrors(), is(true));
     }
 
     @Test
     public void validate_toLong() {
-        assertThat(StringByteLengthLimit.zeroTo((1+2+2) - 1).validate("aåä").hasMessages(), is(true));
+        assertThat(StringByteLengthLimit.zeroTo((1+2+2) - 1).validate("aåä").hasErrors(), is(true));
     }
 
     @Test
     public void validate_utf16_toLong() {
-        assertThat(StringByteLengthLimit.of(0, (4+2+2) - 1, StandardCharsets.UTF_16).validate("abc").hasMessages(), is(true));
+        assertThat(StringByteLengthLimit.of(0, (4+2+2) - 1, StandardCharsets.UTF_16).validate("abc").hasErrors(), is(true));
     }
 
 }

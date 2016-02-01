@@ -38,13 +38,12 @@ public class StringRegexpLimit implements StringLimit {
         this.pattern = pattern;
     }
 
-    @NotNull
     @Override
-    public ValidationMessages validate(@NotNull final String s) {
+    public @NotNull ValidationErrors validate(@NotNull final String s) {
         if (!pattern.matcher(s).matches()) {
-            return ValidationMessages.of("'" + s + "' does not match " + pattern);
+            return ValidationErrors.of("'" + s + "' does not match " + pattern);
         }
-        return ValidationMessages.empty();
+        return ValidationErrors.empty();
     }
 
 }

@@ -27,11 +27,11 @@ public abstract class AbstractLimited<T> {
     private final ValidationBehavior validationBehavior;
 
     @NotNull
-    private final List<Function<T, ValidationMessages>> limits;
+    private final List<Function<T, ValidationErrors>> limits;
 
-    protected AbstractLimited(@NotNull final List<Function<T, ValidationMessages>> limits, @NotNull final ValidationBehavior validationBehavior) {
+    protected AbstractLimited(@NotNull final List<Function<T, ValidationErrors>> limits, @NotNull final ValidationBehavior validationBehavior) {
         this.limits = limits;
-        //  * interface -> function (this.limits = limits.stream().map(limit -> (Function<T, ValidationMessages>) t -> limit.validate(t)).collect(Collectors.toList());)
+        //  * interface -> function (this.limits = limits.stream().map(limit -> (Function<T, ValidationErrors>) t -> limit.validate(t)).collect(Collectors.toList());)
         //  * sql.Date -> LocalDate (try UUID -> String)
         //  * ResponseEntity<T>
         //  * final Rest classes @JsonCreator&/@JsonProperty
@@ -42,7 +42,7 @@ public abstract class AbstractLimited<T> {
     @NotNull
     public T of(@NotNull final T t) {
         final ValidationBehavior behavior = validationBehavior.instance();
-        for (final Function<T, ValidationMessages> limit : limits) {
+        for (final Function<T, ValidationErrors> limit : limits) {
             behavior.atValidation(limit.apply(t));
         }
         behavior.afterValidation();
@@ -52,7 +52,7 @@ public abstract class AbstractLimited<T> {
     public abstract static class Builder<T> {
 
         @NotNull
-        protected final List<Function<T, ValidationMessages>> limits = new ArrayList<>();
+        protected final List<Function<T, ValidationErrors>> limits = new ArrayList<>();
 
         @NotNull
         protected ValidationBehavior validationBehavior = new ValidationBehaviorThrowImmediately();
@@ -64,7 +64,7 @@ public abstract class AbstractLimited<T> {
         }
 
         @NotNull
-        public final Builder<T> limit(@NotNull final Function<T, ValidationMessages> limit) {
+        public final Builder<T> limit(@NotNull final Function<T, ValidationErrors> limit) {
             limits.add(limit);
             return this;
         }

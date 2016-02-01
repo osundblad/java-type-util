@@ -58,6 +58,7 @@ public abstract class PairWrapper<T> {
     }
 
     @Override
+    @NotNull
     public String toString() {
         return this.getClass().getSimpleName() + "{" + first + ", " + second + "}";
     }

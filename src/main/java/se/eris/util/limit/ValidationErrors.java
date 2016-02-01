@@ -22,43 +22,46 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class ValidationMessages {
+public class ValidationErrors {
 
     @NotNull
-    public static ValidationMessages of(@NotNull final String message) {
-        return ValidationMessages.of(ValidationMessage.of(message));
+    public static ValidationErrors of(@NotNull final String message) {
+        return ValidationErrors.of(ValidationError.of(message));
     }
 
     @NotNull
-    public static ValidationMessages of(final List<ValidationMessage> messages) {
-        return new ValidationMessages(messages);
+    public static ValidationErrors of(final List<ValidationError> errors) {
+        return new ValidationErrors(errors);
     }
 
     @NotNull
-    public static ValidationMessages of(@NotNull final ValidationMessage... messages) {
-        return of(Arrays.asList(messages));
+    public static ValidationErrors of(@NotNull final ValidationError... errors) {
+        return of(Arrays.asList(errors));
     }
 
     @NotNull
-    public static ValidationMessages empty() {
+    public static ValidationErrors empty() {
         return of();
     }
 
     @NotNull
-    private final List<ValidationMessage> messages;
+    private final List<ValidationError> errors;
 
-
-    private ValidationMessages(@NotNull final List<ValidationMessage> messages) {
-        this.messages = new ArrayList<>(messages);
+    private ValidationErrors(@NotNull final List<ValidationError> errors) {
+        this.errors = new ArrayList<>(errors);
     }
 
-    public boolean hasMessages() {
-        return !messages.isEmpty();
+    public boolean isValid() {
+        return errors.isEmpty();
+    }
+
+    public boolean hasErrors() {
+        return !errors.isEmpty();
     }
 
     @NotNull
-    public Stream<ValidationMessage> getMessages() {
-        return messages.stream();
+    public Stream<ValidationError> getErrors() {
+        return errors.stream();
     }
 
 }

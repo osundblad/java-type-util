@@ -57,12 +57,12 @@ public class StringLengthLimitTest {
 
     @Test
     public void validate_toShort() {
-        assertThat(StringLengthLimit.of(2, 4).validate("1").hasMessages(), is(true));
+        assertThat(StringLengthLimit.of(2, 4).validate("1").hasErrors(), is(true));
     }
 
     @Test
     public void validate_toLong() {
-        assertThat(StringLengthLimit.of(2, 4).validate("12345").hasMessages(), is(true));
+        assertThat(StringLengthLimit.of(2, 4).validate("12345").hasErrors(), is(true));
     }
 
 }

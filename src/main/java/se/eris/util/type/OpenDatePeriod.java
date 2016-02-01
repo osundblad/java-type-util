@@ -91,6 +91,7 @@ public class OpenDatePeriod extends PairWrapper<Optional<LocalDate>> {
     }
 
     @Override
+    @NotNull
     public String toString() {
         final String from = rawFirst().isPresent() ? rawFirst().toString() : "";
         final String to = rawSecond().isPresent() ? rawSecond().toString() : "";

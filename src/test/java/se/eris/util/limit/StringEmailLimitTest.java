@@ -26,38 +26,38 @@ public class StringEmailLimitTest {
     public void validate_ok() {
         final StringEmailLimit validator = StringEmailLimit.getInstance();
 
-        assertThat(validator.validate("olle@eris.se").hasMessages(), is(false));
-        assertThat(validator.validate("olle.sundblad@eris.se").hasMessages(), is(false));
-        assertThat(validator.validate("olle@sub.eris.se").hasMessages(), is(false));
-        assertThat(validator.validate("olle@sub.sub.eris.se").hasMessages(), is(false));
+        assertThat(validator.validate("olle@eris.se").hasErrors(), is(false));
+        assertThat(validator.validate("olle.sundblad@eris.se").hasErrors(), is(false));
+        assertThat(validator.validate("olle@sub.eris.se").hasErrors(), is(false));
+        assertThat(validator.validate("olle@sub.sub.eris.se").hasErrors(), is(false));
     }
 
     @Test
     public void validate_onlyDomain() {
         final StringEmailLimit validator = StringEmailLimit.getInstance();
 
-        assertThat(validator.validate("@eris.se").hasMessages(), is(true));
+        assertThat(validator.validate("@eris.se").hasErrors(), is(true));
     }
 
     @Test
     public void validate_missingDomain() {
         final StringEmailLimit validator = StringEmailLimit.getInstance();
 
-        assertThat(validator.validate("olle@").hasMessages(), is(true));
+        assertThat(validator.validate("olle@").hasErrors(), is(true));
     }
 
     @Test
     public void validate_noAt() {
         final StringEmailLimit validator = StringEmailLimit.getInstance();
 
-        assertThat(validator.validate("olle.eris.se").hasMessages(), is(true));
+        assertThat(validator.validate("olle.eris.se").hasErrors(), is(true));
     }
 
     @Test
     public void validate_onlyTopDomain() {
         final StringEmailLimit validator = StringEmailLimit.getInstance();
 
-        assertThat(validator.validate("olle@eris").hasMessages(), is(true));
+        assertThat(validator.validate("olle@eris").hasErrors(), is(true));
     }
 
 }

@@ -33,7 +33,7 @@ public class LimitedInteger extends AbstractLimited<Integer> {
         return super.of(i);
     }
 
-    private LimitedInteger(@NotNull final List<Function<Integer, ValidationMessages>> limits, @NotNull final ValidationBehavior validationBehavior) {
+    private LimitedInteger(@NotNull final List<Function<Integer, ValidationErrors>> limits, @NotNull final ValidationBehavior validationBehavior) {
         super(limits, validationBehavior);
     }
 

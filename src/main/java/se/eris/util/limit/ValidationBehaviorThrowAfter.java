@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class ValidationBehaviorThrowAfter implements ValidationBehavior {
 
     @NotNull
-    private final List<ValidationMessage> validationMessages = new ArrayList<>();
+    private final List<ValidationError> validationErrors = new ArrayList<>();
 
     @NotNull
     @Override
@@ -33,16 +33,16 @@ public class ValidationBehaviorThrowAfter implements ValidationBehavior {
     }
 
     @Override
-    public void atValidation(@NotNull final ValidationMessages messages) {
-        if (messages.hasMessages()) {
-            validationMessages.addAll(messages.getMessages().collect(Collectors.toList()));
+    public void atValidation(final @NotNull ValidationErrors messages) {
+        if (messages.hasErrors()) {
+            validationErrors.addAll(messages.getErrors().collect(Collectors.toList()));
         }
     }
 
     @Override
     public void afterValidation() {
-        if (!validationMessages.isEmpty()) {
-            throw new ValidationException(ValidationMessages.of(validationMessages));
+        if (!validationErrors.isEmpty()) {
+            throw new ValidationException(ValidationErrors.of(validationErrors));
         }
     }
 

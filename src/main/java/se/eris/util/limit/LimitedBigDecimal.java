@@ -34,7 +34,7 @@ public class LimitedBigDecimal extends AbstractLimited<BigDecimal> {
         return super.of(i);
     }
 
-    private LimitedBigDecimal(@NotNull final List<Function<BigDecimal, ValidationMessages>> limits, @NotNull final ValidationBehavior validationBehavior) {
+    private LimitedBigDecimal(@NotNull final List<Function<BigDecimal, ValidationErrors>> limits, @NotNull final ValidationBehavior validationBehavior) {
         super(limits, validationBehavior);
     }
 

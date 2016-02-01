@@ -40,16 +40,15 @@ public class IntegerRangeLimit implements Limit<Integer> {
         this.max = max;
     }
 
-    @NotNull
     @Override
-    public ValidationMessages validate(@NotNull final Integer i) {
+    public @NotNull ValidationErrors validate(@NotNull final Integer i) {
         if (i < min) {
-            return ValidationMessages.of(i + " is less than min " + min);
+            return ValidationErrors.of(i + " is less than min " + min);
         }
         if (i > max) {
-            return ValidationMessages.of(i + " is greater than max " + max);
+            return ValidationErrors.of(i + " is greater than max " + max);
         }
-        return ValidationMessages.empty();
+        return ValidationErrors.empty();
     }
 
 }

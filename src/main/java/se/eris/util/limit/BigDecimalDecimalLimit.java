@@ -32,13 +32,12 @@ public class BigDecimalDecimalLimit implements Limit<BigDecimal> {
         this.decimals = decimals;
     }
 
-    @NotNull
     @Override
-    public ValidationMessages validate(@NotNull final BigDecimal item) {
+    public @NotNull ValidationErrors validate(@NotNull final BigDecimal item) {
         if (item.scale() > decimals) {
-            return ValidationMessages.of("Too many decimals " + item.toString() + " (only " + decimals + " allowed)");
+            return ValidationErrors.of("Too many decimals " + item.toString() + " (only " + decimals + " allowed)");
         }
-        return ValidationMessages.empty();
+        return ValidationErrors.empty();
     }
 
 }

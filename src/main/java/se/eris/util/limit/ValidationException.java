@@ -19,15 +19,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class ValidationException extends IllegalArgumentException {
 
-    @NotNull
-    private final ValidationMessages messages;
+    private final @NotNull ValidationErrors messages;
 
-    public ValidationException(@NotNull final ValidationMessages messages) {
+    public ValidationException(final @NotNull ValidationErrors messages) {
         this.messages = messages;
     }
 
-    @NotNull
-    public ValidationMessages getMessages() {
+    public @NotNull ValidationErrors getMessages() {
         return messages;
     }
 

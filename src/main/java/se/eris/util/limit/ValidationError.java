@@ -18,14 +18,13 @@ package se.eris.util.limit;
 import org.jetbrains.annotations.NotNull;
 import se.eris.util.type.StringWrapper;
 
-public class ValidationMessage extends StringWrapper {
+public class ValidationError extends StringWrapper {
 
-    @NotNull
-    public static ValidationMessage of(@NotNull final String s) {
-        return new ValidationMessage(s);
+    public static @NotNull ValidationError of(@NotNull final String s) {
+        return new ValidationError(s);
     }
 
-    private ValidationMessage(@NotNull final String s) {
+    private ValidationError(@NotNull final String s) {
         super(s);
     }
 
