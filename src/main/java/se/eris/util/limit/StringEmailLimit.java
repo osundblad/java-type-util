@@ -31,7 +31,7 @@ public class StringEmailLimit implements StringLimit {
      * Why this pattern see: http://www.regular-expressions.info/email.html
      */
     @NotNull
-    private static final Pattern SIMPLE_EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    public static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]++@(?:[A-Z0-9-]++\\.)++[A-Z]{2,}+$", Pattern.CASE_INSENSITIVE);
 
     private static final StringEmailLimit INSTANCE = new StringEmailLimit();
 
@@ -41,7 +41,7 @@ public class StringEmailLimit implements StringLimit {
     }
 
     @NotNull
-    private final StringLimit emailLimit = StringRegexpLimit.of(SIMPLE_EMAIL_PATTERN);
+    private final StringLimit emailLimit = StringRegexpLimit.of(EMAIL_PATTERN);
 
     @Override
     public @NotNull ValidationErrors validate(@NotNull final String emailAddress) {

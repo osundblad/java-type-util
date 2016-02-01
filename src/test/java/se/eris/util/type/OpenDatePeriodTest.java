@@ -21,6 +21,9 @@ import org.junit.rules.ExpectedException;
 
 import java.time.LocalDate;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+
 public class OpenDatePeriodTest {
 
     private static final int YEAR_2000 = 2000;
@@ -37,6 +40,16 @@ public class OpenDatePeriodTest {
     public void between_endDateBeforeStartDate_shouldFail() {
         exception.expect(IllegalArgumentException.class);
         OpenDatePeriod.between(LocalDate.of(YEAR_2000 + 1, 1, 1), LocalDate.of(YEAR_2000, 1, 1));
+    }
+
+    @Test
+    public void toString_() {
+        final LocalDate startDate = LocalDate.parse("2015-01-01");
+        final LocalDate endDate = LocalDate.parse("2015-12-31");
+
+        assertThat(OpenDatePeriod.between(startDate, endDate).toString(), is("OpenDatePeriod{2015-01-01 - 2015-12-31}"));
+        assertThat(OpenDatePeriod.from(startDate).toString(), is("OpenDatePeriod{2015-01-01 - }"));
+        assertThat(OpenDatePeriod.to(endDate).toString(), is("OpenDatePeriod{ - 2015-12-31}"));
     }
 
 }
