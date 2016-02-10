@@ -36,13 +36,13 @@ public class LimitedStringTest {
     @Test
     public void of_toShort_fails() {
         exception.expect(ValidationExceptionMatcher.of("shorter"));
-        assertThat(LimitedString.init().length(3, 5).build().of("hi"), is("hi"));
+        LimitedString.init().length(3, 5).build().of("hi");
     }
 
     @Test
     public void of_toLong_fails() {
         exception.expect(ValidationExceptionMatcher.of("longer"));
-        assertThat(LimitedString.init().length(4).build().of("hello"), is("hello"));
+        LimitedString.init().length(4).build().of("hello");
     }
 
 }
