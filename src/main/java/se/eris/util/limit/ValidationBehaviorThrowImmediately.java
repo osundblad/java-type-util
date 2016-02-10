@@ -17,6 +17,8 @@ package se.eris.util.limit;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class ValidationBehaviorThrowImmediately implements ValidationBehavior {
 
     @NotNull
@@ -26,9 +28,9 @@ public class ValidationBehaviorThrowImmediately implements ValidationBehavior {
     }
 
     @Override
-    public void atValidation(final @NotNull ValidationErrors messages) {
-        if (messages.hasErrors()) {
-            throw new ValidationException(messages);
+    public void atValidation(final @NotNull Optional<ValidationError> error) {
+        if (error.isPresent()) {
+            throw new ValidationException(ValidationErrors.of(error.get()));
         }
     }
 

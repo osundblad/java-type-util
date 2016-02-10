@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 public class ValidationBehaviorThrowAfter implements ValidationBehavior {
 
@@ -33,9 +33,9 @@ public class ValidationBehaviorThrowAfter implements ValidationBehavior {
     }
 
     @Override
-    public void atValidation(final @NotNull ValidationErrors messages) {
-        if (messages.hasErrors()) {
-            validationErrors.addAll(messages.getErrors().collect(Collectors.toList()));
+    public void atValidation(final @NotNull Optional<ValidationError> error) {
+        if (error.isPresent()) {
+            validationErrors.add(error.get());
         }
     }
 
@@ -45,6 +45,5 @@ public class ValidationBehaviorThrowAfter implements ValidationBehavior {
             throw new ValidationException(ValidationErrors.of(validationErrors));
         }
     }
-
 
 }

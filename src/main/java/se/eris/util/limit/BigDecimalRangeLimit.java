@@ -18,6 +18,7 @@ package se.eris.util.limit;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 public class BigDecimalRangeLimit implements Limit<BigDecimal> {
 
@@ -43,14 +44,15 @@ public class BigDecimalRangeLimit implements Limit<BigDecimal> {
     }
 
     @Override
-    public @NotNull ValidationErrors validate(@NotNull final BigDecimal bigDecimal) {
+    @NotNull
+    public Optional<ValidationError> validate(@NotNull final BigDecimal bigDecimal) {
         if (bigDecimal.compareTo(min) == -1) {
-            return ValidationErrors.of(bigDecimal + " is less than min " + min);
+            return Optional.of(ValidationError.of(bigDecimal + " is less than min " + min));
         }
         if (bigDecimal.compareTo(max) == 1) {
-            return ValidationErrors.of(bigDecimal + " is greater than max " + max);
+            return Optional.of(ValidationError.of(bigDecimal + " is greater than max " + max));
         }
-        return ValidationErrors.empty();
+        return Optional.empty();
     }
 
 }

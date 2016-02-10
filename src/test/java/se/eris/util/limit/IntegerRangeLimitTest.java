@@ -30,12 +30,12 @@ public class IntegerRangeLimitTest {
 
     @Test
     public void validate_toLow() {
-        assertThat(IntegerRangeLimit.of(2, 7).validate(1).hasErrors(), is(true));
+        assertThat(IntegerRangeLimit.of(2, 7).validate(1).isPresent(), is(true));
     }
 
     @Test
     public void validate_toHigh() {
-        assertThat(IntegerRangeLimit.zeroTo(7).validate(8).hasErrors(), is(true));
+        assertThat(IntegerRangeLimit.zeroTo(7).validate(8).isPresent(), is(true));
     }
 
 }

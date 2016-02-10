@@ -17,6 +17,7 @@ package se.eris.util.limit;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -44,11 +45,12 @@ public class StringEmailLimit implements StringLimit {
     private final StringLimit emailLimit = StringRegexpLimit.of(EMAIL_PATTERN);
 
     @Override
-    public @NotNull ValidationErrors validate(@NotNull final String emailAddress) {
-        if (emailLimit.validate(emailAddress).hasErrors()) {
-            return ValidationErrors.of("'" + emailAddress + "' is not a valid email address");
+    @NotNull
+    public Optional<ValidationError> validate(@NotNull final String emailAddress) {
+        if (emailLimit.validate(emailAddress).isPresent()) {
+            return Optional.of(ValidationError.of("'" + emailAddress + "' is not a valid email address"));
         }
-        return ValidationErrors.empty();
+        return Optional.empty();
     }
 
 }

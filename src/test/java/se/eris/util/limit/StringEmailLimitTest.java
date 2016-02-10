@@ -26,65 +26,65 @@ public class StringEmailLimitTest {
     public void validate_ok() {
         final StringEmailLimit validator = StringEmailLimit.getInstance();
 
-        assertThat(validator.validate("test@example.org").hasErrors(), is(false));
-        assertThat(validator.validate("test..something@example.org").hasErrors(), is(false));
-        assertThat(validator.validate("test._%+-something@example.org").hasErrors(), is(false));
+        assertThat(validator.validate("test@example.org").isPresent(), is(false));
+        assertThat(validator.validate("test..something@example.org").isPresent(), is(false));
+        assertThat(validator.validate("test._%+-something@example.org").isPresent(), is(false));
     }
 
     @Test
     public void validate_multipleSubDomains() {
         final StringEmailLimit validator = StringEmailLimit.getInstance();
 
-        assertThat(validator.validate("test@subone.subtwo.subthree.example.org").hasErrors(), is(false));
+        assertThat(validator.validate("test@subone.subtwo.subthree.example.org").isPresent(), is(false));
     }
 
     @Test
     public void validate_onlyTopDomain_shouldFail() {
         final StringEmailLimit validator = StringEmailLimit.getInstance();
 
-        assertThat(validator.validate("test@example").hasErrors(), is(true));
+        assertThat(validator.validate("test@example").isPresent(), is(true));
     }
 
     @Test
     public void validate_onlyDomain_shouldFail() {
         final StringEmailLimit validator = StringEmailLimit.getInstance();
 
-        assertThat(validator.validate("@example.org").hasErrors(), is(true));
+        assertThat(validator.validate("@example.org").isPresent(), is(true));
     }
 
     @Test
     public void validate_missingDomain_shouldFail() {
         final StringEmailLimit validator = StringEmailLimit.getInstance();
 
-        assertThat(validator.validate("test@").hasErrors(), is(true));
+        assertThat(validator.validate("test@").isPresent(), is(true));
     }
 
     @Test
     public void validate_noAt_shouldFail() {
         final StringEmailLimit validator = StringEmailLimit.getInstance();
 
-        assertThat(validator.validate("test.example.org").hasErrors(), is(true));
+        assertThat(validator.validate("test.example.org").isPresent(), is(true));
     }
 
     @Test
     public void validate_twoAt_shouldFail() {
         final StringEmailLimit validator = StringEmailLimit.getInstance();
 
-        assertThat(validator.validate("first@second@example.org").hasErrors(), is(true));
+        assertThat(validator.validate("first@second@example.org").isPresent(), is(true));
     }
 
     @Test
     public void validate_twoConsecutiveDots_shouldFail() {
         final StringEmailLimit validator = StringEmailLimit.getInstance();
 
-        assertThat(validator.validate("test@example..org").hasErrors(), is(true));
+        assertThat(validator.validate("test@example..org").isPresent(), is(true));
     }
 
     @Test
     public void validate_illegalCharacter_shouldFail() {
         final StringEmailLimit validator = StringEmailLimit.getInstance();
 
-        assertThat(validator.validate("£euro@example.org").hasErrors(), is(true));
+        assertThat(validator.validate("£euro@example.org").isPresent(), is(true));
     }
 
 }

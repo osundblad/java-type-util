@@ -17,9 +17,12 @@ package se.eris.util.limit;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 @FunctionalInterface
 public interface Limit<T> {
     
-    @NotNull ValidationErrors validate(@NotNull T item);
+    @NotNull
+    Optional<ValidationError> validate(@NotNull T item);
 
 }

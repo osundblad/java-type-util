@@ -18,6 +18,7 @@ package se.eris.util.limit;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -34,7 +35,7 @@ public class LimitedString extends AbstractLimited<String> {
         return super.of(s);
     }
 
-    private LimitedString(@NotNull final List<Function<String, ValidationErrors>> limits, @NotNull final ValidationBehavior validationBehavior) {
+    private LimitedString(@NotNull final List<Function<String, Optional<ValidationError>>> limits, @NotNull final ValidationBehavior validationBehavior) {
         super(limits, validationBehavior);
     }
 

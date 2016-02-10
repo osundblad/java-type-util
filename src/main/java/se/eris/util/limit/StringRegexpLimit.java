@@ -17,6 +17,7 @@ package se.eris.util.limit;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class StringRegexpLimit implements StringLimit {
@@ -39,11 +40,12 @@ public class StringRegexpLimit implements StringLimit {
     }
 
     @Override
-    public @NotNull ValidationErrors validate(@NotNull final String s) {
+    @NotNull
+    public Optional<ValidationError> validate(@NotNull final String s) {
         if (!pattern.matcher(s).matches()) {
-            return ValidationErrors.of("'" + s + "' does not match " + pattern);
+            return Optional.of(ValidationError.of("'" + s + "' does not match " + pattern));
         }
-        return ValidationErrors.empty();
+        return Optional.empty();
     }
 
 }

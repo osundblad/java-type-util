@@ -17,6 +17,8 @@ package se.eris.util.limit;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class IntegerRangeLimit implements Limit<Integer> {
 
     @NotNull
@@ -41,14 +43,15 @@ public class IntegerRangeLimit implements Limit<Integer> {
     }
 
     @Override
-    public @NotNull ValidationErrors validate(@NotNull final Integer i) {
+    @NotNull
+    public Optional<ValidationError> validate(@NotNull final Integer i) {
         if (i < min) {
-            return ValidationErrors.of(i + " is less than min " + min);
+            return Optional.of(ValidationError.of(i + " is less than min " + min));
         }
         if (i > max) {
-            return ValidationErrors.of(i + " is greater than max " + max);
+            return Optional.of(ValidationError.of(i + " is greater than max " + max));
         }
-        return ValidationErrors.empty();
+        return Optional.empty();
     }
 
 }

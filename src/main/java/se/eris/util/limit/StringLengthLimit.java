@@ -17,6 +17,8 @@ package se.eris.util.limit;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class StringLengthLimit implements StringLimit {
 
     private static final int LONGEST_STRING_TO_PRESENT = 80;
@@ -46,15 +48,16 @@ public class StringLengthLimit implements StringLimit {
     }
 
     @Override
-    public @NotNull ValidationErrors validate(@NotNull final String s) {
+    @NotNull
+    public Optional<ValidationError> validate(@NotNull final String s) {
         final int length = s.length();
         if (length < min) {
-            return ValidationErrors.of("Length violation: " + quote(shorten(s)) + " is shorter (" + length + ") than the minimum length of " + min + ".");
+            return Optional.of(ValidationError.of("Length violation: " + quote(shorten(s)) + " is shorter (" + length + ") than the minimum length of " + min + "."));
         }
         if (length > max) {
-            return ValidationErrors.of("Length violation: " + quote(shorten(s)) + " is longer (" + length + ") than the maximum length of " + max + ".");
+            return Optional.of(ValidationError.of("Length violation: " + quote(shorten(s)) + " is longer (" + length + ") than the maximum length of " + max + "."));
         }
-        return ValidationErrors.empty();
+        return Optional.empty();
     }
 
     @NotNull

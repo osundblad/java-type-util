@@ -17,12 +17,14 @@ package se.eris.util.limit;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public interface ValidationBehavior {
 
     @NotNull
     ValidationBehavior instance();
 
-    void atValidation(@NotNull ValidationErrors messages);
+    void atValidation(@NotNull Optional<ValidationError> error);
 
     void afterValidation();
 

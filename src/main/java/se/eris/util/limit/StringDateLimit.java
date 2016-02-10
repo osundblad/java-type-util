@@ -21,6 +21,7 @@ import se.eris.util.type.OpenDatePeriod;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Optional;
 
 public class StringDateLimit implements StringLimit {
 
@@ -56,17 +57,18 @@ public class StringDateLimit implements StringLimit {
     }
 
     @Override
-    public @NotNull ValidationErrors validate(@NotNull final String s) {
+    @NotNull
+    public Optional<ValidationError> validate(@NotNull final String s) {
         final LocalDate localDate;
         try {
             localDate = LocalDate.parse(s, dateFormat);
         } catch (final DateTimeParseException e) {
-            return ValidationErrors.of("'" + s + "' is not a valid date " + dateFormat.toFormat());
+            return Optional.of(ValidationError.of("'" + s + "' is not a valid date " + dateFormat.toFormat()));
         }
         if (!datePeriod.isInPeriod(localDate)) {
-            return ValidationErrors.of("'" + s + "' is not in date period " + datePeriod.toString());
+            return Optional.of(ValidationError.of("'" + s + "' is not in date period " + datePeriod.toString()));
         }
-        return ValidationErrors.empty();
+        return Optional.empty();
     }
 
 }

@@ -19,38 +19,30 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.util.regex.Pattern;
-
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertThat;
 
-public class StringRegexpLimitTest {
+public class LimitedStringTest {
 
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
     @Test
-    public void validate_matches() {
-        final Limit<String> limit = StringRegexpLimit.of(Pattern.compile("ab?c*d+"));
-
-        limit.validate("ad");
-        limit.validate("abd");
-        limit.validate("accccd");
-        limit.validate("addddd");
+    public void of_validLength_returnsString() {
+        assertThat(LimitedString.init().length(2, 5).build().of("hi"), is("hi"));
+        assertThat(LimitedString.init().length(5).build().of("hello"), is("hello"));
     }
 
     @Test
-    public void validate_toLittle() {
-        final Limit<String> limit = StringRegexpLimit.of(Pattern.compile("ab?c*d+"));
-
-        assertThat(limit.validate("d").isPresent(), is(true));
+    public void of_toShort_fails() {
+        exception.expect(ValidationExceptionMatcher.of("shorter"));
+        assertThat(LimitedString.init().length(3, 5).build().of("hi"), is("hi"));
     }
 
     @Test
-    public void validate_toMuch() {
-        final Limit<String> limit = StringRegexpLimit.of(Pattern.compile("ab?c*d+"));
-
-        assertThat(limit.validate("aad").isPresent(), is(true));
+    public void of_toLong_fails() {
+        exception.expect(ValidationExceptionMatcher.of("longer"));
+        assertThat(LimitedString.init().length(4).build().of("hello"), is("hello"));
     }
 
 }

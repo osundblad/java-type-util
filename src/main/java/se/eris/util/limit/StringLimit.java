@@ -17,8 +17,11 @@ package se.eris.util.limit;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public interface StringLimit extends Limit<String> {
 
-    @NotNull ValidationErrors validate(@NotNull String item);
+    @NotNull
+    Optional<ValidationError> validate(@NotNull String item);
 
 }

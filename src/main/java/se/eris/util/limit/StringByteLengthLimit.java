@@ -55,15 +55,16 @@ public class StringByteLengthLimit implements StringLimit {
     }
 
     @Override
-    public @NotNull ValidationErrors validate(@NotNull final String s) {
+    @NotNull
+    public Optional<ValidationError> validate(@NotNull final String s) {
         final int length = getByteLength(s);
         if (length < min) {
-            return ValidationErrors.of("Byte length of " + s + " is less than min " + min);
+            return Optional.of(ValidationError.of("Byte length of " + s + " is less than min " + min));
         }
         if (length > max) {
-            return ValidationErrors.of("Byte length of " + s + " is greater than max " + max);
+            return Optional.of(ValidationError.of("Byte length of " + s + " is greater than max " + max));
         }
-        return ValidationErrors.empty();
+        return Optional.empty();
     }
 
     private int getByteLength(@NotNull final String s) {

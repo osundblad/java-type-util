@@ -60,6 +60,19 @@
                     </annotations>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>1.1.8</version>
+                <configuration>
+                    <targetClasses>
+                        <param>se.eris.util.*</param>
+                    </targetClasses>
+                    <targetTests>
+                        <param>se.eris.util.*</param>
+                    </targetTests>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

@@ -18,45 +18,30 @@ package se.eris.util.limit;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class ValidationErrors {
 
     @NotNull
-    public static ValidationErrors of(@NotNull final String message) {
-        return ValidationErrors.of(ValidationError.of(message));
-    }
-
-    @NotNull
-    public static ValidationErrors of(final List<ValidationError> errors) {
+    public static ValidationErrors of(@NotNull final List<ValidationError> errors) {
         return new ValidationErrors(errors);
     }
 
     @NotNull
-    public static ValidationErrors of(@NotNull final ValidationError... errors) {
-        return of(Arrays.asList(errors));
-    }
-
-    @NotNull
-    public static ValidationErrors empty() {
-        return of();
+    public static ValidationErrors of(@NotNull final ValidationError error) {
+        return of(Collections.singletonList(error));
     }
 
     @NotNull
     private final List<ValidationError> errors;
 
     private ValidationErrors(@NotNull final List<ValidationError> errors) {
+        if (errors.isEmpty()) {
+            throw new IllegalArgumentException("Cannot create " + ValidationErrors.class.getSimpleName() + " without errors");
+        }
         this.errors = new ArrayList<>(errors);
-    }
-
-    public boolean isValid() {
-        return errors.isEmpty();
-    }
-
-    public boolean hasErrors() {
-        return !errors.isEmpty();
     }
 
     @NotNull

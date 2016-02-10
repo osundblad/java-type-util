@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 public class LimitedBigDecimal extends AbstractLimited<BigDecimal> {
@@ -30,11 +31,11 @@ public class LimitedBigDecimal extends AbstractLimited<BigDecimal> {
 
     @NotNull
     @Override
-    public BigDecimal of(@NotNull final BigDecimal i) {
-        return super.of(i);
+    public BigDecimal of(@NotNull final BigDecimal bigDecimal) {
+        return super.of(bigDecimal);
     }
 
-    private LimitedBigDecimal(@NotNull final List<Function<BigDecimal, ValidationErrors>> limits, @NotNull final ValidationBehavior validationBehavior) {
+    private LimitedBigDecimal(@NotNull final List<Function<BigDecimal, Optional<ValidationError>>> limits, @NotNull final ValidationBehavior validationBehavior) {
         super(limits, validationBehavior);
     }
 
