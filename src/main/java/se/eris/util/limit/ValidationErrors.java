@@ -49,4 +49,12 @@ public class ValidationErrors {
         return errors.stream();
     }
 
+    @Override
+    @NotNull
+    public String toString() {
+        return "ValidationErrors{" +
+                "errors=" + errors +
+                '}';
+    }
+
 }

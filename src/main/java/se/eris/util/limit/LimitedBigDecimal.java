@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+@SuppressWarnings("WeakerAccess")
 public class LimitedBigDecimal extends AbstractLimited<BigDecimal> {
 
     @NotNull
@@ -44,6 +45,12 @@ public class LimitedBigDecimal extends AbstractLimited<BigDecimal> {
         @NotNull
         public Builder decimals(final int decimals) {
             limit(BigDecimalDecimalLimit.of(decimals));
+            return this;
+        }
+
+        @NotNull
+        public Builder range(@NotNull final String min, @NotNull final String max) {
+            limit(BigDecimalRangeLimit.of(new BigDecimal(min), new BigDecimal(max)));
             return this;
         }
 

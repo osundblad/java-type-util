@@ -30,4 +30,10 @@ public class ValidationException extends IllegalArgumentException {
         return errors;
     }
 
+    @Override
+    public String toString() {
+        return "ValidationException{" +
+                "errors=" + errors +
+                '}';
+    }
 }

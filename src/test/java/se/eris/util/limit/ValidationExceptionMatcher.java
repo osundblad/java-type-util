@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
+@SuppressWarnings("WeakerAccess")
 public class ValidationExceptionMatcher extends TypeSafeDiagnosingMatcher<ValidationException> {
 
     public static ValidationExceptionMatcher of(@NotNull final String... contains) {
@@ -53,8 +54,9 @@ public class ValidationExceptionMatcher extends TypeSafeDiagnosingMatcher<Valida
     public void describeTo(@NotNull final Description description) {
         description.appendText("should throw " + ValidationException.class.getSimpleName());
         if (contains.length != 0) {
-            description.appendValueList(", containing all of the following stings: ", ", ", ".", Arrays.asList(contains));
+            description.appendValueList(", containing errors with all of the following strings: ", ", ", ".", Arrays.asList(contains));
         }
     }
+
 
 }

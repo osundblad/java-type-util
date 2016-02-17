@@ -19,13 +19,24 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
+@SuppressWarnings("WeakerAccess")
 public class StringLengthLimit implements StringLimit {
 
-    private static final int LONGEST_STRING_TO_PRESENT = 80;
+    public static final int LONGEST_STRING_TO_PRESENT = 80;
 
     @NotNull
     public static StringLengthLimit zeroTo(final int max) {
         return of(0, max);
+    }
+
+    @NotNull
+    public static StringLengthLimit oneTo(final int max) {
+        return of(1, max);
+    }
+
+    @NotNull
+    public static StringLengthLimit atLeast(final int min) {
+        return of(min, Integer.MAX_VALUE);
     }
 
     @NotNull
@@ -36,7 +47,7 @@ public class StringLengthLimit implements StringLimit {
     private final int min;
     private final int max;
 
-    protected StringLengthLimit(final int min, final int max) {
+    private StringLengthLimit(final int min, final int max) {
         if (min < 0) {
             throw new IllegalArgumentException("Min " + min + " less than zero");
         }
