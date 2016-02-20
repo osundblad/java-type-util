@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("WeakerAccess")
 public class LimitedString extends AbstractLimited<String> {
 
     @NotNull
@@ -39,6 +40,7 @@ public class LimitedString extends AbstractLimited<String> {
         super(limits, validationBehavior);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class Builder extends AbstractLimited.Builder<String> {
 
         @NotNull

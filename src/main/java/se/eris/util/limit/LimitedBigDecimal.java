@@ -36,6 +36,10 @@ public class LimitedBigDecimal extends AbstractLimited<BigDecimal> {
         return super.of(bigDecimal);
     }
 
+    private LimitedBigDecimal(@NotNull final Builder builder) {
+        this(builder.limits, builder.validationBehavior);
+    }
+
     private LimitedBigDecimal(@NotNull final List<Function<BigDecimal, Optional<ValidationError>>> limits, @NotNull final ValidationBehavior validationBehavior) {
         super(limits, validationBehavior);
     }
@@ -56,7 +60,7 @@ public class LimitedBigDecimal extends AbstractLimited<BigDecimal> {
 
         @NotNull
         public LimitedBigDecimal build() {
-            return new LimitedBigDecimal(limits, validationBehavior);
+            return new LimitedBigDecimal(this);
         }
     }
 
