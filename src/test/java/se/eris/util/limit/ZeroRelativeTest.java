@@ -18,14 +18,28 @@ package se.eris.util.limit;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertThat;
 
-public class LimitedIntegerTest {
-
+public class ZeroRelativeTest {
 
     @Test
-    public void of() {
-        assertThat(LimitedInteger.init().range(2, 5).build().of(2), is(2));
-        assertThat(LimitedInteger.init().range(2, 5).build().of(5), is(5));
+    public void positive_ok() {
+        assertThat(ZeroRelative.positive().validate(1).isPresent(), is(false));
     }
+
+    @Test
+    public void positive_fail() {
+        assertThat(ZeroRelative.positive().validate(0).isPresent(), is(true));
+    }
+
+    @Test
+    public void negative_ok() {
+        assertThat(ZeroRelative.negative().validate(-1).isPresent(), is(false));
+    }
+
+    @Test
+    public void negative_fail() {
+        assertThat(ZeroRelative.negative().validate(0).isPresent(), is(true));
+    }
+
 }

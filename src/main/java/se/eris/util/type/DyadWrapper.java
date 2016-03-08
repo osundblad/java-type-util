@@ -17,6 +17,14 @@ package se.eris.util.type;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Two things that are meant to be used together.
+ *
+ * @param <T> the first type
+ * @param <U> the second type
+ *
+ * @see PairWrapper
+ */
 public abstract class DyadWrapper<T, U> {
 
     @NotNull

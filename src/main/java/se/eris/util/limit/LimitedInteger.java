@@ -41,7 +41,7 @@ public class LimitedInteger extends AbstractLimited<Integer> {
     public static class Builder extends AbstractLimited.Builder<Integer> {
 
         @NotNull
-        public Builder range(final int max) {
+        public Builder zeroTo(final int max) {
             limit(IntegerRangeLimit.zeroTo(max));
             return this;
         }
@@ -49,6 +49,12 @@ public class LimitedInteger extends AbstractLimited<Integer> {
         @NotNull
         public Builder range(final int min, final int max) {
             limit(IntegerRangeLimit.of(min, max));
+            return this;
+        }
+
+        @NotNull
+        public Builder positive() {
+            limit(ZeroRelative.positive());
             return this;
         }
 
