@@ -26,6 +26,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static se.eris.util.limit.StringLengthLimit.LONGEST_STRING_TO_PRESENT;
 
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 public class StringLengthLimitTest {
 
     @Rule
@@ -104,6 +105,26 @@ public class StringLengthLimitTest {
     }
 
     @Test
+    public void exactly_ok() {
+        final Optional<ValidationError> validationError = StringLengthLimit.exactly(4).validate("1234");
+        assertThat(validationError.isPresent(), is(false));
+    }
+
+    @Test
+    public void exactly_toShort() {
+        final Optional<ValidationError> validationError = StringLengthLimit.exactly(4).validate("123");
+        assertThat(validationError.isPresent(), is(true));
+        assertThat(validationError.get().asString(), containsString("'123'"));
+    }
+
+    @Test
+    public void exactly_toLong() {
+        final Optional<ValidationError> validationError = StringLengthLimit.exactly(4).validate("12345");
+        assertThat(validationError.isPresent(), is(true));
+        assertThat(validationError.get().asString(), containsString("'12345'"));
+    }
+
+    @Test
     public void errorFormat_truncateLongStrings() {
         final Optional<ValidationError> validationError = StringLengthLimit.oneTo(2).validate(StringTestUtil.createLongString(LONGEST_STRING_TO_PRESENT + 1));
         assertThat(validationError.isPresent(), is(true));
@@ -116,5 +137,4 @@ public class StringLengthLimitTest {
         assertThat(validationError.isPresent(), is(true));
         assertThat(validationError.get().asString(), not(containsString("(truncated at ")));
     }
-
 }

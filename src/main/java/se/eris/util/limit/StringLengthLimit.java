@@ -40,6 +40,11 @@ public class StringLengthLimit implements StringLimit {
     }
 
     @NotNull
+    public static StringLengthLimit exactly(final int length) {
+        return of(length, length);
+    }
+
+    @NotNull
     public static StringLengthLimit of(final int min, final int max) {
         return new StringLengthLimit(min, max);
     }
