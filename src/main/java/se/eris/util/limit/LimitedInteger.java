@@ -52,9 +52,43 @@ public class LimitedInteger extends AbstractLimited<Integer> {
             return this;
         }
 
+        /**
+         * (0, MaxInt] or maybe more readable [1, MaxInt]
+         * @return the Builder
+         */
         @NotNull
         public Builder positive() {
             limit(ZeroRelative.positive());
+            return this;
+        }
+
+        /**
+         * [MinInt, 0]
+         * @return the Builder
+         */
+        @NotNull
+        public Builder nonPositive() {
+            limit(ZeroRelative.nonPositive());
+            return this;
+        }
+
+        /**
+         * [MinInt, 0) or maybe more readable [MinInt, -1]
+         * @return the Builder
+         */
+        @NotNull
+        public Builder negative() {
+            limit(ZeroRelative.negative());
+            return this;
+        }
+
+        /**
+         * [0, MaxInt]
+         * @return the Builder
+         */
+        @NotNull
+        public Builder nonNegative() {
+            limit(ZeroRelative.nonNegative());
             return this;
         }
 

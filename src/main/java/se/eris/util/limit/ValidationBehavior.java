@@ -21,6 +21,11 @@ import java.util.Optional;
 
 public interface ValidationBehavior {
 
+    /**
+     * todo Needs a better name!
+     * @see AbstractLimited#of(Object)
+     * @return creates a new instance called at validation.
+     */
     @NotNull
     ValidationBehavior instance();
 

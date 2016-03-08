@@ -33,6 +33,16 @@ public class ZeroRelativeTest {
     }
 
     @Test
+    public void nonPositive_ok() {
+        assertThat(ZeroRelative.nonPositive().validate(0).isPresent(), is(false));
+    }
+
+    @Test
+    public void nonPositive_fail() {
+        assertThat(ZeroRelative.nonPositive().validate(1).isPresent(), is(true));
+    }
+
+    @Test
     public void negative_ok() {
         assertThat(ZeroRelative.negative().validate(-1).isPresent(), is(false));
     }
@@ -40,6 +50,16 @@ public class ZeroRelativeTest {
     @Test
     public void negative_fail() {
         assertThat(ZeroRelative.negative().validate(0).isPresent(), is(true));
+    }
+
+    @Test
+    public void nonNegative_ok() {
+        assertThat(ZeroRelative.nonNegative().validate(0).isPresent(), is(false));
+    }
+
+    @Test
+    public void nonNegative_fail() {
+        assertThat(ZeroRelative.nonNegative().validate(-1).isPresent(), is(true));
     }
 
 }

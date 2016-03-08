@@ -26,14 +26,14 @@ public class ValidationBehaviorThrowAfter implements ValidationBehavior {
     @NotNull
     private final List<ValidationError> validationErrors = new ArrayList<>();
 
-    @NotNull
     @Override
+    @NotNull
     public ValidationBehavior instance() {
         return new ValidationBehaviorThrowAfter();
     }
 
     @Override
-    public void atValidation(final @NotNull Optional<ValidationError> error) {
+    public void atValidation(@NotNull final Optional<ValidationError> error) {
         if (error.isPresent()) {
             validationErrors.add(error.get());
         }

@@ -51,7 +51,15 @@ public abstract class AbstractLimited<T> {
         protected final List<Function<T, Optional<ValidationError>>> limits = new ArrayList<>();
 
         @NotNull
-        protected ValidationBehavior validationBehavior = new ValidationBehaviorThrowImmediately();
+        protected final ValidationBehavior validationBehavior;
+
+        public Builder(@NotNull final ValidationBehavior validationBehavior) {
+            this.validationBehavior = validationBehavior;
+        }
+
+        public Builder() {
+            this(new ValidationBehaviorThrowImmediately());
+        }
 
         public final void limit(@NotNull final Limit<T> limit) {
             limits.add(limit::validate);
@@ -59,10 +67,6 @@ public abstract class AbstractLimited<T> {
 
         public final void limit(@NotNull final Function<T, Optional<ValidationError>> limit) {
             limits.add(limit);
-        }
-
-        public final void behavior(@NotNull final ValidationBehavior behavior) {
-            this.validationBehavior = behavior;
         }
 
     }

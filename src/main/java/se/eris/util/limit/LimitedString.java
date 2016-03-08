@@ -31,6 +31,11 @@ public class LimitedString extends AbstractLimited<String> {
     }
 
     @NotNull
+    public static Builder init(@NotNull final ValidationBehavior validationBehavior) {
+        return new Builder(validationBehavior);
+    }
+
+    @NotNull
     @Override
     public String of(@NotNull final String s) {
         return super.of(s);
@@ -42,6 +47,14 @@ public class LimitedString extends AbstractLimited<String> {
 
     @SuppressWarnings("WeakerAccess")
     public static class Builder extends AbstractLimited.Builder<String> {
+
+        public Builder() {
+            super();
+        }
+
+        public Builder(@NotNull final ValidationBehavior validationBehavior) {
+            super(validationBehavior);
+        }
 
         @NotNull
         public Builder length(final int min, final int max) {

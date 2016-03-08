@@ -45,16 +45,14 @@ public class ValidationErrors {
     }
 
     @NotNull
-    public Stream<ValidationError> getErrors() {
+    public Stream<ValidationError> stream() {
         return errors.stream();
     }
 
     @Override
     @NotNull
     public String toString() {
-        return "ValidationErrors{" +
-                "errors=" + errors +
-                '}';
+        return "ValidationErrors{errors=" + errors + '}';
     }
 
 }

@@ -21,9 +21,8 @@ import java.util.Optional;
 
 public class ZeroRelative implements Limit<Integer> {
 
-
-
-    public enum ZeroRelation {
+    private enum ZeroRelation {
+        /** For complete coverage. Kind of useless */
         ZERO,
         POSITIVE,
         NEGATIVE,
@@ -37,9 +36,13 @@ public class ZeroRelative implements Limit<Integer> {
     public static final ZeroRelative NEGATIVE = new ZeroRelative(ZeroRelation.NEGATIVE);
 
     @NotNull
-    public static Limit<Integer> negative() {
-        return NEGATIVE;
-    }
+    public static final ZeroRelative NON_NEGATIVE = new ZeroRelative(ZeroRelation.NON_NEGATIVE);
+
+    @NotNull
+    public static final ZeroRelative NON_POSITIVE = new ZeroRelative(ZeroRelation.NON_POSITIVE);
+
+    @NotNull
+    public static final ZeroRelative ZERO = new ZeroRelative(ZeroRelation.ZERO);
 
     @NotNull
     public static Limit<Integer> positive() {
@@ -47,12 +50,31 @@ public class ZeroRelative implements Limit<Integer> {
     }
 
     @NotNull
-    private ZeroRelation relation;
+    public static Limit<Integer> nonPositive() {
+        return NON_POSITIVE;
+    }
+
+    @NotNull
+    public static Limit<Integer> negative() {
+        return NEGATIVE;
+    }
+
+    @NotNull
+    public static Limit<Integer> nonNegative() {
+        return NON_NEGATIVE;
+    }
+
+    @NotNull
+    public static Limit<Integer> zero() {
+        return ZERO;
+    }
+
+    @NotNull
+    private final ZeroRelation relation;
 
     private ZeroRelative(@NotNull final ZeroRelation relation) {
         this.relation = relation;
     }
-
 
     @Override
     public @NotNull Optional<ValidationError> validate(@NotNull final Integer item) {
@@ -63,7 +85,7 @@ public class ZeroRelative implements Limit<Integer> {
             case NON_NEGATIVE: if (item < 0) return Optional.of(ValidationError.of(item + " is negative")); break;
             case ZERO: if (item != 0) return Optional.of(ValidationError.of(item + " is not zero")); break;
             default:
-                throw new IllegalStateException("Unknown relation " + relation);
+                throw new IllegalStateException("Unknown relation '" + relation + "'");
         }
         return Optional.empty();
     }

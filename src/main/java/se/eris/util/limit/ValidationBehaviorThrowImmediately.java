@@ -21,14 +21,14 @@ import java.util.Optional;
 
 public class ValidationBehaviorThrowImmediately implements ValidationBehavior {
 
-    @NotNull
     @Override
+    @NotNull
     public ValidationBehavior instance() {
         return new ValidationBehaviorThrowImmediately();
     }
 
     @Override
-    public void atValidation(final @NotNull Optional<ValidationError> error) {
+    public void atValidation(@NotNull final Optional<ValidationError> error) {
         if (error.isPresent()) {
             throw new ValidationException(ValidationErrors.of(error.get()));
         }
