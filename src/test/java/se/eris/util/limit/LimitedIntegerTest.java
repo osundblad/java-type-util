@@ -15,17 +15,34 @@
  */
 package se.eris.util.limit;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class LimitedIntegerTest {
 
+    @Rule
+    public final ExpectedException exception = ExpectedException.none();
 
     @Test
     public void of() {
         assertThat(LimitedInteger.init().range(2, 5).build().of(2), is(2));
         assertThat(LimitedInteger.init().range(2, 5).build().of(5), is(5));
     }
+
+    @Test
+    public void functionLimit_even() {
+        final Limit<Integer> even = (item) -> (((item % 2) == 0) ? Optional.empty() : Optional.of(ValidationError.of(item + " is odd")));
+
+        assertThat(LimitedInteger.init().add(even).build().of(2), is(2));
+
+        exception.expect(ValidationExceptionMatcher.of(1, "1 is odd"));
+        LimitedInteger.init().add(even).build().of(1);
+    }
+
 }

@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class ZeroRelative implements Limit<Integer> {
+public class IntegerRelativeZeroLimit implements Limit<Integer> {
 
     private enum ZeroRelation {
         /** For complete coverage. Kind of useless */
@@ -29,20 +29,17 @@ public class ZeroRelative implements Limit<Integer> {
         NON_POSITIVE,
         NON_NEGATIVE,
     }
-    @NotNull
-    public static final ZeroRelative POSITIVE = new ZeroRelative(ZeroRelation.POSITIVE);
 
     @NotNull
-    public static final ZeroRelative NEGATIVE = new ZeroRelative(ZeroRelation.NEGATIVE);
-
+    private static final IntegerRelativeZeroLimit POSITIVE = new IntegerRelativeZeroLimit(ZeroRelation.POSITIVE);
     @NotNull
-    public static final ZeroRelative NON_NEGATIVE = new ZeroRelative(ZeroRelation.NON_NEGATIVE);
-
+    private static final IntegerRelativeZeroLimit NEGATIVE = new IntegerRelativeZeroLimit(ZeroRelation.NEGATIVE);
     @NotNull
-    public static final ZeroRelative NON_POSITIVE = new ZeroRelative(ZeroRelation.NON_POSITIVE);
-
+    private static final IntegerRelativeZeroLimit NON_NEGATIVE = new IntegerRelativeZeroLimit(ZeroRelation.NON_NEGATIVE);
     @NotNull
-    public static final ZeroRelative ZERO = new ZeroRelative(ZeroRelation.ZERO);
+    private static final IntegerRelativeZeroLimit NON_POSITIVE = new IntegerRelativeZeroLimit(ZeroRelation.NON_POSITIVE);
+    @NotNull
+    private static final IntegerRelativeZeroLimit ZERO = new IntegerRelativeZeroLimit(ZeroRelation.ZERO);
 
     @NotNull
     public static Limit<Integer> positive() {
@@ -72,12 +69,13 @@ public class ZeroRelative implements Limit<Integer> {
     @NotNull
     private final ZeroRelation relation;
 
-    private ZeroRelative(@NotNull final ZeroRelation relation) {
+    private IntegerRelativeZeroLimit(@NotNull final ZeroRelation relation) {
         this.relation = relation;
     }
 
     @Override
-    public @NotNull Optional<ValidationError> validate(@NotNull final Integer item) {
+    @NotNull
+    public Optional<ValidationError> validate(@NotNull final Integer item) {
         switch (relation) {
             case POSITIVE: if (item <= 0) return Optional.of(ValidationError.of(item + " is not positive")); break;
             case NEGATIVE: if (item >= 0) return Optional.of(ValidationError.of(item + " is not negative")); break;
@@ -85,7 +83,7 @@ public class ZeroRelative implements Limit<Integer> {
             case NON_NEGATIVE: if (item < 0) return Optional.of(ValidationError.of(item + " is negative")); break;
             case ZERO: if (item != 0) return Optional.of(ValidationError.of(item + " is not zero")); break;
             default:
-                throw new IllegalStateException("Unknown relation '" + relation + "'");
+                throw new IllegalStateException("Unknown zero relation '" + relation + "'");
         }
         return Optional.empty();
     }

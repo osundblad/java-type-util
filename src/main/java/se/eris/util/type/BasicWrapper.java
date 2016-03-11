@@ -20,15 +20,15 @@ import org.jetbrains.annotations.NotNull;
 public abstract class BasicWrapper<T> {
 
     @NotNull
-    private final T type;
+    private final T item;
 
-    protected BasicWrapper(@NotNull final T type) {
-        this.type = type;
+    protected BasicWrapper(@NotNull final T item) {
+        this.item = item;
     }
 
     @NotNull
     public T raw() {
-        return type;
+        return item;
     }
 
     @SuppressWarnings("ControlFlowStatementWithoutBraces")
@@ -39,18 +39,18 @@ public abstract class BasicWrapper<T> {
 
         final BasicWrapper that = (BasicWrapper) o;
 
-        return type.equals(that.type);
+        return item.equals(that.item);
     }
 
     @Override
     public int hashCode() {
-        return type.hashCode();
+        return item.hashCode();
     }
 
     @Override
     @NotNull
     public String toString() {
-        return this.getClass().getSimpleName() + "{" + type + "}";
+        return this.getClass().getSimpleName() + "{" + item + "}";
     }
 
 }

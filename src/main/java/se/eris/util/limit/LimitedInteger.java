@@ -41,6 +41,12 @@ public class LimitedInteger extends AbstractLimited<Integer> {
     public static class Builder extends AbstractLimited.Builder<Integer> {
 
         @NotNull
+        public Builder add(@NotNull final Limit<Integer> limit) {
+            super.limit(limit);
+            return this;
+        }
+
+        @NotNull
         public Builder zeroTo(final int max) {
             limit(IntegerRangeLimit.zeroTo(max));
             return this;
@@ -58,7 +64,7 @@ public class LimitedInteger extends AbstractLimited<Integer> {
          */
         @NotNull
         public Builder positive() {
-            limit(ZeroRelative.positive());
+            limit(IntegerRelativeZeroLimit.positive());
             return this;
         }
 
@@ -68,7 +74,7 @@ public class LimitedInteger extends AbstractLimited<Integer> {
          */
         @NotNull
         public Builder nonPositive() {
-            limit(ZeroRelative.nonPositive());
+            limit(IntegerRelativeZeroLimit.nonPositive());
             return this;
         }
 
@@ -78,7 +84,7 @@ public class LimitedInteger extends AbstractLimited<Integer> {
          */
         @NotNull
         public Builder negative() {
-            limit(ZeroRelative.negative());
+            limit(IntegerRelativeZeroLimit.negative());
             return this;
         }
 
@@ -88,7 +94,7 @@ public class LimitedInteger extends AbstractLimited<Integer> {
          */
         @NotNull
         public Builder nonNegative() {
-            limit(ZeroRelative.nonNegative());
+            limit(IntegerRelativeZeroLimit.nonNegative());
             return this;
         }
 

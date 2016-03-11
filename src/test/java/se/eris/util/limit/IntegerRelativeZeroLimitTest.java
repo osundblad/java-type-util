@@ -20,46 +20,46 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class ZeroRelativeTest {
+public class IntegerRelativeZeroLimitTest {
 
     @Test
     public void positive_ok() {
-        assertThat(ZeroRelative.positive().validate(1).isPresent(), is(false));
+        assertThat(IntegerRelativeZeroLimit.positive().validate(1).isPresent(), is(false));
     }
 
     @Test
     public void positive_fail() {
-        assertThat(ZeroRelative.positive().validate(0).isPresent(), is(true));
+        assertThat(IntegerRelativeZeroLimit.positive().validate(0).isPresent(), is(true));
     }
 
     @Test
     public void nonPositive_ok() {
-        assertThat(ZeroRelative.nonPositive().validate(0).isPresent(), is(false));
+        assertThat(IntegerRelativeZeroLimit.nonPositive().validate(0).isPresent(), is(false));
     }
 
     @Test
     public void nonPositive_fail() {
-        assertThat(ZeroRelative.nonPositive().validate(1).isPresent(), is(true));
+        assertThat(IntegerRelativeZeroLimit.nonPositive().validate(1).isPresent(), is(true));
     }
 
     @Test
     public void negative_ok() {
-        assertThat(ZeroRelative.negative().validate(-1).isPresent(), is(false));
+        assertThat(IntegerRelativeZeroLimit.negative().validate(-1).isPresent(), is(false));
     }
 
     @Test
     public void negative_fail() {
-        assertThat(ZeroRelative.negative().validate(0).isPresent(), is(true));
+        assertThat(IntegerRelativeZeroLimit.negative().validate(0).isPresent(), is(true));
     }
 
     @Test
     public void nonNegative_ok() {
-        assertThat(ZeroRelative.nonNegative().validate(0).isPresent(), is(false));
+        assertThat(IntegerRelativeZeroLimit.nonNegative().validate(0).isPresent(), is(false));
     }
 
     @Test
     public void nonNegative_fail() {
-        assertThat(ZeroRelative.nonNegative().validate(-1).isPresent(), is(true));
+        assertThat(IntegerRelativeZeroLimit.nonNegative().validate(-1).isPresent(), is(true));
     }
 
 }

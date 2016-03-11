@@ -57,6 +57,12 @@ public class LimitedString extends AbstractLimited<String> {
         }
 
         @NotNull
+        public Builder add(@NotNull final Limit<String> limit) {
+            super.limit(limit);
+            return this;
+        }
+
+        @NotNull
         public Builder length(final int min, final int max) {
             limit(StringLengthLimit.of(min, max));
             return this;
