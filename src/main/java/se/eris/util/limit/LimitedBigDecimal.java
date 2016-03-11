@@ -47,6 +47,11 @@ public class LimitedBigDecimal extends AbstractLimited<BigDecimal> {
     public static class Builder extends AbstractLimited.Builder<BigDecimal> {
 
         @NotNull
+        public Builder limit(@NotNull final Limit<BigDecimal> limit) {
+            return (Builder) super.limit(limit);
+        }
+
+        @NotNull
         public Builder decimals(final int decimals) {
             limit(BigDecimalDecimalLimit.of(decimals));
             return this;

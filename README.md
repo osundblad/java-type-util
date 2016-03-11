@@ -29,4 +29,10 @@ is limited to max 1000 characters.
     
     }
 
-If there is no predefined limit you can create your own easily
+If there is no predefined limit you can create your own Limits easily:
+
+    Limit<Integer> evenLimit = (item) -> (((item % 2) == 0) ? Optional.empty() : Optional.of(ValidationError.of(item + " is odd")));
+    LimitedInteger even = LimitedInteger.init().limit(evenLimit).build();
+    int a = even.of(2);   // a = 2;
+    int b = even.of(17);  // throws ValidationException
+    

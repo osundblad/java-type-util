@@ -57,9 +57,8 @@ public class LimitedString extends AbstractLimited<String> {
         }
 
         @NotNull
-        public Builder add(@NotNull final Limit<String> limit) {
-            super.limit(limit);
-            return this;
+        public Builder limit(@NotNull final Limit<String> limit) {
+            return (Builder) super.limit(limit);
         }
 
         @NotNull

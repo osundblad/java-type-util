@@ -61,12 +61,10 @@ public abstract class AbstractLimited<T> {
             this(new ValidationBehaviorThrowImmediately());
         }
 
-        public final void limit(@NotNull final Limit<T> limit) {
+        @NotNull
+        public Builder<T> limit(@NotNull final Limit<T> limit) {
             limits.add(limit::validate);
-        }
-
-        public final void limit(@NotNull final Function<T, Optional<ValidationError>> limit) {
-            limits.add(limit);
+            return this;
         }
 
     }

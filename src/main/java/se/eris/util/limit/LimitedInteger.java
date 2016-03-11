@@ -41,9 +41,8 @@ public class LimitedInteger extends AbstractLimited<Integer> {
     public static class Builder extends AbstractLimited.Builder<Integer> {
 
         @NotNull
-        public Builder add(@NotNull final Limit<Integer> limit) {
-            super.limit(limit);
-            return this;
+        public Builder limit(@NotNull final Limit<Integer> limit) {
+            return (Builder) super.limit(limit);
         }
 
         @NotNull

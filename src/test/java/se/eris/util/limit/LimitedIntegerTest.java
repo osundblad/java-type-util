@@ -37,12 +37,13 @@ public class LimitedIntegerTest {
 
     @Test
     public void functionLimit_even() {
-        final Limit<Integer> even = (item) -> (((item % 2) == 0) ? Optional.empty() : Optional.of(ValidationError.of(item + " is odd")));
+        final Limit<Integer> evenLimit = (item) -> (((item % 2) == 0) ? Optional.empty() : Optional.of(ValidationError.of(item + " is odd")));
+        final LimitedInteger even = LimitedInteger.init().limit(evenLimit).build();
 
-        assertThat(LimitedInteger.init().add(even).build().of(2), is(2));
+        assertThat(even.of(2), is(2));
 
         exception.expect(ValidationExceptionMatcher.of(1, "1 is odd"));
-        LimitedInteger.init().add(even).build().of(1);
+        even.of(1);
     }
 
 }
