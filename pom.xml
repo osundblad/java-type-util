@@ -39,6 +39,16 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.pitest</groupId>
+                    <artifactId>pitest-maven</artifactId>
+                    <version>1.1.9</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>se.eris.notnull</groupId>
@@ -63,7 +73,7 @@
             <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
-                <version>1.1.8</version>
+                <!-- mvn -DwithHistory org.pitest:pitest-maven:mutationCoverage -->
                 <configuration>
                     <targetClasses>
                         <param>se.eris.util.*</param>
