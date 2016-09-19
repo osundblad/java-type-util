@@ -32,6 +32,7 @@ public class IoStringTest {
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     public void toDouble() {
         assertThat(IoString.toDouble("1.7").get(), is(1.7));
@@ -47,13 +48,14 @@ public class IoStringTest {
     }
 
     @Test
-    public void toDouble_notADouble() {
+    public void toDouble_notDouble() {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Double");
         IoString.toDouble("abc").isPresent();
     }
 
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     public void toInteger() {
         assertThat(IoString.toInteger("1234567").get(), is(1234567));
@@ -66,12 +68,13 @@ public class IoStringTest {
     }
 
     @Test
-    public void toInteger_notAnInteger() {
+    public void toInteger_notInteger() {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Integer");
         IoString.toInteger("0xF").isPresent();
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     public void toShort() {
         assertThat(IoString.toShort("0").get(), is((short) 0));
@@ -90,37 +93,45 @@ public class IoStringTest {
     }
 
     @Test
-    public void toShort_notAShort() {
+    public void toShort_notShort() {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Short");
         IoString.toShort("0xF").isPresent();
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     public void toBoolean() {
         assertThat(IoString.toBoolean("true").get(), is(true));
-        assertThat(IoString.toBoolean("TruE").get(), is(true));
-
         assertThat(IoString.toBoolean("false").get(), is(false));
-        assertThat(IoString.toBoolean(null).get(), is(false));
+        assertThat(IoString.toBoolean(null).isPresent(), is(false));
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
-    public void toUUID() {
+    public void toBoolean_notBoolean() {
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("Boolean");
+        assertThat(IoString.toBoolean("TruE").isPresent(), is(false));
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    @Test
+    public void toUUID_roundtrip() {
         final UUID uuid = UUID.randomUUID();
         assertThat(IoString.toUUID(uuid.toString()).get(), is(uuid));
     }
 
     @Test
-    public void toUUID_notAUUID() {
+    public void toUUID_notUUID() {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("UUID");
         IoString.toUUID("abc").isPresent();
     }
 
-
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
-    public void toLocalDate() {
+    public void toLocalDate_roundtrip() {
         final LocalDate now = LocalDate.now();
         assertThat(IoString.toLocalDate(now.toString()).get(), is(now));
     }
@@ -131,7 +142,7 @@ public class IoStringTest {
     }
 
     @Test
-    public void toLocalDate_notADate() {
+    public void toLocalDate_notLocalDate() {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("LocalDate");
         IoString.toLocalDate("abc").isPresent();

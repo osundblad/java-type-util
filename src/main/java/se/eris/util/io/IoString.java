@@ -68,12 +68,16 @@ public final class IoString {
         }
     }
 
-    /**
-     * todo Maybe return boolean or be more strict (allow only true/false)
-     */
     @NotNull
     public static Optional<Boolean> toBoolean(@Nullable final String s) {
-        return Optional.of(Boolean.parseBoolean(s));
+        if (s == null) {
+            return Optional.empty();
+        }
+        switch (s) {
+            case "true": return Optional.of(Boolean.TRUE);
+            case "false": return Optional.of(Boolean.FALSE);
+            default: throw new IllegalArgumentException(s + " is not a Boolean");
+        }
     }
 
     @NotNull
