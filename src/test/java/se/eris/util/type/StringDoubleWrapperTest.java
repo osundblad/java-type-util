@@ -1,5 +1,5 @@
 /*
- *    Copyright 2016 Olle Sundblad
+ *    Copyright 2016 Olle Sundblad - olle@eris.se
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,34 +18,25 @@ package se.eris.util.type;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
-import java.util.UUID;
-
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertThat;
 
-public class UUIDWrapperTest {
-
-    @Test
-    public void asUUID() {
-        final UUID uuid = UUID.randomUUID();
-        final WrapperImpl wrapper = new WrapperImpl(uuid);
-
-        assertThat(wrapper.asUUID(), is(uuid));
-    }
+public class StringDoubleWrapperTest {
 
     @Test
     public void asString() {
-        final UUID uuid = UUID.randomUUID();
-        final WrapperImpl wrapper = new WrapperImpl(uuid);
-
-        assertThat(wrapper.asString(), is(uuid.toString()));
+        assertThat(WrapperImpl.of("3.333333333333333333").asString(), is("3.333333333333333333"));
     }
 
-    private static class WrapperImpl extends UUIDWrapper {
+    private static class WrapperImpl extends StringDoubleWrapper {
 
-        private WrapperImpl(@NotNull final UUID uuid) {
-            super(uuid);
+        @NotNull
+        public static StringDoubleWrapperTest.WrapperImpl of(@NotNull final String s) {
+            return new WrapperImpl(s);
         }
 
+        private WrapperImpl(@NotNull final String s) {
+            super(s);
+        }
     }
 }

@@ -25,6 +25,8 @@ import java.util.UUID;
 
 /**
  * Some trivial methods to parse input Strings that might be null.
+ * todo:
+ *  - decide if empty string should behave as null
  */
 @SuppressWarnings("WeakerAccess")
 public final class IoString {
@@ -73,11 +75,13 @@ public final class IoString {
         if (s == null) {
             return Optional.empty();
         }
-        switch (s) {
-            case "true": return Optional.of(Boolean.TRUE);
-            case "false": return Optional.of(Boolean.FALSE);
-            default: throw new IllegalArgumentException(s + " is not a Boolean");
+        if ("true".equalsIgnoreCase(s)) {
+            return Optional.of(Boolean.TRUE);
         }
+        if ("false".equalsIgnoreCase(s)) {
+            return Optional.of(Boolean.FALSE);
+        }
+        throw new IllegalArgumentException(s + " is not a Boolean");
     }
 
     @NotNull

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2016 Olle Sundblad
+ *    Copyright 2016 Olle Sundblad - olle@eris.se
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -74,6 +74,13 @@ public class IoStringTest {
         IoString.toInteger("0xF").isPresent();
     }
 
+    @Test
+    public void toInteger_outOfRange() {
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("Integer");
+        IoString.toInteger(String.valueOf(Long.MAX_VALUE)).isPresent();
+    }
+
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     public void toShort() {
@@ -89,7 +96,7 @@ public class IoStringTest {
     public void toShort_outOfRange() {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Short");
-        IoString.toShort("1234567").isPresent();
+        IoString.toShort(String.valueOf(Integer.MAX_VALUE)).isPresent();
     }
 
     @Test
@@ -103,7 +110,8 @@ public class IoStringTest {
     @Test
     public void toBoolean() {
         assertThat(IoString.toBoolean("true").get(), is(true));
-        assertThat(IoString.toBoolean("false").get(), is(false));
+        assertThat(IoString.toBoolean("TruE").get(), is(true));
+        assertThat(IoString.toBoolean("fALSe").get(), is(false));
         assertThat(IoString.toBoolean(null).isPresent(), is(false));
     }
 
@@ -112,7 +120,7 @@ public class IoStringTest {
     public void toBoolean_notBoolean() {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Boolean");
-        assertThat(IoString.toBoolean("TruE").isPresent(), is(false));
+        assertThat(IoString.toBoolean("maybe").isPresent(), is(false));
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")

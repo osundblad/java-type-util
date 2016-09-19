@@ -27,19 +27,28 @@ import static org.hamcrest.core.Is.is;
 public class OpenDatePeriodTest {
 
     private static final int YEAR_2000 = 2000;
+    private static final LocalDate DATE_2000_01_01 = LocalDate.of(YEAR_2000, 1, 1);
 
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
     @Test
     public void between_valid() {
-        OpenDatePeriod.between(LocalDate.of(YEAR_2000, 1, 1), LocalDate.of(YEAR_2000 + 1, 1, 1));
+        OpenDatePeriod.between(DATE_2000_01_01, DATE_2000_01_01.plusYears(1));
     }
 
     @Test
     public void between_endDateBeforeStartDate_shouldFail() {
         exception.expect(IllegalArgumentException.class);
-        OpenDatePeriod.between(LocalDate.of(YEAR_2000 + 1, 1, 1), LocalDate.of(YEAR_2000, 1, 1));
+        OpenDatePeriod.between(DATE_2000_01_01.plusDays(1), LocalDate.of(YEAR_2000, 1, 1));
+    }
+
+    @Test
+    public void isInPeriod() {
+        assertThat(OpenDatePeriod.between(DATE_2000_01_01, DATE_2000_01_01.plusYears(1)).isInPeriod(DATE_2000_01_01.minusDays(1)), is(false));
+        assertThat(OpenDatePeriod.between(DATE_2000_01_01, DATE_2000_01_01.plusYears(1)).isInPeriod(DATE_2000_01_01), is(true));
+        assertThat(OpenDatePeriod.between(DATE_2000_01_01, DATE_2000_01_01.plusYears(1)).isInPeriod(DATE_2000_01_01.plusYears(1)), is(true));
+        assertThat(OpenDatePeriod.between(DATE_2000_01_01, DATE_2000_01_01.plusYears(1)).isInPeriod(DATE_2000_01_01.plusYears(1).plusDays(1)), is(false));
     }
 
     @Test
@@ -51,5 +60,6 @@ public class OpenDatePeriodTest {
         assertThat(OpenDatePeriod.from(startDate).toString(), is("OpenDatePeriod{2015-01-01 - }"));
         assertThat(OpenDatePeriod.to(endDate).toString(), is("OpenDatePeriod{ - 2015-12-31}"));
     }
+
 
 }
