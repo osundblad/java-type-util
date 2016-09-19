@@ -5,10 +5,16 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <name>JType</name>
+
     <groupId>se.eris</groupId>
     <artifactId>jtype</artifactId>
-    <packaging>jar</packaging>
     <version>0.3</version>
+    <packaging>jar</packaging>
+
+    <description>Library to help creating type objects, minimize boilerplate code, and help with io of typed objects.</description>
+
+    <url>https://github.com/osundblad/java-type-util</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -93,10 +99,10 @@
                 <version>1.1.8</version>
                 <configuration>
                     <targetClasses>
-                        <param>se.eris.util.*</param>
+                        <param>se.eris.jtype.*</param>
                     </targetClasses>
                     <targetTests>
-                        <param>se.eris.util.*</param>
+                        <param>se.eris.jtype.*</param>
                     </targetTests>
                 </configuration>
             </plugin>
