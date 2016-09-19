@@ -21,6 +21,9 @@ import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
 import java.util.Optional;
 
+/**
+ * Inclusive date period [from - to]. Both from and to are optional missing value means no limit.
+ */
 public class OpenDatePeriod extends PairWrapper<Optional<LocalDate>> {
 
     @NotNull

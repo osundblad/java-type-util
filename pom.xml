@@ -5,8 +5,10 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <name>Type Util</name>
+
     <groupId>se.eris</groupId>
-    <artifactId>util</artifactId>
+    <artifactId>jtype</artifactId>
     <packaging>jar</packaging>
     <version>0.3-SNAPSHOT</version>
 
@@ -16,12 +18,41 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
+    <url>https://github.com/osundblad/java-type-util</url>
+
+    <licenses>
+        <license>
+            <name>Apache 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+
     <developers>
         <developer>
             <name>Olle Sundblad</name>
             <email>olle@eris.se</email>
         </developer>
     </developers>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <scm>
+        <url>https://github.com/osundblad/java-type-util</url>
+        <connection>scm:git:git@github.com:osundblad/java-type-util.git</connection>
+        <developerConnection>scm:git:git@github.com:osundblad/java-type-util.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
 
     <dependencies>
         <dependency>
@@ -44,16 +75,39 @@
                 <plugin>
                     <groupId>org.pitest</groupId>
                     <artifactId>pitest-maven</artifactId>
-                    <version>1.1.9</version>
+                    <version>1.1.10</version>
                 </plugin>
             </plugins>
         </pluginManagement>
 
         <plugins>
             <plugin>
-                <groupId>se.eris.notnull</groupId>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.3</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
+                    <goals>deploy</goals>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>se.eris</groupId>
                 <artifactId>notnull-instrumenter-maven-plugin</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>0.3</version>
                 <executions>
                     <execution>
                         <id>instrument</id>

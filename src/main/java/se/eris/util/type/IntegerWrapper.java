@@ -17,24 +17,24 @@ package se.eris.util.type;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
+public abstract class IntegerWrapper extends BasicWrapper<Integer> {
 
-public abstract class UUIDWrapper extends BasicWrapper<UUID> {
-
-    protected UUIDWrapper() {
-        super(UUID.randomUUID());
-    }
-
-    protected UUIDWrapper(@NotNull final UUID uuid) {
-        super(uuid);
+    protected IntegerWrapper(@NotNull final Integer i) {
+        super(i);
     }
 
     @NotNull
-    public UUID asUUID() {
+    public Integer asInteger() {
+        return super.raw();
+    }
+
+    public int asPrimitive() {
         return super.raw();
     }
 
     @NotNull
-    public String asString() { return this.raw().toString(); }
+    public String asString() {
+        return super.raw().toString();
+    }
 
 }

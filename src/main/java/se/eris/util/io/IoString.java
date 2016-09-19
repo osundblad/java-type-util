@@ -69,7 +69,7 @@ public final class IoString {
     }
 
     /**
-     * Maybe return boolean or be more strict (allow only true/false)
+     * todo Maybe return boolean or be more strict (allow only true/false)
      */
     @NotNull
     public static Optional<Boolean> toBoolean(@Nullable final String s) {

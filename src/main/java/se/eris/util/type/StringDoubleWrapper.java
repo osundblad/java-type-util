@@ -17,24 +17,28 @@ package se.eris.util.type;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
+/**
+ * Useful for user entered floating point values, where you don't want rounding to show.
+ */
+public abstract class StringDoubleWrapper extends BasicWrapper<String> {
 
-public abstract class UUIDWrapper extends BasicWrapper<UUID> {
-
-    protected UUIDWrapper() {
-        super(UUID.randomUUID());
-    }
-
-    protected UUIDWrapper(@NotNull final UUID uuid) {
-        super(uuid);
+    protected StringDoubleWrapper(@NotNull final String s) {
+        super(s);
+        Double.parseDouble(s);
     }
 
     @NotNull
-    public UUID asUUID() {
+    public String asString() {
         return super.raw();
     }
 
     @NotNull
-    public String asString() { return this.raw().toString(); }
+    public Double asDouble() {
+        return Double.parseDouble(raw());
+    }
+
+    public double asPrimitive() {
+        return Double.parseDouble(raw());
+    }
 
 }
