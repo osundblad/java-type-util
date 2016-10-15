@@ -28,7 +28,7 @@ public class UUIDWrapperTest {
     @Test
     public void asUUID() {
         final UUID uuid = UUID.randomUUID();
-        final WrapperImpl wrapper = new WrapperImpl(uuid);
+        final WrapperImpl wrapper = new WrapperImpl(uuid.toString());
 
         assertThat(wrapper.asUUID(), is(uuid));
     }
@@ -41,7 +41,11 @@ public class UUIDWrapperTest {
         assertThat(wrapper.asString(), is(uuid.toString()));
     }
 
-    private static class WrapperImpl extends UUIDWrapper {
+    private static final class WrapperImpl extends UUIDWrapper {
+
+        private WrapperImpl(@NotNull final String uuid) {
+            super(uuid);
+        }
 
         private WrapperImpl(@NotNull final UUID uuid) {
             super(uuid);

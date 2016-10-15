@@ -28,7 +28,7 @@ public class NotNullTest {
     @Test
     public void notNullArgument_shouldInsertNullCheck() {
         exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("@NotNull");
+        exception.expectMessage("NotNull");
         notNullArgument(null);
     }
 
@@ -39,7 +39,7 @@ public class NotNullTest {
     @Test
     public void notNullReturnValue_shouldInsertNullCheck() {
         exception.expect(IllegalStateException.class);
-        exception.expectMessage("@NotNull");
+        exception.expectMessage("NotNull");
         notNullReturnValue();
     }
 

@@ -12,7 +12,7 @@
     <version>0.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <description>Library to help creating type objects, minimize boilerplate code, and help with io of typed objects.</description>
+    <description>Library to help creating type objects, by minimize boilerplate code, and helping with io.</description>
 
     <url>https://github.com/osundblad/java-type-util</url>
 
@@ -53,7 +53,7 @@
         <connection>scm:git:git@github.com:osundblad/java-type-util.git</connection>
         <developerConnection>scm:git:git@github.com:osundblad/java-type-util.git</developerConnection>
         <url>https://github.com/osundblad/java-type-util</url>
-        <tag>java-type-util-0.3</tag>
+        <tag>java-type-util-0.4</tag>
     </scm>
 
     <dependencies>
@@ -76,7 +76,7 @@
             <plugin>
                 <groupId>se.eris</groupId>
                 <artifactId>notnull-instrumenter-maven-plugin</artifactId>
-                <version>0.3</version>
+                <version>0.5.0</version>
                 <executions>
                     <execution>
                         <id>instrument</id>
@@ -87,9 +87,9 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <implicit>true</implicit>
                     <annotations>
-                        <param>org.jetbrains.annotations.NotNull</param>
-                        <param>javax.validation.constraints.NotNull</param>
+                        <param>org.jetbrains.annotations.Nullable</param>
                     </annotations>
                 </configuration>
             </plugin>

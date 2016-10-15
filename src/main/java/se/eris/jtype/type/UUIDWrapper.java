@@ -25,6 +25,10 @@ public abstract class UUIDWrapper extends BasicWrapper<UUID> {
         super(UUID.randomUUID());
     }
 
+    protected UUIDWrapper(@NotNull final String uuid) {
+        super(UUID.fromString(uuid));
+    }
+
     protected UUIDWrapper(@NotNull final UUID uuid) {
         super(uuid);
     }
