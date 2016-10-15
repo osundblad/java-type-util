@@ -35,6 +35,11 @@ public class StringLengthLimit implements StringLimit {
     }
 
     @NotNull
+    public static StringLengthLimit notEmpty() {
+        return of(1, Integer.MAX_VALUE);
+    }
+
+    @NotNull
     public static StringLengthLimit atLeast(final int min) {
         return of(min, Integer.MAX_VALUE);
     }

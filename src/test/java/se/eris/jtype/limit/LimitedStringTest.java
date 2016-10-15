@@ -28,6 +28,17 @@ public class LimitedStringTest {
     public final ExpectedException exception = ExpectedException.none();
 
     @Test
+    public void notEmpty_validLength_returnsString() {
+        assertThat(LimitedString.init().notEmpty().build().of("hi"), is("hi"));
+    }
+
+    @Test
+    public void notEmpty_invalidLength_fails() {
+        exception.expect(ValidationExceptionMatcher.of("shorter"));
+        LimitedString.init().notEmpty().build().of("");
+    }
+
+    @Test
     public void of_validLength_returnsString() {
         assertThat(LimitedString.init().length(2, 5).build().of("hi"), is("hi"));
         assertThat(LimitedString.init().length(5).build().of("hello"), is("hello"));
