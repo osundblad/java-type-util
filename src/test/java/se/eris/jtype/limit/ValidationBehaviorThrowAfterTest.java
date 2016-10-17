@@ -36,8 +36,8 @@ public class ValidationBehaviorThrowAfterTest {
     public void afterValidation_twoErrors() {
         exception.expect(ValidationExceptionMatcher.of(2,
                 "Length violation: 'abcdef' is longer (6) than the maximum length of 5.",
-                "'abcdef' does not match [0-9]+"));
-        LimitedString.init(new ValidationBehaviorThrowAfter()).length(5).matches("[0-9]+").build().of("abcdef");
+                "'abcdef' does not match [0-1]+"));
+        LimitedString.init(new ValidationBehaviorThrowAfter()).length(5).matches("[0-1]+").build().of("abcdef");
     }
 
 }

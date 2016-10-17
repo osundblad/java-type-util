@@ -47,7 +47,7 @@ public class LimitedStringTest {
     @Test
     public void of_toShort_fails() {
         exception.expect(ValidationExceptionMatcher.of("shorter"));
-        LimitedString.init().length(3, 5).build().of("hi");
+        LimitedString.init().length(3, 7).build().of("hi");
     }
 
     @Test
