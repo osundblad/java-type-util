@@ -22,7 +22,12 @@ import java.util.Optional;
 @SuppressWarnings("WeakerAccess")
 @FunctionalInterface
 public interface Limit<T> {
-    
+
+    /**
+     * @param item the item to validate.
+     * @return Optional containing ValidationError if validation failed, empty
+     * if validation was successful.
+     */
     @NotNull
     Optional<ValidationError> validate(@NotNull T item);
 

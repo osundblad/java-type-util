@@ -37,7 +37,7 @@ public abstract class AbstractLimited<T> {
 
     @NotNull
     public T of(@NotNull final T t) {
-        final ValidationBehavior behavior = validationBehavior.instance();
+        final ValidationBehavior behavior = validationBehavior.getInstance();
         for (final Function<T, Optional<ValidationError>> limit : limits) {
             behavior.atValidation(limit.apply(t));
         }
@@ -53,10 +53,17 @@ public abstract class AbstractLimited<T> {
         @NotNull
         protected final ValidationBehavior validationBehavior;
 
+         /**
+         * Creates a Builder with the specified {@link ValidationBehavior}.
+         * @param validationBehavior the {@link ValidationBehavior} to use.
+         */
         public Builder(@NotNull final ValidationBehavior validationBehavior) {
             this.validationBehavior = validationBehavior;
         }
 
+        /**
+         * Creates a Builder with {@link ValidationBehaviorThrowImmediately} behavior.
+         */
         public Builder() {
             this(new ValidationBehaviorThrowImmediately());
         }

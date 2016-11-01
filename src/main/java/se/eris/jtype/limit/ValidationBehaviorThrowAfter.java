@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Collects all {@link ValidationError}s before throwing.
+ */
 public class ValidationBehaviorThrowAfter implements ValidationBehavior {
 
     @NotNull
@@ -28,15 +31,13 @@ public class ValidationBehaviorThrowAfter implements ValidationBehavior {
 
     @Override
     @NotNull
-    public ValidationBehavior instance() {
+    public ValidationBehaviorThrowAfter getInstance() {
         return new ValidationBehaviorThrowAfter();
     }
 
     @Override
     public void atValidation(@NotNull final Optional<ValidationError> error) {
-        if (error.isPresent()) {
-            validationErrors.add(error.get());
-        }
+        error.ifPresent(validationErrors::add);
     }
 
     @Override

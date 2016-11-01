@@ -23,6 +23,10 @@ public abstract class StringWrapper extends BasicWrapper<String> {
         super(s);
     }
 
+    public boolean isEmpty() {
+        return super.raw().isEmpty();
+    }
+
     @NotNull
     public String asString() {
         return super.raw();

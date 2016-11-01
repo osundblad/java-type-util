@@ -19,11 +19,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
+@SuppressWarnings({"TypeMayBeWeakened", "WeakerAccess"})
 public class IntegerRelativeZeroLimit implements Limit<Integer> {
 
     private enum ZeroRelation {
         /** For complete coverage. Kind of useless */
         ZERO,
+        NON_ZERO,
         POSITIVE,
         NEGATIVE,
         NON_POSITIVE,
@@ -40,6 +42,8 @@ public class IntegerRelativeZeroLimit implements Limit<Integer> {
     private static final IntegerRelativeZeroLimit NON_POSITIVE = new IntegerRelativeZeroLimit(ZeroRelation.NON_POSITIVE);
     @NotNull
     private static final IntegerRelativeZeroLimit ZERO = new IntegerRelativeZeroLimit(ZeroRelation.ZERO);
+    @NotNull
+    private static final IntegerRelativeZeroLimit NON_ZERO = new IntegerRelativeZeroLimit(ZeroRelation.NON_ZERO);
 
     @NotNull
     public static Limit<Integer> positive() {
@@ -67,12 +71,18 @@ public class IntegerRelativeZeroLimit implements Limit<Integer> {
     }
 
     @NotNull
+    public static Limit<Integer> nonZero() {
+        return NON_ZERO;
+    }
+
+    @NotNull
     private final ZeroRelation relation;
 
     private IntegerRelativeZeroLimit(@NotNull final ZeroRelation relation) {
         this.relation = relation;
     }
 
+    @SuppressWarnings("ControlFlowStatementWithoutBraces")
     @Override
     @NotNull
     public Optional<ValidationError> validate(@NotNull final Integer item) {
@@ -82,6 +92,7 @@ public class IntegerRelativeZeroLimit implements Limit<Integer> {
             case NON_POSITIVE: if (item > 0) return Optional.of(ValidationError.of(item + " is positive")); break;
             case NON_NEGATIVE: if (item < 0) return Optional.of(ValidationError.of(item + " is negative")); break;
             case ZERO: if (item != 0) return Optional.of(ValidationError.of(item + " is not zero")); break;
+            case NON_ZERO: if (item == 0) return Optional.of(ValidationError.of(item + " is zero")); break;
             default:
                 throw new IllegalStateException("Unknown zero relation '" + relation + "'");
         }

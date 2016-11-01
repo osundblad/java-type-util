@@ -22,12 +22,11 @@ import java.util.Optional;
 public interface ValidationBehavior {
 
     /**
-     * todo Needs a better name!
      * @see AbstractLimited#of(Object)
-     * @return creates a new instance called at validation.
+     * @return creates a new instance of this {@link ValidationBehavior}.
      */
     @NotNull
-    ValidationBehavior instance();
+    ValidationBehavior getInstance();
 
     void atValidation(@NotNull Optional<ValidationError> error);
 

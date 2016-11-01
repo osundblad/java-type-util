@@ -22,10 +22,12 @@ public abstract class BasicWrapper<T> {
     @NotNull
     private final T item;
 
+    @SuppressWarnings("WeakerAccess")
     protected BasicWrapper(@NotNull final T item) {
         this.item = item;
     }
 
+    @SuppressWarnings("WeakerAccess")
     @NotNull
     public T raw() {
         return item;

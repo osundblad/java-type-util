@@ -19,12 +19,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
+/**
+ * Throws at first {@link ValidationError}.
+ */
 public class ValidationBehaviorThrowImmediately implements ValidationBehavior {
+
+    private static final ValidationBehaviorThrowImmediately instance = new ValidationBehaviorThrowImmediately();
 
     @Override
     @NotNull
-    public ValidationBehavior instance() {
-        return new ValidationBehaviorThrowImmediately();
+    public ValidationBehaviorThrowImmediately getInstance() {
+        return instance;
     }
 
     @Override

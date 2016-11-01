@@ -62,4 +62,24 @@ public class IntegerRelativeZeroLimitTest {
         assertThat(IntegerRelativeZeroLimit.nonNegative().validate(-1).isPresent(), is(true));
     }
 
+    @Test
+    public void zero_ok() {
+        assertThat(IntegerRelativeZeroLimit.zero().validate(0).isPresent(), is(false));
+    }
+
+    @Test
+    public void zero_fail() {
+        assertThat(IntegerRelativeZeroLimit.zero().validate(2).isPresent(), is(true));
+    }
+
+    @Test
+    public void nonZero_ok() {
+        assertThat(IntegerRelativeZeroLimit.nonZero().validate(7).isPresent(), is(false));
+    }
+
+    @Test
+    public void nonZero_fail() {
+        assertThat(IntegerRelativeZeroLimit.nonZero().validate(0).isPresent(), is(true));
+    }
+
 }
