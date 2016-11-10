@@ -1,6 +1,18 @@
 # util
 
+
 ## Usage
+
+Add the following Maven dependency:
+
+        <dependency>
+            <groupId>se.eris</groupId>
+            <artifactId>jtype</artifactId>
+            <version>0.3</version>
+        </dependency>
+
+
+## Simple Wrappers
 
 The most simple usage is to just extend a Wrapper class. The wrapper classes implement 
 the hashCode, equals, and toString methods.
@@ -35,4 +47,10 @@ If no predefined limit matches your requirements you can create your own Limits 
     LimitedInteger even = LimitedInteger.init().limit(evenLimit).build();
     int a = even.of(2);   // a = 2;
     int b = even.of(17);  // throws ValidationException
-    
+ 
+## Complex Wrappers
+
+* DyadWrapper
+* PairWrapper
+* OneOfWrapper
+* ...
