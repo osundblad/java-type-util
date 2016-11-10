@@ -3,7 +3,7 @@
 
 ## Usage
 
-Add the following Maven dependency:
+Add the following Maven dependency
 
         <dependency>
             <groupId>se.eris</groupId>
