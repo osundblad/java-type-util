@@ -19,22 +19,19 @@ import org.jetbrains.annotations.Nullable;
 
 
 /**
- * Two things of which exactly one must be not null.
+ * Two things of which at least one must absent (null).
  *
  * @param <T> the first type
  * @param <U> the second type
  *
  * @see PairWrapper
  */
-public abstract class OneOfWrapper<T, U> extends OneOfBaseWrapper<T, U> {
+public abstract class MaxOneOfWrapper<T, U> extends OneOfBaseWrapper<T, U> {
 
-    protected OneOfWrapper(@Nullable final T first, @Nullable final U second) {
+    protected MaxOneOfWrapper(@Nullable final T first, @Nullable final U second) {
         super(second, first);
         if (this.first.isPresent() && this.second.isPresent()) {
             throw new RuntimeException("Both values cannot be present");
-        }
-        if (this.first.isAbsent() && this.second.isAbsent()) {
-            throw new RuntimeException("Both values cannot be absent");
         }
     }
 

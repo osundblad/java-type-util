@@ -24,14 +24,14 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class OneOfWrapperTest {
+public class MinOneOfWrapperTest {
 
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
     @Test
     public void new_firstAndNotSecond_shouldSucceed() {
-        new Subject("Test", null);
+        new Subject("test", null);
     }
 
     @Test
@@ -40,10 +40,8 @@ public class OneOfWrapperTest {
     }
 
     @Test
-    public void new_firstAndSecond_shouldFail() {
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("Both values cannot be present");
-        new Subject("Test", 7);
+    public void new_firstAndSecond_shouldSucceed() {
+        new Subject("test", 7);
     }
 
     @Test
@@ -57,6 +55,7 @@ public class OneOfWrapperTest {
     public void equals() {
         final Subject testNull = new Subject("test", null);
         final Subject testNullNew = new Subject("test", null);
+        final Subject testSeven = new Subject("test", 7);
         final Subject otherNull = new Subject("other", null);
         final Subject nullSeven = new Subject(null, 7);
         final Subject nullEight = new Subject(null, 8);
@@ -64,6 +63,8 @@ public class OneOfWrapperTest {
         assertThat(testNull, is(testNullNew));
         assertThat(testNull, not(otherNull));
         assertThat(nullSeven, not(nullEight));
+        assertThat(nullSeven, not(testSeven));
+        assertThat(testNull, not(testSeven));
     }
 
     @Test
@@ -71,7 +72,7 @@ public class OneOfWrapperTest {
         assertThat(new Subject("Test", null).toString(), is("Subject{Test, null}"));
     }
 
-    private static class Subject extends OneOfWrapper<String, Integer> {
+    private static class Subject extends MinOneOfWrapper<String, Integer> {
         Subject(@Nullable final String first, @Nullable final Integer second) {
             super(first, second);
         }
