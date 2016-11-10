@@ -26,6 +26,10 @@ public final class Optional<T> implements Serializable {
         return new Optional<T>(value);
     }
 
+    public static <T> Optional<T> ofOptional(final java.util.Optional<T> value) {
+        return ofNullable(value.orElse(null));
+    }
+
     @Nullable
     private final T value;
 
