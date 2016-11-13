@@ -4,10 +4,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -34,7 +31,7 @@ public final class SOptional<T> implements Serializable {
         return new SOptional<T>(value);
     }
 
-    public static <T> SOptional<T> fromOptional(final java.util.Optional<T> value) {
+    public static <T> SOptional<T> fromOptional(final Optional<T> value) {
         return ofNullable(value.orElse(null));
     }
 
@@ -94,18 +91,18 @@ public final class SOptional<T> implements Serializable {
         return value != null;
     }
 
-    public <U> java.util.Optional<U> flatMap(final Function<? super T,java.util.Optional<U>> mapper) {
+    public <U> Optional<U> flatMap(final Function<? super T,Optional<U>> mapper) {
         if (value == null) {
-            return java.util.Optional.empty();
+            return Optional.empty();
         }
         return mapper.apply(value);
     }
 
-    public java.util.Optional<T> filter(final Predicate<? super T> predicate) {
+    public Optional<T> filter(final Predicate<? super T> predicate) {
         if (value == null) {
-            return java.util.Optional.empty();
+            return Optional.empty();
         }
-        return predicate.test(value) ? java.util.Optional.of(value) : java.util.Optional.empty();
+        return predicate.test(value) ? Optional.of(value) : Optional.empty();
     }
 
     public void ifPresent(final Consumer<? super T> consumer) {
@@ -114,11 +111,11 @@ public final class SOptional<T> implements Serializable {
         }
     }
 
-    public <U> java.util.Optional<U> map(final Function<? super T,? extends U> mapper) {
+    public <U> Optional<U> map(final Function<? super T,? extends U> mapper) {
         if (value == null) {
-            return java.util.Optional.empty();
+            return Optional.empty();
         }
-        return java.util.Optional.ofNullable(mapper.apply(value));
+        return Optional.ofNullable(mapper.apply(value));
     }
 
 
@@ -137,8 +134,8 @@ public final class SOptional<T> implements Serializable {
         return (value != null) ? value.hashCode() : 0;
     }
 
-    public java.util.Optional<T> asOptional() {
-        return java.util.Optional.ofNullable(value);
+    public Optional<T> asOptional() {
+        return Optional.ofNullable(value);
     }
 
     public Set<T> asSet() {
