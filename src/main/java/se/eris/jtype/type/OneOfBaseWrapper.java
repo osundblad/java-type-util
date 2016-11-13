@@ -22,12 +22,12 @@ import java.io.Serializable;
 
 public class OneOfBaseWrapper<T, U> implements Serializable {
 
-    protected final Optional<T> first;
-    protected final Optional<U> second;
+    protected final SOptional<T> first;
+    protected final SOptional<U> second;
 
     public OneOfBaseWrapper(@Nullable final U second, @Nullable final T first) {
-        this.second = Optional.ofNullable(second);
-        this.first = Optional.ofNullable(first);
+        this.second = SOptional.ofNullable(second);
+        this.first = SOptional.ofNullable(first);
     }
 
     @Nullable

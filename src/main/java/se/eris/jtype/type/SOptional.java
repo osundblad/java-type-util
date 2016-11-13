@@ -1,5 +1,6 @@
 package se.eris.jtype.type;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
@@ -12,28 +13,35 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public final class Optional<T> implements Serializable {
+/**
+ * Serializable version of {@link java.util.Optional} with some of Guava's Optional methods.
+ *
+ * Useful until Java designers realize the stupidity and makes Optional {@link Serializable}.
+ *
+ * @param <T>
+ */
+public final class SOptional<T> implements Serializable {
 
-    public static <T> Optional<T> empty(final T value) {
-        return new Optional<T>(null);
+    public static <T> SOptional<T> empty(final T value) {
+        return new SOptional<T>(null);
     }
 
-    public static <T> Optional<T> of(final T value) {
-        return new Optional<T>(value);
+    public static <T> SOptional<T> of(final T value) {
+        return new SOptional<T>(value);
     }
 
-    public static <T> Optional<T> ofNullable(@Nullable final T value) {
-        return new Optional<T>(value);
+    public static <T> SOptional<T> ofNullable(@Nullable final T value) {
+        return new SOptional<T>(value);
     }
 
-    public static <T> Optional<T> ofOptional(final java.util.Optional<T> value) {
+    public static <T> SOptional<T> fromOptional(final java.util.Optional<T> value) {
         return ofNullable(value.orElse(null));
     }
 
     @Nullable
     private final T value;
 
-    private Optional(@Nullable final T value) {
+    private SOptional(@Nullable final T value) {
         this.value = value;
     }
 
@@ -76,10 +84,12 @@ public final class Optional<T> implements Serializable {
     }
 
 
+    @Contract(pure = true)
     public boolean isAbsent() {
         return value == null;
     }
 
+    @Contract(pure = true)
     public boolean isPresent() {
         return value != null;
     }
@@ -118,7 +128,7 @@ public final class Optional<T> implements Serializable {
         if (this == o) return true;
         if ((o == null) || (getClass() != o.getClass())) return false;
 
-        final Optional<?> that = (Optional<?>) o;
+        final SOptional<?> that = (SOptional<?>) o;
         return Objects.equals(value, that.value);
     }
 
@@ -137,9 +147,7 @@ public final class Optional<T> implements Serializable {
 
     @Override
     public String toString() {
-        return "Optional{" +
-                "value=" + value +
-                '}';
+        return "SOptional{value=" + value + '}';
     }
 
 }
