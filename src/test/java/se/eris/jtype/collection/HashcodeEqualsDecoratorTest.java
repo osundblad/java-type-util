@@ -26,21 +26,23 @@ import static org.junit.Assert.assertThat;
 
 public class HashcodeEqualsDecoratorTest {
 
+    private static final Subject s1_1 = new Subject(1, "1");
+    private static final Subject s1_2 = new Subject(1, "2");
+    private static final Subject s2_2 = new Subject(2, "2");
+
     @Test
     public void equals() {
-        final Subject s12 = new Subject(1, "2");
-        final Subject s13 = new Subject(1, "3");
-        assertThat(s12, not(s13));
-        final HashcodeEqualsDecorator<Subject> of12 = HashcodeEqualsDecorator.of(s12, Subject.he);
-        final HashcodeEqualsDecorator<Subject> of13 = HashcodeEqualsDecorator.of(s13, Subject.he);
-        assertThat(of12, is(of13));
+        assertThat(s1_1, not(s1_2));
+        final HashcodeEqualsDecorator<Subject> of1_1 = HashcodeEqualsDecorator.of(s1_1, Subject.he);
+        final HashcodeEqualsDecorator<Subject> of1_2 = HashcodeEqualsDecorator.of(s1_2, Subject.he);
+        assertThat(of1_1, is(of1_2));
     }
 
     @Test
     public void hashcode_shouldFollowSetDefinition() {
-        assertThat(HashcodeEqualsDecorator.of(new Subject(1, "2"), Subject.he).hashCode(), is(1));
-        assertThat(HashcodeEqualsDecorator.of(new Subject(1, "other"), Subject.he).hashCode(), is(1));
-        assertThat(HashcodeEqualsDecorator.of(null, Subject.he).hashCode(), is(0));
+        assertThat(HashcodeEqualsDecorator.of(s1_1, Subject.he).hashCode(), is(1));
+        assertThat(HashcodeEqualsDecorator.of(s1_2, Subject.he).hashCode(), is(1));
+        assertThat(HashcodeEqualsDecorator.of(s2_2, Subject.he).hashCode(), is(2));
     }
 
     private static class Subject {

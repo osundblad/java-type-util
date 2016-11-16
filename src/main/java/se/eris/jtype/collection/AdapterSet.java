@@ -15,23 +15,23 @@
  */
 package se.eris.jtype.collection;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.Spliterator;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
- * An immutable set using the supplied hashcode and equals functions.
+ * An immutable set using the supplied hashcode and equals functions. Note that null values are
+ * not allowed in this set.
  * @param <T>
  */
 public class AdapterSet<T> implements Set<T>, Serializable {
 
-    public static <T> AdapterSet<T> from(final Collection<T> collection, final HashcodeEquals<T> he) {
+    public static <T> AdapterSet<T> from(final HashcodeEquals<T> he, final Collection<T> collection) {
         return new AdapterSet<T>(collection, he);
+    }
+    public static <T> AdapterSet<T> from(final HashcodeEquals<T> he, final T... items) {
+        return new AdapterSet<T>(Arrays.asList(items), he);
     }
     private final Set<HashcodeEqualsDecorator<T>> set;
 
@@ -61,7 +61,6 @@ public class AdapterSet<T> implements Set<T>, Serializable {
         }
     }
 
-    @NotNull
     @Override
     public Iterator<T> iterator() {
         return set.stream().map(HashcodeEqualsDecorator::getSubject).iterator();
@@ -69,37 +68,37 @@ public class AdapterSet<T> implements Set<T>, Serializable {
 
     @Override
     public boolean add(final Object o) {
-        unsupportedOperation();
+        unsupportedOperationImmutable();
         return false;
     }
 
     @Override
     public boolean remove(final Object o) {
-        unsupportedOperation();
+        unsupportedOperationImmutable();
         return false;
     }
 
     @Override
     public boolean addAll(final Collection c) {
-        unsupportedOperation();
+        unsupportedOperationImmutable();
         return false;
     }
 
     @Override
     public void clear() {
-        unsupportedOperation();
+        unsupportedOperationImmutable();
         return;
     }
 
     @Override
     public boolean removeAll(final Collection c) {
-        unsupportedOperation();
+        unsupportedOperationImmutable();
         return false;
     }
 
     @Override
     public boolean retainAll(final Collection c) {
-        unsupportedOperation();
+        unsupportedOperationImmutable();
         return false;
     }
 
@@ -116,30 +115,31 @@ public class AdapterSet<T> implements Set<T>, Serializable {
         return true;
     }
 
-    @NotNull
     @Override
     public Object[] toArray() {
-        throw new UnsupportedOperationException("not implemented yet");
+        return set.stream().map(HashcodeEqualsDecorator::getSubject).toArray();
     }
 
-    @NotNull
     @Override
     public Object[] toArray(final Object[] a) {
-        throw new UnsupportedOperationException("not implemented yet");
+        return set.stream().map(HashcodeEqualsDecorator::getSubject).collect(Collectors.toList()).toArray(a);
     }
 
     @Override
     public Spliterator spliterator() {
-        throw new UnsupportedOperationException("not implemented yet");
+        return set.stream().map(HashcodeEqualsDecorator::getSubject).spliterator();
     }
 
-    private void unsupportedOperation() {
+    private void unsupportedOperationImmutable() {
         throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is immutable");
     }
 
-    @NotNull
     public Set<T> asSet() {
         return set.stream().map(HashcodeEqualsDecorator::getSubject).collect(Collectors.toSet());
+    }
+
+    public Stream<T> asStream() {
+        return set.stream().map(HashcodeEqualsDecorator::getSubject);
     }
 
     @SuppressWarnings("ControlFlowStatementWithoutBraces")
@@ -169,4 +169,5 @@ public class AdapterSet<T> implements Set<T>, Serializable {
                 ", he=" + he +
                 '}';
     }
+
 }

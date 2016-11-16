@@ -41,9 +41,6 @@ class HashcodeEqualsDecorator<T> {
 
     @Override
     public int hashCode() {
-        if (subject == null) {
-            return 0;
-        }
         return functions.hashcodeFunction().applyAsInt(subject);
     }
 
