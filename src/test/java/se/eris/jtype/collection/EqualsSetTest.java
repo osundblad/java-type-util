@@ -28,7 +28,7 @@ import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 
-public class AdapterSetTest {
+public class EqualsSetTest {
 
     @Rule
     public final ExpectedException exception = ExpectedException.none();
@@ -42,32 +42,32 @@ public class AdapterSetTest {
         final Set<Subject> hashSet = new HashSet<>(Arrays.asList(s1_1, s1_2, s2_2));
         assertThat(hashSet.size(), is(3));
 
-        final AdapterSet<Subject> adapterSet = AdapterSet.from(Subject.he, hashSet);
-        assertThat(adapterSet.size(), is(2));
+        final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, hashSet);
+        assertThat(equalsSet.size(), is(2));
     }
 
     @Test
     public void contains_() {
-        final AdapterSet<Subject> adapterSet = AdapterSet.from(Subject.he, Collections.singletonList(s1_1));
+        final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Collections.singletonList(s1_1));
 
-        assertThat(adapterSet.contains(s1_1), is(true));
-        assertThat(adapterSet.contains(s1_2), is(true));
-        assertThat(adapterSet.contains(s2_2), is(false));
+        assertThat(equalsSet.contains(s1_1), is(true));
+        assertThat(equalsSet.contains(s1_2), is(true));
+        assertThat(equalsSet.contains(s2_2), is(false));
     }
 
     @Test
     public void contains_other() {
-        final AdapterSet<Subject> adapterSet = AdapterSet.from(Subject.he, Collections.singletonList(s1_1));
+        final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Collections.singletonList(s1_1));
 
-        assertThat(adapterSet.contains("a string"), is(false));
+        assertThat(equalsSet.contains("a string"), is(false));
 
     }
 
     @Test
     public void iterator() {
-        final AdapterSet<Subject> adapterSet = AdapterSet.from(Subject.he, Arrays.asList(s1_1, s1_2, s2_2));
+        final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Arrays.asList(s1_1, s1_2, s2_2));
 
-        final Iterator<Subject> iterator = adapterSet.iterator();
+        final Iterator<Subject> iterator = equalsSet.iterator();
         assertThat(iterator.hasNext(), is(true));
         iterator.next();
         assertThat(iterator.hasNext(), is(true));
@@ -75,7 +75,7 @@ public class AdapterSetTest {
         assertThat(iterator.hasNext(), is(false));
 
         int c = 0;
-        for (final Subject subject : adapterSet) {
+        for (final Subject subject : equalsSet) {
             c++;
         }
         assertThat(c, is(2));
@@ -83,95 +83,95 @@ public class AdapterSetTest {
 
     @Test
     public void add() {
-        final AdapterSet<Subject> adapterSet = AdapterSet.from(Subject.he, Collections.emptySet());
+        final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Collections.emptySet());
 
         exception.expect(UnsupportedOperationException.class);
-        adapterSet.add(s1_1);
+        equalsSet.add(s1_1);
     }
 
     @Test
     public void remove() {
-        final AdapterSet<Subject> adapterSet = AdapterSet.from(Subject.he, Collections.emptySet());
+        final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Collections.emptySet());
 
         exception.expect(UnsupportedOperationException.class);
-        adapterSet.remove(s1_1);
+        equalsSet.remove(s1_1);
     }
 
     @Test
     public void addAll() {
-        final AdapterSet<Subject> adapterSet = AdapterSet.from(Subject.he, Collections.emptySet());
+        final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Collections.emptySet());
 
         exception.expect(UnsupportedOperationException.class);
-        adapterSet.addAll(Collections.emptyList());
+        equalsSet.addAll(Collections.emptyList());
     }
 
     @Test
     public void clear() {
-        final AdapterSet<Subject> adapterSet = AdapterSet.from(Subject.he, Collections.emptySet());
+        final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Collections.emptySet());
 
         exception.expect(UnsupportedOperationException.class);
-        adapterSet.clear();
+        equalsSet.clear();
 
     }
 
     @Test
     public void removeAll() {
-        final AdapterSet<Subject> adapterSet = AdapterSet.from(Subject.he, Collections.emptySet());
+        final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Collections.emptySet());
 
         exception.expect(UnsupportedOperationException.class);
-        adapterSet.removeAll(Collections.emptyList());
+        equalsSet.removeAll(Collections.emptyList());
     }
 
     @Test
     public void retainAll() {
-        final AdapterSet<Subject> adapterSet = AdapterSet.from(Subject.he, Collections.emptySet());
+        final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Collections.emptySet());
 
         exception.expect(UnsupportedOperationException.class);
-        adapterSet.retainAll(Collections.emptyList());
+        equalsSet.retainAll(Collections.emptyList());
     }
 
     @SuppressWarnings("CollectionAddedToSelf")
     @Test
     public void containsAll_empty() {
-        final AdapterSet<Subject> adapterSet = AdapterSet.from(Subject.he, Collections.emptySet());
+        final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Collections.emptySet());
 
-        assertThat(adapterSet.containsAll(adapterSet), is(true));
-        assertThat(adapterSet.containsAll(Collections.emptySet()), is(true));
+        assertThat(equalsSet.containsAll(equalsSet), is(true));
+        assertThat(equalsSet.containsAll(Collections.emptySet()), is(true));
     }
 
     @Test
     public void containsAll_nonEmpty() {
-        final AdapterSet<Subject> adapterSet = AdapterSet.from(Subject.he, Collections.singleton(s1_1));
+        final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Collections.singleton(s1_1));
 
-        assertThat(adapterSet.containsAll(Arrays.asList(s1_1, s1_2)), is(true));
-        assertThat(adapterSet.containsAll(Arrays.asList(s1_1, s2_2)), is(false));
+        assertThat(equalsSet.containsAll(Arrays.asList(s1_1, s1_2)), is(true));
+        assertThat(equalsSet.containsAll(Arrays.asList(s1_1, s2_2)), is(false));
     }
 
     @Test
     public void toArray_withoutSuppliedArray() {
-        final AdapterSet<Subject> adapterSet = AdapterSet.from(Subject.he, s1_1, s2_2);
+        final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, s1_1, s2_2);
 
-        final Object[] array = adapterSet.toArray();
+        final Object[] array = equalsSet.toArray();
         assertThat(array, arrayContainingInAnyOrder(s1_1, s2_2));
         assertThat(array.length, is(2));
     }
 
     @Test
     public void toArray_suppliedArraySameLength() {
-        final AdapterSet<Subject> adapterSet = AdapterSet.from(Subject.he, s1_1, s2_2);
+        final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, s1_1, s2_2);
 
         final Subject[] array2 = new Subject[2];
-        final Object[] return2 = adapterSet.toArray(array2);
+        final Object[] return2 = equalsSet.toArray(array2);
         assertThat(return2, arrayContainingInAnyOrder(s1_1, s2_2));
         assertThat(return2, sameInstance(array2));
     }
 
     @Test
     public void toArray_suppliedArrayLonger() {
-        final AdapterSet<Subject> adapterSet = AdapterSet.from(Subject.he, s1_1, s2_2);
+        final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, s1_1, s2_2);
 
         final Subject[] array3 = new Subject[3];
-        final Object[] return3 = adapterSet.toArray(array3);
+        final Object[] return3 = equalsSet.toArray(array3);
         assertThat(return3, arrayContainingInAnyOrder(s1_1, s2_2, null));
         assertThat(return3, sameInstance(array3));
     }
@@ -182,7 +182,7 @@ public class AdapterSetTest {
 
     @Test
     public void setEquals() {
-        final Set<Subject> adapterSet = AdapterSet.from(Subject.he, s1_1, s2_2);
+        final Set<Subject> adapterSet = EqualsSet.from(Subject.he, s1_1, s2_2);
         final Set<Subject> hashSet = new HashSet<>(Arrays.asList(s1_1, s2_2));
 
         assertThat(adapterSet, is(hashSet));

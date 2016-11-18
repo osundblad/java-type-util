@@ -15,29 +15,33 @@
  */
 package se.eris.jtype.collection;
 
+import se.eris.jtype.Experimental;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
+ * BETA
  * An immutable set using the supplied hashcode and equals functions. Note that null values are
  * not allowed in this set.
  * @param <T>
  */
-public class AdapterSet<T> implements Set<T>, Serializable {
+@Experimental
+public class EqualsSet<T> implements Set<T>, Serializable {
 
-    public static <T> AdapterSet<T> from(final HashcodeEquals<T> he, final Collection<T> collection) {
-        return new AdapterSet<T>(collection, he);
+    public static <T> EqualsSet<T> from(final HashcodeEquals<T> he, final Collection<T> collection) {
+        return new EqualsSet<T>(collection, he);
     }
-    public static <T> AdapterSet<T> from(final HashcodeEquals<T> he, final T... items) {
-        return new AdapterSet<T>(Arrays.asList(items), he);
+    public static <T> EqualsSet<T> from(final HashcodeEquals<T> he, final T... items) {
+        return new EqualsSet<T>(Arrays.asList(items), he);
     }
     private final Set<HashcodeEqualsDecorator<T>> set;
 
     private final HashcodeEquals<T> he;
 
-    private AdapterSet(final Collection<T> collection, final HashcodeEquals<T> he) {
+    private EqualsSet(final Collection<T> collection, final HashcodeEquals<T> he) {
         this.set = collection.stream().map(o -> HashcodeEqualsDecorator.of(o, he)).collect(Collectors.toSet());
         this.he = he;
     }
@@ -164,7 +168,7 @@ public class AdapterSet<T> implements Set<T>, Serializable {
 
     @Override
     public String toString() {
-        return "AdapterSet{" +
+        return "EqualsSet{" +
                 "set=" + set +
                 ", he=" + he +
                 '}';

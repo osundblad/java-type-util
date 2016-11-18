@@ -15,12 +15,15 @@
  */
 package se.eris.jtype.collection;
 
+import se.eris.jtype.Experimental;
 import se.eris.jtype.type.DyadWrapper;
 
+import java.io.Serializable;
 import java.util.function.BiPredicate;
 import java.util.function.ToIntFunction;
 
-public class HashcodeEquals<T> extends DyadWrapper<ToIntFunction<T>, BiPredicate<T, T>> {
+@Experimental
+public class HashcodeEquals<T> extends DyadWrapper<ToIntFunction<T>, BiPredicate<T, T>> implements Serializable {
 
     public static <T> HashcodeEquals<T> of(final ToIntFunction<T> hashcode, final BiPredicate<T, T> equals) {
         return new HashcodeEquals<T>(hashcode, equals);

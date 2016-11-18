@@ -15,7 +15,12 @@
  */
 package se.eris.jtype.collection;
 
-class HashcodeEqualsDecorator<T> {
+import se.eris.jtype.Experimental;
+
+import java.io.Serializable;
+
+@Experimental
+class HashcodeEqualsDecorator<T> implements Serializable {
 
     public static <T> HashcodeEqualsDecorator<T> of(final T subject, final HashcodeEquals<T> functions) {
         return new HashcodeEqualsDecorator<>(subject, functions);
