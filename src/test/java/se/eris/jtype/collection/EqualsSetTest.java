@@ -59,6 +59,7 @@ public class EqualsSetTest {
     public void contains_other() {
         final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Collections.singletonList(s1_1));
 
+        //noinspection SuspiciousMethodCalls
         assertThat(equalsSet.contains("a string"), is(false));
 
     }
@@ -174,6 +175,13 @@ public class EqualsSetTest {
         final Object[] return3 = equalsSet.toArray(array3);
         assertThat(return3, arrayContainingInAnyOrder(s1_1, s2_2, null));
         assertThat(return3, sameInstance(array3));
+    }
+
+    @Test
+    public void stream() {
+        final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, s1_1, s2_2);
+
+        assertThat(equalsSet.stream().filter(s -> s.id == 2).count(), is(1L));
     }
 
     @Test

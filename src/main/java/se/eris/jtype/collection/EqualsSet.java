@@ -20,10 +20,8 @@ import se.eris.jtype.Experimental;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
- * BETA
  * An immutable set using the supplied hashcode and equals functions. Note that null values are
  * not allowed in this set.
  * @param <T>
@@ -32,16 +30,16 @@ import java.util.stream.Stream;
 public class EqualsSet<T> implements Set<T>, Serializable {
 
     public static <T> EqualsSet<T> from(final HashcodeEquals<T> he, final Collection<T> collection) {
-        return new EqualsSet<T>(collection, he);
+        return new EqualsSet<T>(he, collection);
     }
     public static <T> EqualsSet<T> from(final HashcodeEquals<T> he, final T... items) {
-        return new EqualsSet<T>(Arrays.asList(items), he);
+        return new EqualsSet<T>(he, Arrays.asList(items));
     }
     private final Set<HashcodeEqualsDecorator<T>> set;
 
     private final HashcodeEquals<T> he;
 
-    private EqualsSet(final Collection<T> collection, final HashcodeEquals<T> he) {
+    private EqualsSet(final HashcodeEquals<T> he, final Collection<T> collection) {
         this.set = collection.stream().map(o -> HashcodeEqualsDecorator.of(o, he)).collect(Collectors.toSet());
         this.he = he;
     }
@@ -106,8 +104,51 @@ public class EqualsSet<T> implements Set<T>, Serializable {
         return false;
     }
 
+    /**
+     * @see #removeAll(Collection)
+      */
+    public EqualsSet<T> except(final Collection<T> remove) {
+        final Collection<T> newSet = new HashSet<>(this);
+        newSet.removeAll(remove);
+        return EqualsSet.from(he, newSet);
+    }
+
+    /**
+     * @see #removeAll(Collection)
+      */
+    @SafeVarargs
+    public final EqualsSet<T> except(final T... remove) {
+        return except(Arrays.asList(remove));
+    }
+
+    /**
+     * @see #retainAll(Collection)
+     */
+    public EqualsSet<T> keep(final Collection<T> keep) {
+        final Collection<T> newSet = new HashSet<>(this);
+        newSet.retainAll(keep);
+        return EqualsSet.from(he, newSet);
+    }
+
+    /**
+     * @see #removeAll(Collection)
+     */
+    @SafeVarargs
+    public final EqualsSet<T> keep(final T... keep) {
+        return keep(Arrays.asList(keep));
+    }
+
+    public EqualsSet<T> union(final Collection<T> add) {
+        final Collection<T> newSet = new HashSet<>(2 * (this.size() + add.size()));
+        newSet.addAll(this);
+        newSet.addAll(add);
+        return EqualsSet.from(he, newSet);
+    }
+
+
     @Override
     public boolean containsAll(final Collection c) {
+        //noinspection ObjectEquality
         if (this == c) {
             return true;
         }
@@ -138,12 +179,11 @@ public class EqualsSet<T> implements Set<T>, Serializable {
         throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is immutable");
     }
 
+    /**
+     * @return returns the Set as a Set without the overridden equals and hashcode.
+     */
     public Set<T> asSet() {
         return set.stream().map(HashcodeEqualsDecorator::getSubject).collect(Collectors.toSet());
-    }
-
-    public Stream<T> asStream() {
-        return set.stream().map(HashcodeEqualsDecorator::getSubject);
     }
 
     @SuppressWarnings("ControlFlowStatementWithoutBraces")

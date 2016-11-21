@@ -25,7 +25,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * BETA
  * An immutable map using the supplied hashcode and equals functions. Note that null keys are
  * not allowed in this map.
  * @param <K>
