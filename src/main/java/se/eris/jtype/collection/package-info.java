@@ -13,6 +13,12 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
+/**
+ * All classes in this package are experimental. So don't use them for production
+ * at your own risk, they may be changed/removed at any time. Feedback that these
+ * are really useful from several sources will most likely make me remove the
+ * experimental status. So give thumbs up or down!
+ */
 @Experimental
 package se.eris.jtype.collection;
 

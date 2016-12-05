@@ -24,7 +24,11 @@ import java.util.stream.Collectors;
 /**
  * An immutable set using the supplied hashcode and equals functions. Note that null values are
  * not allowed in this set.
- * @param <T>
+ *
+ * @param <T> the type of the Set.
+ *
+ * idea(s):
+ *  - since equals/hashcode are overridden a get method seems useful
  */
 @Experimental
 public class EqualsSet<T> implements Set<T>, Serializable {
@@ -32,6 +36,7 @@ public class EqualsSet<T> implements Set<T>, Serializable {
     public static <T> EqualsSet<T> from(final HashcodeEquals<T> he, final Collection<T> collection) {
         return new EqualsSet<T>(he, collection);
     }
+
     public static <T> EqualsSet<T> from(final HashcodeEquals<T> he, final T... items) {
         return new EqualsSet<T>(he, Arrays.asList(items));
     }
@@ -105,37 +110,50 @@ public class EqualsSet<T> implements Set<T>, Serializable {
     }
 
     /**
+     * <p>The relative complement.</p>
+     *
+     * <p>Examples:
+     * <pre>
+     *     {1, 2} \ {1, 2} = ∅
+     *     {1, 2, 3, 4} \ {1, 3} = {2, 4}</pre>
+     * </p>
      * @see #removeAll(Collection)
       */
-    public EqualsSet<T> except(final Collection<T> remove) {
+    public EqualsSet<T> complement(final Collection<T> remove) {
         final Collection<T> newSet = new HashSet<>(this);
         newSet.removeAll(remove);
         return EqualsSet.from(he, newSet);
     }
 
     /**
-     * @see #removeAll(Collection)
+     * @see #complement(Collection)
       */
     @SafeVarargs
-    public final EqualsSet<T> except(final T... remove) {
-        return except(Arrays.asList(remove));
+    public final EqualsSet<T> complement(final T... remove) {
+        return complement(Arrays.asList(remove));
     }
 
     /**
+     * <p>Examples:
+     * <pre>
+     *     {1, 2} ∩ {1, 2} = {1, 2}
+     *     {1, 2} ∩ {2, 3} = {2}
+     * </pre>
+     * </p>
      * @see #retainAll(Collection)
      */
-    public EqualsSet<T> keep(final Collection<T> keep) {
+    public EqualsSet<T> intersection(final Collection<T> keep) {
         final Collection<T> newSet = new HashSet<>(this);
         newSet.retainAll(keep);
         return EqualsSet.from(he, newSet);
     }
 
     /**
-     * @see #removeAll(Collection)
+     * @see #intersection(Collection)
      */
     @SafeVarargs
-    public final EqualsSet<T> keep(final T... keep) {
-        return keep(Arrays.asList(keep));
+    public final EqualsSet<T> intersection(final T... keep) {
+        return intersection(Arrays.asList(keep));
     }
 
     public EqualsSet<T> union(final Collection<T> add) {
