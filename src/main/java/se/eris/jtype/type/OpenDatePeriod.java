@@ -100,4 +100,5 @@ public class OpenDatePeriod extends PairWrapper<SOptional<LocalDate>> {
         final String to = hasEnd() ? getEndDate().toString() : "";
         return "OpenDatePeriod{" + from + " - " + to + "}";
     }
+
 }

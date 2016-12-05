@@ -75,16 +75,17 @@ public class MaxOneOfWrapperTest {
         assertThat(new Subject("Test", null).toString(), is("Subject{Test, null}"));
     }
 
-    private static class Subject extends MaxOneOfWrapper<String, Integer> {
-        Subject(@Nullable final String first, @Nullable final Integer second) {
-            super(first, second);
-        }
-    }
-
     @Test
     public void serializable_shouldBeSerializable() throws IOException, ClassNotFoundException {
         final Subject otherNull = new Subject("other", null);
         assertThat(SerializeUtil.roundtrip(otherNull, Subject.class), is(otherNull));
+    }
+
+    private static class Subject extends MaxOneOfWrapper<String, Integer> {
+        Subject(@Nullable final String first, @Nullable final Integer second) {
+            super(first, second);
+        }
+
     }
 
 }
