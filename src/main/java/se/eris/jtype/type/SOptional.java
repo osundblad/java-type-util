@@ -19,19 +19,22 @@ import java.util.function.Supplier;
  */
 public final class SOptional<T> implements Serializable {
 
+    private static final SOptional<?> EMPTY = new SOptional<>(null);
+
     public static <T> SOptional<T> empty(final T value) {
-        return new SOptional<T>(null);
+        //noinspection unchecked,CastToConcreteClass
+        return (SOptional<T>) EMPTY;
     }
 
     public static <T> SOptional<T> of(final T value) {
-        return new SOptional<T>(value);
+        return new SOptional<>(value);
     }
 
     public static <T> SOptional<T> ofNullable(@Nullable final T value) {
-        return new SOptional<T>(value);
+        return new SOptional<>(value);
     }
 
-    public static <T> SOptional<T> fromOptional(final Optional<T> value) {
+    public static <T> SOptional<T> from(final Optional<T> value) {
         return ofNullable(value.orElse(null));
     }
 
