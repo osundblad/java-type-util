@@ -1,5 +1,5 @@
 /*
- *    Copyright 2016 Olle Sundblad
+ *    Copyright 2016 Olle Sundblad - olle@eris.se
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,40 +18,28 @@ package se.eris.jtype.type;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
-import java.util.UUID;
-
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class UUIDWrapperTest {
+public class DyadWrapperTest {
 
     @Test
-    public void asUUID() {
-        final UUID uuid = UUID.randomUUID();
-        final WrapperImpl wrapper = new WrapperImpl(uuid.toString());
-
-        assertThat(wrapper.asUUID(), is(uuid));
+    public void equals() {
+        final Subject testSeven = new Subject("test", 7);
+        final Subject testSevenNew = new Subject("test", 7);
+        final Subject otherSeven = new Subject("other", 7);
+        final Subject testEight = new Subject("test", 8);
+        assertThat(testSeven, is(testSeven));
+        assertThat(testSeven, is(testSevenNew));
+        assertThat(testSeven, not(testEight));
+        assertThat(testSeven, not(otherSeven));
     }
 
-    @Test
-    public void asString() {
-        final UUID uuid = UUID.randomUUID();
-        final WrapperImpl wrapper = new WrapperImpl(uuid);
-
-        assertThat(wrapper.asString(), is(uuid.toString()));
-    }
-
-    private static final class WrapperImpl extends UUIDWrapper {
-
-        private WrapperImpl(@NotNull final String uuid) {
-            super(uuid);
+    private static class Subject extends DyadWrapper<String, Integer> {
+        Subject(@NotNull final String first, @NotNull final Integer second) {
+            super(first, second);
         }
-
-        private WrapperImpl(@NotNull final UUID uuid) {
-            super(uuid);
-        }
-
     }
-
 
 }

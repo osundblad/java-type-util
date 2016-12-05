@@ -17,12 +17,13 @@ package se.eris.jtype.limit;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public abstract class AbstractLimited<T> {
+public abstract class AbstractLimited<T> implements Serializable {
 
     @NotNull
     private final ValidationBehavior validationBehavior;
