@@ -17,7 +17,9 @@ package se.eris.jtype.type;
 
 import org.jetbrains.annotations.NotNull;
 
-public abstract class BasicWrapper<T> {
+import java.io.Serializable;
+
+public abstract class BasicWrapper<T> implements Serializable {
 
     @NotNull
     private final T item;

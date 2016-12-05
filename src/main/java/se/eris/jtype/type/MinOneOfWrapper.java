@@ -17,7 +17,6 @@ package se.eris.jtype.type;
 
 import org.jetbrains.annotations.Nullable;
 
-
 /**
  * Two things of which at least one must be present (not null).
  *

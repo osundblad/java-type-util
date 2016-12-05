@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 
-public class OneOfBaseWrapper<T, U> implements Serializable {
+public abstract class OneOfBaseWrapper<T, U> implements Serializable {
 
     protected final SOptional<T> first;
     protected final SOptional<U> second;

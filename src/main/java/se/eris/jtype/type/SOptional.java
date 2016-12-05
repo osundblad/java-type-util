@@ -42,7 +42,7 @@ public final class SOptional<T> implements Serializable {
         this.value = value;
     }
 
-    public T getValue() {
+    public T get() {
         if (value == null) {
             throw new NoSuchElementException();
         }

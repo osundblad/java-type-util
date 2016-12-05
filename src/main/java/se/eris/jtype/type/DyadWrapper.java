@@ -17,6 +17,8 @@ package se.eris.jtype.type;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
+
 /**
  * Two things that are meant to be used together.
  *
@@ -25,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @see PairWrapper
  */
-public abstract class DyadWrapper<T, U> {
+public abstract class DyadWrapper<T, U> implements Serializable {
 
     @NotNull
     private final T first;
