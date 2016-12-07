@@ -1,5 +1,7 @@
 **PITest**
 
+`mvn clean install -Dse.eris.notnull.instrument=false`
+
 `mvn -DwithHistory org.pitest:pitest-maven:mutationCoverage`
 
 **Release to oss.sonatype.org**

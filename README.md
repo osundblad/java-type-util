@@ -68,5 +68,6 @@ If no predefined limit matches your requirements you can create your own Limits 
 
 ### SOptional
 
-A Serializable Optional until the Java community realizes its mistake and makes Optional serializable. It also takes some methods from the Guava Optional.
+A Serializable Optional until the Java community realizes the mistake and makes Optional serializable. It also takes 
+some useful methods from the Guava Optional.
 
