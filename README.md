@@ -2,6 +2,7 @@
 
 ## Table of Content
 
+* Usage
 * Wrappers
  * Simple
  * Complex
