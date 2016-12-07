@@ -1,5 +1,13 @@
 # util
 
+## Table of Content
+
+* Usage
+* Wrappers
+ * Simple
+ * Complex
+* Limits
+* Other Stuff
 
 ## Usage
 
@@ -8,9 +16,8 @@ Add the following Maven dependency
         <dependency>
             <groupId>se.eris</groupId>
             <artifactId>jtype</artifactId>
-            <version>0.3</version>
+            <version>0.4.1</version>
         </dependency>
-
 
 ## Simple Wrappers
 
@@ -24,6 +31,15 @@ the hashCode, equals, and toString methods.
         }
     
     }
+ 
+## Complex Wrappers
+
+* DyadWrapper
+* PairWrapper
+* OneOfWrapper
+* ...
+
+## Limits
 
 To get some use out of the library you can combine it with a Limit. In this example the description String 
 is limited to max 1000 characters. 
@@ -47,10 +63,10 @@ If no predefined limit matches your requirements you can create your own Limits 
     LimitedInteger even = LimitedInteger.init().limit(evenLimit).build();
     int a = even.of(2);   // a = 2;
     int b = even.of(17);  // throws ValidationException
- 
-## Complex Wrappers
 
-* DyadWrapper
-* PairWrapper
-* OneOfWrapper
-* ...
+## Other Stuff
+
+### SOptional
+
+A Serializable Optional until the Java community realizes its mistake and makes Optional serializable. It also takes some methods from the Guava Optional.
+
