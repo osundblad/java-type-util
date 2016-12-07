@@ -1,3 +1,7 @@
+**PITest**
+
+`mvn -DwithHistory org.pitest:pitest-maven:mutationCoverage`
+
 **Release to oss.sonatype.org**
 
 `mvn clean install deploy -P release`

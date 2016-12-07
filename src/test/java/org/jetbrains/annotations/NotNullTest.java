@@ -15,10 +15,12 @@
  */
 package org.jetbrains.annotations;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+@Ignore
 @SuppressWarnings("ConstantConditions")
 public class NotNullTest {
 
