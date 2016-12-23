@@ -20,6 +20,6 @@
  * experimental status. So give thumbs up or down!
  */
 @Experimental
-package se.eris.jtype.collection;
+package se.eris.jtype.cache;
 
 import se.eris.jtype.Experimental;
