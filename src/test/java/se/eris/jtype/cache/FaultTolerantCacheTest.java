@@ -15,7 +15,6 @@
  */
 package se.eris.jtype.cache;
 
-import com.google.common.collect.Sets;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,6 +24,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.TemporalAmount;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -38,7 +39,7 @@ public class FaultTolerantCacheTest {
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
-    public static final CacheParameters<String> CACHE_PARAMETERS = CacheParameters.of(Duration.ofMinutes(20), Duration.ofMinutes(5));
+    private static final CacheParameters<String> CACHE_PARAMETERS = CacheParameters.of(Duration.ofMinutes(20), Duration.ofMinutes(5));
 
     private final Function<String, Optional<Integer>> source =
             (s) -> {
@@ -94,8 +95,8 @@ public class FaultTolerantCacheTest {
         assertThat(cache.get("S20000:AB"), is(Optional.of(1)));
     }
 
-    @Test(timeout = 1000)
-    public void get_refetchPeriod_returnValue() {
+    @Test(timeout = 10000)
+    public void get_afterRefetchAsyncPeriod_returnCachedValue() {
         final TimeSupplier timeSupplier = new TimeSupplier();
         final FaultTolerantCache<String, Integer> cache = FaultTolerantCache.of(source, CACHE_PARAMETERS, timeSupplier);
         final String key = "S200:ABC";
@@ -105,6 +106,7 @@ public class FaultTolerantCacheTest {
         assertThat(cache.get(key), is(Optional.of(1)));
         //noinspection StatementWithEmptyBody,OptionalGetWithoutIsPresent
         while (cache.get(key).get() == 1) {
+            Thread.yield();
         }
         assertThat(cache.get(key), is(Optional.of(8)));
     }
@@ -148,7 +150,7 @@ public class FaultTolerantCacheTest {
         cache.put("A", 1);
         cache.put("B", 2);
 
-        final Map<String, Integer> present = cache.getPresent(Sets.newHashSet("A", "B", "C"));
+        final Map<String, Integer> present = cache.getPresent(new HashSet<>(Arrays.asList("A", "B", "C")));
         assertThat(present.size(), is(2));
     }
 

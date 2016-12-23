@@ -65,10 +65,10 @@ public final class FaultTolerantCache<K, V> {
         final Dated<V> dated = opDated.get();
         final LocalDateTime now = timeSupplier.get();
 
-        if (now.isBefore(getEarliestRefetchTime(dated))) {
+        if (now.isBefore(getEarliestRefetchTime(dated.getDateTime()))) {
             return Optional.of(dated.getSubject());
         }
-        if (now.isBefore(getSyncedRefetchTime(dated))) {
+        if (now.isBefore(getSyncedRefetchTime(dated.getDateTime()))) {
             asyncFetch(key);
             return Optional.of(dated.getSubject());
         }
@@ -86,13 +86,13 @@ public final class FaultTolerantCache<K, V> {
     }
 
     @NotNull
-    private ChronoLocalDateTime getSyncedRefetchTime(final Dated<V> dated) {
-        return dated.getDateTime().plus(cacheParameters.getSyncedRefetchPeriod());
+    private ChronoLocalDateTime getSyncedRefetchTime(@NotNull final ChronoLocalDateTime dateTime) {
+        return dateTime.plus(cacheParameters.getRefetchSyncPeriod());
     }
 
     @NotNull
-    private ChronoLocalDateTime getEarliestRefetchTime(@NotNull final Dated<V> dated) {
-        return dated.getDateTime().plus(cacheParameters.getAsyncRefetchPeriod());
+    private ChronoLocalDateTime getEarliestRefetchTime(@NotNull final ChronoLocalDateTime dateTime) {
+        return dateTime.plus(cacheParameters.getRefetchAsyncPeriod());
     }
 
     @NotNull

@@ -26,15 +26,15 @@ import java.util.function.Consumer;
 public final class CacheParameters<K> {
 
     @NotNull
-    private final Duration refetchPeriod;
+    private final Duration refetchSyncPeriod;
     @NotNull
     private final Duration refetchAsyncPeriod;
     @NotNull
     private final Optional<BiConsumer<K, Throwable>> supplierFailedAction;
 
     @NotNull
-    public static <K> CacheParameters<K> of(@NotNull final Duration refetchPeriod, @NotNull final Duration refetchAsyncPeriod) {
-        return of(refetchPeriod, refetchAsyncPeriod, null);
+    public static <K> CacheParameters<K> of(@NotNull final Duration refetchSyncPeriod, @NotNull final Duration refetchAsyncPeriod) {
+        return of(refetchSyncPeriod, refetchAsyncPeriod, null);
     }
 
     /**
@@ -42,22 +42,22 @@ public final class CacheParameters<K> {
      * </code>
      */
     @NotNull
-    public static <K> CacheParameters<K> of(@NotNull final Duration refetchPeriod, @NotNull final Duration backgroundRefetchPeriod, @Nullable final BiConsumer<K, Throwable> supplierFailedAction) {
-        return new CacheParameters<>(refetchPeriod, backgroundRefetchPeriod, supplierFailedAction);
+    public static <K> CacheParameters<K> of(@NotNull final Duration refetchSyncPeriod, @NotNull final Duration refetchAsyncPeriod, @Nullable final BiConsumer<K, Throwable> supplierFailedAction) {
+        return new CacheParameters<>(refetchSyncPeriod, refetchAsyncPeriod, supplierFailedAction);
     }
 
     /*
      * Todo: make a CacheParametersBuilder.
      */
-    private CacheParameters(@NotNull final Duration refetchPeriod, @NotNull final Duration refetchAsyncPeriod, @Nullable final BiConsumer<K, Throwable> supplierFailedAction) {
-        this.refetchPeriod = refetchPeriod;
+    private CacheParameters(@NotNull final Duration refetchSyncPeriod, @NotNull final Duration refetchAsyncPeriod, @Nullable final BiConsumer<K, Throwable> supplierFailedAction) {
+        this.refetchSyncPeriod = refetchSyncPeriod;
         this.refetchAsyncPeriod = refetchAsyncPeriod;
         this.supplierFailedAction = Optional.ofNullable(supplierFailedAction);
     }
 
     @NotNull
-    public Duration getSyncedRefetchPeriod() {
-        return refetchPeriod;
+    public Duration getRefetchSyncPeriod() {
+        return refetchSyncPeriod;
     }
 
     /**
@@ -65,7 +65,7 @@ public final class CacheParameters<K> {
      * refetches.
      */
     @NotNull
-    public Duration getAsyncRefetchPeriod() {
+    public Duration getRefetchAsyncPeriod() {
         return refetchAsyncPeriod;
     }
 
