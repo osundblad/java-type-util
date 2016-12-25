@@ -40,9 +40,12 @@ public class FaultTolerantCacheTest {
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
-    private static final CacheParameters<String> CACHE_PARAMETERS = CacheParameters.of(Duration.ofMinutes(20), Duration.ofMinutes(5));
+    private static final Duration REFETCH_SYNC_PERIOD = Duration.ofMinutes(20);
+    private static final Duration REFETCH_ASYNC_PERIOD = Duration.ofMinutes(5);
 
-    private final Function<String, Optional<Integer>> source =
+    private static final CacheParameters<String> CACHE_PARAMETERS = CacheParameters.of(REFETCH_SYNC_PERIOD, REFETCH_ASYNC_PERIOD);
+
+    private static final Function<String, Optional<Integer>> source =
             (s) -> {
                 if (s.startsWith("E")) {
                     throw new IllegalArgumentException("Supplier Error");
@@ -113,14 +116,18 @@ public class FaultTolerantCacheTest {
         final TimeSupplier timeSupplier = new TimeSupplier();
         final FaultTolerantCache<String, Integer> cache = FaultTolerantCache.of(source, CACHE_PARAMETERS, timeSupplier);
         final String key = "S200:ABC";
-        cache.put(key, 1);
 
+        cache.put(key, 1);
         timeSupplier.step(Duration.ofMinutes(10));
+
+        System.out.println("Thread.activeCount() = " + Thread.activeCount());
+
         assertThat(cache.get(key), is(Optional.of(1)));
         while (cache.get(key).equals(Optional.of(1))) {
             try {
+                System.out.println("Thread.activeCount() = " + Thread.activeCount());
                 TimeUnit.MILLISECONDS.sleep(100);
-            } catch (InterruptedException e) {
+            } catch (final InterruptedException e) {
                 // ignore
             }
         }
@@ -174,9 +181,9 @@ public class FaultTolerantCacheTest {
     private FaultTolerantCache<String, Integer> setupCacheMixedData(final TimeSupplier timeSupplier) {
         final FaultTolerantCache<String, Integer> cache = FaultTolerantCache.of(source, CACHE_PARAMETERS, timeSupplier);
         cache.put("A", 2);
-        timeSupplier.step(Duration.ofMinutes(10));
+        timeSupplier.step(REFETCH_SYNC_PERIOD);
         cache.put("B", 2);
-        timeSupplier.step(Duration.ofMinutes(15));
+        timeSupplier.step(REFETCH_ASYNC_PERIOD.plusMinutes(1));
         return cache;
     }
 

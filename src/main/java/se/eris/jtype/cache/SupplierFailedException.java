@@ -21,4 +21,8 @@ public class SupplierFailedException extends RuntimeException {
         super(message, e);
     }
 
+    public SupplierFailedException(String message) {
+        super(message);
+    }
+
 }

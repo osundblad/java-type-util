@@ -31,13 +31,13 @@ import java.util.stream.Collectors;
 
 public final class FaultTolerantCache<K, V> {
 
-    private final Map<K, Dated<V>> cache = new HashMap<>();
-    private final Map<K, LocalDateTime> locks = new ConcurrentHashMap<>();
+    private final Map<K, Dated<V>> cache = new ConcurrentHashMap<>();
+    private final Map<K, LocalDateTime> locks = new HashMap<>();
 
     private final Function<K, Optional<V>> source;
     private final CacheParameters<K> cacheParameters;
     private final Supplier<LocalDateTime> timeSupplier;
-    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
 
     public static <K, V> FaultTolerantCache<K, V> of(final Function<K, Optional<V>> source, final CacheParameters<K> cacheParameters) {
         return of(source, cacheParameters, LocalDateTime::now);
@@ -75,19 +75,14 @@ public final class FaultTolerantCache<K, V> {
     private void asyncFetch(final K key) {
         if (lock(key)) {
             CompletableFuture
-                    .supplyAsync(() -> source.apply(key), executorService)
-                    .handle((result, e) -> {
-                        try {
-                            if (result.isPresent()) {
-                                return result;
-                            }
-                            cacheParameters.getSupplierFailedAction().ifPresent(consumer -> consumer.accept(key, e));
-                            throw new SupplierFailedException(getSupplierFailedMessage(key), e);
-                        } finally {
-                            unlock(key);
+                    .supplyAsync(() -> syncedFetch(key), executorService)
+                    .thenAccept(v -> {
+                        if (v.isPresent()) {
+                            cache.put(key, Dated.of(timeSupplier.get(), v.get()));
+                            return;
                         }
-                    })
-                    .thenAccept(v -> cache.put(key, Dated.of(timeSupplier.get(), v.get())));
+                        throw new SupplierFailedException(getSupplierFailedMessage(key));
+                    });
         }
     }
 
@@ -119,6 +114,8 @@ public final class FaultTolerantCache<K, V> {
         } catch (final RuntimeException e) {
             cacheParameters.getSupplierFailedAction().ifPresent(throwableConsumer -> throwableConsumer.accept(key, e));
             throw new SupplierFailedException(getSupplierFailedMessage(key), e);
+        } finally {
+            unlock(key);
         }
     }
 
