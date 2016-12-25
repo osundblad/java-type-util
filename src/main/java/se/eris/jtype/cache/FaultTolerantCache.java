@@ -56,7 +56,7 @@ public final class FaultTolerantCache<K, V> {
     public Optional<V> get(final K key) {
         final Optional<Dated<V>> opDated = Optional.ofNullable(cache.get(key));
         if (!opDated.isPresent()) {
-            return fetch(key);
+            return syncedFetch(key);
         }
         final Dated<V> dated = opDated.get();
         final LocalDateTime now = timeSupplier.get();
@@ -68,8 +68,9 @@ public final class FaultTolerantCache<K, V> {
             asyncFetch(key);
             return Optional.of(dated.getSubject());
         }
-        return syncedFetch(key, dated);
+        return syncedFetch(key, dated.getSubject());
     }
+
 
     private void asyncFetch(final K key) {
         if (lock(key)) {
@@ -80,7 +81,8 @@ public final class FaultTolerantCache<K, V> {
                             if (result.isPresent()) {
                                 return result;
                             }
-                            throw new RuntimeException(getFetchFaileMessage(key), e);
+                            cacheParameters.getSupplierFailedAction().ifPresent(consumer -> consumer.accept(key, e));
+                            throw new SupplierFailedException(getSupplierFailedMessage(key), e);
                         } finally {
                             unlock(key);
                         }
@@ -93,22 +95,30 @@ public final class FaultTolerantCache<K, V> {
         if (locks.containsKey(key)) {
             return false;
         }
-        System.out.println("LOCKED " + key);
         locks.put(key, timeSupplier.get());
         return true;
     }
 
-    private synchronized void unlock(final K key) {
+    private void unlock(final K key) {
         locks.remove(key);
-        System.out.println("UNLOCKED " + key);
     }
 
-    private Optional<V> syncedFetch(final K key, final Dated<V> dated) {
+    private Optional<V> syncedFetch(final K key, final V defaultValue) {
         try {
-            return fetch(key);
+            return syncedFetch(key);
+        } catch (final Exception e) {
+            return Optional.of(defaultValue);
+        }
+    }
+
+    private Optional<V> syncedFetch(final K key) {
+        try {
+            final Optional<V> fetched = source.apply(key);
+            fetched.ifPresent(v -> put(key, v));
+            return fetched;
         } catch (final RuntimeException e) {
             cacheParameters.getSupplierFailedAction().ifPresent(throwableConsumer -> throwableConsumer.accept(key, e));
-            return Optional.of(dated.getSubject());
+            throw new SupplierFailedException(getSupplierFailedMessage(key), e);
         }
     }
 
@@ -120,14 +130,8 @@ public final class FaultTolerantCache<K, V> {
         return dateTime.plus(cacheParameters.getRefetchAsyncPeriod());
     }
 
-    private String getFetchFaileMessage(final K key) {
+    private String getSupplierFailedMessage(final K key) {
         return "Source " + source + " failed to get key " + key;
-    }
-
-    private Optional<V> fetch(final K key) {
-        final Optional<V> fetched = source.apply(key);
-        fetched.ifPresent(v -> put(key, v));
-        return fetched;
     }
 
     public Optional<V> getIfPresent(final K key) {
@@ -141,6 +145,14 @@ public final class FaultTolerantCache<K, V> {
     public Map<K, V> getPresent(final Collection<K> keys) {
         return cache.entrySet().stream()
                 .filter(e -> keys.contains(e.getKey()))
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getSubject()));
+    }
+
+    public Map<K, V> getPresentFresh(final Collection<K> keys) {
+        final ChronoLocalDateTime fetchedAfter = timeSupplier.get().minus(cacheParameters.getRefetchSyncPeriod());
+        return cache.entrySet().stream()
+                .filter(e -> keys.contains(e.getKey()))
+                .filter(e -> e.getValue().getDateTime().isAfter(fetchedAfter))
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getSubject()));
     }
 

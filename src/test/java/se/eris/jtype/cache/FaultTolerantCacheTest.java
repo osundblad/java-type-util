@@ -15,6 +15,7 @@
  */
 package se.eris.jtype.cache;
 
+import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -44,7 +45,7 @@ public class FaultTolerantCacheTest {
     private final Function<String, Optional<Integer>> source =
             (s) -> {
                 if (s.startsWith("E")) {
-                    throw new RuntimeException("Supplier Error");
+                    throw new IllegalArgumentException("Supplier Error");
                 }
                 if (s.matches("S[0-9]+:.*")) {
                     try {
@@ -78,11 +79,23 @@ public class FaultTolerantCacheTest {
 
     @Test
     public void get_failingSourceWithoutCache_shouldThrow() {
-        final FaultTolerantCache<String, Integer> cache = FaultTolerantCache.of(source, CACHE_PARAMETERS, new TimeSupplier());
+        final FaultTolerantCache<String, Integer> cache = FaultTolerantCache.of(source, CACHE_PARAMETERS);
 
-        exception.expect(RuntimeException.class);
-        exception.expectMessage("Supplier Error");
+        exception.expect(SupplierFailedException.class);
+        exception.expectCause(Matchers.any(IllegalArgumentException.class));
+        exception.expectMessage("failed to get key");
         cache.get("ERROR");
+    }
+
+    @Test
+    public void get_outDated_returnValue() {
+        final TimeSupplier timeSupplier = new TimeSupplier();
+        final FaultTolerantCache<String, Integer> cache = FaultTolerantCache.of(source, CACHE_PARAMETERS, timeSupplier);
+        cache.put("AB", 1);
+        assertThat(cache.get("AB"), is(Optional.of(1)));
+
+        timeSupplier.step(Duration.ofDays(10));
+        assertThat(cache.get("AB"), is(Optional.of("AB".length())));
     }
 
     @Test(timeout = 1000)
@@ -104,26 +117,14 @@ public class FaultTolerantCacheTest {
 
         timeSupplier.step(Duration.ofMinutes(10));
         assertThat(cache.get(key), is(Optional.of(1)));
-        //noinspection StatementWithEmptyBody,OptionalGetWithoutIsPresent
-        while (cache.get(key).get() == 1) {
+        while (cache.get(key).equals(Optional.of(1))) {
             try {
-                TimeUnit.MILLISECONDS.sleep(10);
+                TimeUnit.MILLISECONDS.sleep(100);
             } catch (InterruptedException e) {
                 // ignore
             }
         }
         assertThat(cache.get(key), is(Optional.of(8)));
-    }
-
-    @Test
-    public void get_outDated_returnValue() {
-        final TimeSupplier timeSupplier = new TimeSupplier();
-        final FaultTolerantCache<String, Integer> cache = FaultTolerantCache.of(source, CACHE_PARAMETERS, timeSupplier);
-        cache.put("AB", 1);
-        assertThat(cache.get("AB"), is(Optional.of(1)));
-
-        timeSupplier.step(Duration.ofDays(10));
-        assertThat(cache.get("AB"), is(Optional.of("AB".length())));
     }
 
     @Test
@@ -145,17 +146,38 @@ public class FaultTolerantCacheTest {
     public void getIfPresent_nonExisisting_returnEmpty() {
         final FaultTolerantCache<String, Integer> cache = FaultTolerantCache.of(source, CACHE_PARAMETERS);
 
-        assertThat(cache.getIfPresent("A"), is(Optional.empty()));
+        assertThat(cache.getIfPresent("B"), is(Optional.empty()));
     }
 
     @Test
-    public void getPresent_mixed_returnPresent() {
-        final FaultTolerantCache<String, Integer> cache = FaultTolerantCache.of(source, CACHE_PARAMETERS);
-        cache.put("A", 1);
-        cache.put("B", 2);
+    public void getPresent_mixedData_returnAllPresent() {
+        final TimeSupplier timeSupplier = new TimeSupplier();
+        final FaultTolerantCache<String, Integer> cache = setupCacheMixedData(timeSupplier);
 
         final Map<String, Integer> present = cache.getPresent(new HashSet<>(Arrays.asList("A", "B", "C")));
         assertThat(present.size(), is(2));
+        assertThat(present.containsKey("A"), is(true));
+        assertThat(present.containsKey("B"), is(true));
+    }
+
+    @Test
+    public void getPresentFresh_mixedData_returnOnlyFresh() {
+        final TimeSupplier timeSupplier = new TimeSupplier();
+        final FaultTolerantCache<String, Integer> cache = setupCacheMixedData(timeSupplier);
+
+        final Map<String, Integer> present = cache.getPresentFresh(new HashSet<>(Arrays.asList("A", "B", "C")));
+        assertThat(present.size(), is(1));
+        assertThat(present.containsKey("B"), is(true));
+        assertThat(present.get("B"), is(2));
+    }
+
+    private FaultTolerantCache<String, Integer> setupCacheMixedData(final TimeSupplier timeSupplier) {
+        final FaultTolerantCache<String, Integer> cache = FaultTolerantCache.of(source, CACHE_PARAMETERS, timeSupplier);
+        cache.put("A", 2);
+        timeSupplier.step(Duration.ofMinutes(10));
+        cache.put("B", 2);
+        timeSupplier.step(Duration.ofMinutes(15));
+        return cache;
     }
 
     private static class TimeSupplier implements Supplier<LocalDateTime> {
