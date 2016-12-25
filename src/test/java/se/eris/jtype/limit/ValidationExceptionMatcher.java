@@ -17,7 +17,6 @@ package se.eris.jtype.limit;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -26,28 +25,28 @@ import java.util.Optional;
 @SuppressWarnings("WeakerAccess")
 public class ValidationExceptionMatcher extends TypeSafeDiagnosingMatcher<ValidationException> {
 
-    @NotNull
-    public static ValidationExceptionMatcher of(@NotNull final String... contains) {
+
+    public static ValidationExceptionMatcher of( final String... contains) {
         return new ValidationExceptionMatcher(Optional.empty(), contains);
     }
 
-    @NotNull
-    public static ValidationExceptionMatcher of(@NotNull final Integer numberOfErrors, @NotNull final String... contains) {
+
+    public static ValidationExceptionMatcher of( final Integer numberOfErrors,  final String... contains) {
         return new ValidationExceptionMatcher(Optional.of(numberOfErrors), contains);
     }
 
-    @NotNull
+
     private final Optional<Integer> numberOfErrors;
-    @NotNull
+
     private final String[] contains;
 
-    private ValidationExceptionMatcher(@NotNull final Optional<Integer> numberOfErrors, @NotNull final String... contains) {
+    private ValidationExceptionMatcher( final Optional<Integer> numberOfErrors,  final String... contains) {
         this.numberOfErrors = numberOfErrors;
         this.contains = contains;
     }
 
     @Override
-    protected boolean matchesSafely(@Nullable final ValidationException item, @NotNull final Description mismatchDescription) {
+    protected boolean matchesSafely(@Nullable final ValidationException item,  final Description mismatchDescription) {
         if (item == null) {
             return false;
         }
@@ -64,7 +63,7 @@ public class ValidationExceptionMatcher extends TypeSafeDiagnosingMatcher<Valida
     }
 
     @Override
-    public void describeTo(@NotNull final Description description) {
+    public void describeTo( final Description description) {
         description.appendText("should throw " + ValidationException.class.getSimpleName());
         if (numberOfErrors.isPresent()) {
             description.appendText(", with " + numberOfErrors.get() + " errors");

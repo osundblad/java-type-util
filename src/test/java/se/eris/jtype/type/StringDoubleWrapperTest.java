@@ -15,7 +15,6 @@
  */
 package se.eris.jtype.type;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -30,12 +29,11 @@ public class StringDoubleWrapperTest {
 
     private static class WrapperImpl extends StringDoubleWrapper {
 
-        @NotNull
-        public static StringDoubleWrapperTest.WrapperImpl of(@NotNull final String s) {
+        public static StringDoubleWrapperTest.WrapperImpl of(final String s) {
             return new WrapperImpl(s);
         }
 
-        private WrapperImpl(@NotNull final String s) {
+        private WrapperImpl(final String s) {
             super(s);
         }
     }

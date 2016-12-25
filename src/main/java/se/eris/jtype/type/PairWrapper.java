@@ -15,8 +15,6 @@
  */
 package se.eris.jtype.type;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * Two things that are the same and are meant to be used together.
  *
@@ -24,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class PairWrapper<T> extends DyadWrapper<T, T> {
 
-    protected PairWrapper(@NotNull final T first, @NotNull final T second) {
+    protected PairWrapper(final T first, final T second) {
         super(first, second);
     }
 

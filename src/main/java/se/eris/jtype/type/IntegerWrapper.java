@@ -15,15 +15,12 @@
  */
 package se.eris.jtype.type;
 
-import org.jetbrains.annotations.NotNull;
-
 public abstract class IntegerWrapper extends BasicWrapper<Integer> {
 
-    protected IntegerWrapper(@NotNull final Integer i) {
+    protected IntegerWrapper( final Integer i) {
         super(i);
     }
 
-    @NotNull
     public Integer asInteger() {
         return super.raw();
     }
@@ -32,7 +29,6 @@ public abstract class IntegerWrapper extends BasicWrapper<Integer> {
         return super.raw();
     }
 
-    @NotNull
     public String asString() {
         return super.raw().toString();
     }

@@ -15,8 +15,6 @@
  */
 package se.eris.jtype.limit;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -25,23 +23,20 @@ import java.util.regex.Pattern;
 @SuppressWarnings("WeakerAccess")
 public class LimitedString extends AbstractLimited<String> {
 
-    @NotNull
     public static LimitedString.Builder init() {
         return new Builder();
     }
 
-    @NotNull
-    public static Builder init(@NotNull final ValidationBehavior validationBehavior) {
+    public static Builder init(final ValidationBehavior validationBehavior) {
         return new Builder(validationBehavior);
     }
 
-    @NotNull
     @Override
-    public String of(@NotNull final String s) {
+    public String of(final String s) {
         return super.of(s);
     }
 
-    private LimitedString(@NotNull final List<Function<String, Optional<ValidationError>>> limits, @NotNull final ValidationBehavior validationBehavior) {
+    private LimitedString(final List<Function<String, Optional<ValidationError>>> limits, final ValidationBehavior validationBehavior) {
         super(limits, validationBehavior);
     }
 
@@ -52,46 +47,39 @@ public class LimitedString extends AbstractLimited<String> {
             super();
         }
 
-        public Builder(@NotNull final ValidationBehavior validationBehavior) {
+        public Builder(final ValidationBehavior validationBehavior) {
             super(validationBehavior);
         }
 
-        @NotNull
-        public Builder limit(@NotNull final Limit<String> limit) {
+        public Builder limit(final Limit<String> limit) {
             return (Builder) super.limit(limit);
         }
 
-        @NotNull
         public Builder notEmpty() {
             limit(StringLengthLimit.notEmpty());
             return this;
         }
 
-        @NotNull
         public Builder length(final int min, final int max) {
             limit(StringLengthLimit.of(min, max));
             return this;
         }
 
-        @NotNull
         public Builder length(final int max) {
             limit(StringLengthLimit.zeroTo(max));
             return this;
         }
 
-        @NotNull
-        public Builder matches(@NotNull final Pattern pattern) {
+        public Builder matches(final Pattern pattern) {
             limit(StringRegexpLimit.of(pattern));
             return this;
         }
 
-        @NotNull
-        public Builder matches(@NotNull final String regexp) {
+        public Builder matches(final String regexp) {
             limit(StringRegexpLimit.of(regexp));
             return this;
         }
 
-        @NotNull
         public LimitedString build() {
             return new LimitedString(limits, validationBehavior);
         }

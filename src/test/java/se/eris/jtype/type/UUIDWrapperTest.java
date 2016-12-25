@@ -15,7 +15,6 @@
  */
 package se.eris.jtype.type;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.util.UUID;
@@ -43,11 +42,11 @@ public class UUIDWrapperTest {
 
     private static final class WrapperImpl extends UUIDWrapper {
 
-        private WrapperImpl(@NotNull final String uuid) {
+        private WrapperImpl(final String uuid) {
             super(uuid);
         }
 
-        private WrapperImpl(@NotNull final UUID uuid) {
+        private WrapperImpl(final UUID uuid) {
             super(uuid);
         }
 

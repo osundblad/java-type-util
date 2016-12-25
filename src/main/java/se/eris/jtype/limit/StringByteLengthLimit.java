@@ -15,26 +15,24 @@
  */
 package se.eris.jtype.limit;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 public class StringByteLengthLimit implements StringLimit {
 
-    @NotNull
+
     public static StringByteLengthLimit zeroTo(final int max) {
         return of(0, max);
     }
 
-    @NotNull
+
     public static StringByteLengthLimit of(final int min, final int max) {
         return new StringByteLengthLimit(min, max, Optional.empty());
     }
 
-    @NotNull
-    public static StringByteLengthLimit of(final int min, final int max, @NotNull final Charset charset) {
+
+    public static StringByteLengthLimit of(final int min, final int max,  final Charset charset) {
         return new StringByteLengthLimit(min, max, Optional.of(charset));
     }
 
@@ -42,7 +40,7 @@ public class StringByteLengthLimit implements StringLimit {
     private final int max;
     private final Charset charset;
 
-    private StringByteLengthLimit(final int min, final int max, @NotNull final Optional<Charset> charset) {
+    private StringByteLengthLimit(final int min, final int max,  final Optional<Charset> charset) {
         this.charset = charset.orElse(StandardCharsets.UTF_8);
         if (min < 0) {
             throw new IllegalArgumentException("Min " + min + " less than zero");
@@ -55,8 +53,8 @@ public class StringByteLengthLimit implements StringLimit {
     }
 
     @Override
-    @NotNull
-    public Optional<ValidationError> validate(@NotNull final String s) {
+
+    public Optional<ValidationError> validate( final String s) {
         final int length = getByteLength(s);
         if (length < min) {
             return Optional.of(ValidationError.of("Byte length of " + s + " is less than min " + min));
@@ -67,7 +65,7 @@ public class StringByteLengthLimit implements StringLimit {
         return Optional.empty();
     }
 
-    private int getByteLength(@NotNull final String s) {
+    private int getByteLength( final String s) {
         return s.getBytes(charset).length;
     }
 

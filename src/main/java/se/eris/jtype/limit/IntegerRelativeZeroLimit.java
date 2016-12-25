@@ -15,8 +15,6 @@
  */
 package se.eris.jtype.limit;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Optional;
 
 @SuppressWarnings({"TypeMayBeWeakened", "WeakerAccess"})
@@ -32,60 +30,46 @@ public class IntegerRelativeZeroLimit implements Limit<Integer> {
         NON_NEGATIVE,
     }
 
-    @NotNull
     private static final IntegerRelativeZeroLimit POSITIVE = new IntegerRelativeZeroLimit(ZeroRelation.POSITIVE);
-    @NotNull
     private static final IntegerRelativeZeroLimit NEGATIVE = new IntegerRelativeZeroLimit(ZeroRelation.NEGATIVE);
-    @NotNull
     private static final IntegerRelativeZeroLimit NON_NEGATIVE = new IntegerRelativeZeroLimit(ZeroRelation.NON_NEGATIVE);
-    @NotNull
     private static final IntegerRelativeZeroLimit NON_POSITIVE = new IntegerRelativeZeroLimit(ZeroRelation.NON_POSITIVE);
-    @NotNull
     private static final IntegerRelativeZeroLimit ZERO = new IntegerRelativeZeroLimit(ZeroRelation.ZERO);
-    @NotNull
     private static final IntegerRelativeZeroLimit NON_ZERO = new IntegerRelativeZeroLimit(ZeroRelation.NON_ZERO);
 
-    @NotNull
     public static Limit<Integer> positive() {
         return POSITIVE;
     }
 
-    @NotNull
     public static Limit<Integer> nonPositive() {
         return NON_POSITIVE;
     }
 
-    @NotNull
     public static Limit<Integer> negative() {
         return NEGATIVE;
     }
 
-    @NotNull
     public static Limit<Integer> nonNegative() {
         return NON_NEGATIVE;
     }
 
-    @NotNull
     public static Limit<Integer> zero() {
         return ZERO;
     }
 
-    @NotNull
     public static Limit<Integer> nonZero() {
         return NON_ZERO;
     }
 
-    @NotNull
     private final ZeroRelation relation;
 
-    private IntegerRelativeZeroLimit(@NotNull final ZeroRelation relation) {
+    private IntegerRelativeZeroLimit( final ZeroRelation relation) {
         this.relation = relation;
     }
 
     @SuppressWarnings("ControlFlowStatementWithoutBraces")
     @Override
-    @NotNull
-    public Optional<ValidationError> validate(@NotNull final Integer item) {
+    public Optional<ValidationError> validate( final Integer item) {
         switch (relation) {
             case POSITIVE: if (item <= 0) return Optional.of(ValidationError.of(item + " is not positive")); break;
             case NEGATIVE: if (item >= 0) return Optional.of(ValidationError.of(item + " is not negative")); break;

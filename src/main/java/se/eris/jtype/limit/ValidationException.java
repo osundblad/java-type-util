@@ -15,17 +15,15 @@
  */
 package se.eris.jtype.limit;
 
-import org.jetbrains.annotations.NotNull;
-
 public class ValidationException extends IllegalArgumentException {
 
-    private final @NotNull ValidationErrors errors;
+    private final  ValidationErrors errors;
 
-    public ValidationException(final @NotNull ValidationErrors errors) {
+    public ValidationException(final  ValidationErrors errors) {
         this.errors = errors;
     }
 
-    @NotNull
+
     public ValidationErrors getErrors() {
         return errors;
     }

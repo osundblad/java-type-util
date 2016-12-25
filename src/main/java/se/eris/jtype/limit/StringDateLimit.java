@@ -15,7 +15,6 @@
  */
 package se.eris.jtype.limit;
 
-import org.jetbrains.annotations.NotNull;
 import se.eris.jtype.type.OpenDatePeriod;
 
 import java.time.LocalDate;
@@ -25,40 +24,40 @@ import java.util.Optional;
 
 public class StringDateLimit implements StringLimit {
 
-    @NotNull
+
     public StringDateLimit iso() {
         return of(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
-    @NotNull
-    public StringDateLimit iso(@NotNull final OpenDatePeriod datePeriod) {
+
+    public StringDateLimit iso( final OpenDatePeriod datePeriod) {
         return of(DateTimeFormatter.ISO_LOCAL_DATE, datePeriod);
     }
 
-    @NotNull
-    public static StringDateLimit of(@NotNull final DateTimeFormatter dateFormat) {
+
+    public static StringDateLimit of( final DateTimeFormatter dateFormat) {
         return new StringDateLimit(dateFormat, OpenDatePeriod.ALWAYS);
     }
 
-    @NotNull
-    public static StringDateLimit of(@NotNull final DateTimeFormatter dateFormat, @NotNull final OpenDatePeriod datePeriod) {
+
+    public static StringDateLimit of( final DateTimeFormatter dateFormat,  final OpenDatePeriod datePeriod) {
         return new StringDateLimit(dateFormat, datePeriod);
     }
 
-    @NotNull
+
     private final DateTimeFormatter dateFormat;
 
-    @NotNull
+
     private final OpenDatePeriod datePeriod;
 
-    private StringDateLimit(@NotNull final DateTimeFormatter dateFormat, @NotNull final OpenDatePeriod datePeriod) {
+    private StringDateLimit( final DateTimeFormatter dateFormat,  final OpenDatePeriod datePeriod) {
         this.dateFormat = dateFormat;
         this.datePeriod = datePeriod;
     }
 
     @Override
-    @NotNull
-    public Optional<ValidationError> validate(@NotNull final String s) {
+
+    public Optional<ValidationError> validate( final String s) {
         final LocalDate localDate;
         try {
             localDate = LocalDate.parse(s, dateFormat);

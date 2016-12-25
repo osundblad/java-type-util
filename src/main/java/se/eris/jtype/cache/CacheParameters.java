@@ -15,7 +15,6 @@
  */
 package se.eris.jtype.cache;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
@@ -25,15 +24,11 @@ import java.util.function.Consumer;
 
 public final class CacheParameters<K> {
 
-    @NotNull
     private final Duration refetchSyncPeriod;
-    @NotNull
     private final Duration refetchAsyncPeriod;
-    @NotNull
     private final Optional<BiConsumer<K, Throwable>> supplierFailedAction;
 
-    @NotNull
-    public static <K> CacheParameters<K> of(@NotNull final Duration refetchSyncPeriod, @NotNull final Duration refetchAsyncPeriod) {
+    public static <K> CacheParameters<K> of(final Duration refetchSyncPeriod, final Duration refetchAsyncPeriod) {
         return of(refetchSyncPeriod, refetchAsyncPeriod, null);
     }
 
@@ -41,21 +36,19 @@ public final class CacheParameters<K> {
      * Example:<code>
      * </code>
      */
-    @NotNull
-    public static <K> CacheParameters<K> of(@NotNull final Duration refetchSyncPeriod, @NotNull final Duration refetchAsyncPeriod, @Nullable final BiConsumer<K, Throwable> supplierFailedAction) {
+    public static <K> CacheParameters<K> of(final Duration refetchSyncPeriod, final Duration refetchAsyncPeriod, @Nullable final BiConsumer<K, Throwable> supplierFailedAction) {
         return new CacheParameters<>(refetchSyncPeriod, refetchAsyncPeriod, supplierFailedAction);
     }
 
     /*
      * Todo: make a CacheParametersBuilder.
      */
-    private CacheParameters(@NotNull final Duration refetchSyncPeriod, @NotNull final Duration refetchAsyncPeriod, @Nullable final BiConsumer<K, Throwable> supplierFailedAction) {
+    private CacheParameters(final Duration refetchSyncPeriod, final Duration refetchAsyncPeriod, @Nullable final BiConsumer<K, Throwable> supplierFailedAction) {
         this.refetchSyncPeriod = refetchSyncPeriod;
         this.refetchAsyncPeriod = refetchAsyncPeriod;
         this.supplierFailedAction = Optional.ofNullable(supplierFailedAction);
     }
 
-    @NotNull
     public Duration getRefetchSyncPeriod() {
         return refetchSyncPeriod;
     }
@@ -64,7 +57,6 @@ public final class CacheParameters<K> {
      * @return the time after which the value is refeteched after returning cached value. To prevent frequent
      * refetches.
      */
-    @NotNull
     public Duration getRefetchAsyncPeriod() {
         return refetchAsyncPeriod;
     }
@@ -73,7 +65,6 @@ public final class CacheParameters<K> {
      * @return the {@link Consumer} that is called when the {@link java.util.function.Supplier} throws
      * an {@link Exception}. Useful for, for example, logging.
      */
-    @NotNull
     public Optional<BiConsumer<K, Throwable>> getSupplierFailedAction() {
         return supplierFailedAction;
     }

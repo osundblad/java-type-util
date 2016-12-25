@@ -15,43 +15,36 @@
  */
 package se.eris.jtype.limit;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
 public class LimitedInteger extends AbstractLimited<Integer> {
 
-    @NotNull
     public static LimitedInteger.Builder init() {
         return new Builder();
     }
 
-    @NotNull
     @Override
-    public Integer of(@NotNull final Integer i) {
+    public Integer of( final Integer i) {
         return super.of(i);
     }
 
-    private LimitedInteger(@NotNull final List<Function<Integer, Optional<ValidationError>>> limits, @NotNull final ValidationBehavior validationBehavior) {
+    private LimitedInteger( final List<Function<Integer, Optional<ValidationError>>> limits,  final ValidationBehavior validationBehavior) {
         super(limits, validationBehavior);
     }
 
     public static class Builder extends AbstractLimited.Builder<Integer> {
 
-        @NotNull
-        public Builder limit(@NotNull final Limit<Integer> limit) {
+        public Builder limit( final Limit<Integer> limit) {
             return (Builder) super.limit(limit);
         }
 
-        @NotNull
         public Builder zeroTo(final int max) {
             limit(IntegerRangeLimit.zeroTo(max));
             return this;
         }
 
-        @NotNull
         public Builder range(final int min, final int max) {
             limit(IntegerRangeLimit.of(min, max));
             return this;
@@ -61,7 +54,6 @@ public class LimitedInteger extends AbstractLimited<Integer> {
          * (0, MaxInt] or maybe more readable [1, MaxInt]
          * @return the Builder
          */
-        @NotNull
         public Builder positive() {
             limit(IntegerRelativeZeroLimit.positive());
             return this;
@@ -71,7 +63,6 @@ public class LimitedInteger extends AbstractLimited<Integer> {
          * [MinInt, 0]
          * @return the Builder
          */
-        @NotNull
         public Builder nonPositive() {
             limit(IntegerRelativeZeroLimit.nonPositive());
             return this;
@@ -81,7 +72,6 @@ public class LimitedInteger extends AbstractLimited<Integer> {
          * [MinInt, 0) or maybe more readable [MinInt, -1]
          * @return the Builder
          */
-        @NotNull
         public Builder negative() {
             limit(IntegerRelativeZeroLimit.negative());
             return this;
@@ -91,13 +81,11 @@ public class LimitedInteger extends AbstractLimited<Integer> {
          * [0, MaxInt]
          * @return the Builder
          */
-        @NotNull
         public Builder nonNegative() {
             limit(IntegerRelativeZeroLimit.nonNegative());
             return this;
         }
 
-        @NotNull
         public LimitedInteger build() {
             return new LimitedInteger(limits, validationBehavior);
         }

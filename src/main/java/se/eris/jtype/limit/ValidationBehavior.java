@@ -15,20 +15,17 @@
  */
 package se.eris.jtype.limit;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Optional;
 
 public interface ValidationBehavior {
 
     /**
-     * @see AbstractLimited#of(Object)
      * @return creates a new instance of this {@link ValidationBehavior}.
+     * @see AbstractLimited#of(Object)
      */
-    @NotNull
     ValidationBehavior getInstance();
 
-    void atValidation(@NotNull Optional<ValidationError> error);
+    void atValidation(Optional<ValidationError> error);
 
     void afterValidation();
 

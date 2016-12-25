@@ -15,8 +15,6 @@
  */
 package se.eris.jtype.type;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.UUID;
 
 public abstract class UUIDWrapper extends BasicWrapper<UUID> {
@@ -25,20 +23,20 @@ public abstract class UUIDWrapper extends BasicWrapper<UUID> {
         super(UUID.randomUUID());
     }
 
-    protected UUIDWrapper(@NotNull final String uuid) {
+    protected UUIDWrapper(final String uuid) {
         super(UUID.fromString(uuid));
     }
 
-    protected UUIDWrapper(@NotNull final UUID uuid) {
+    protected UUIDWrapper(final UUID uuid) {
         super(uuid);
     }
 
-    @NotNull
     public UUID asUUID() {
         return super.raw();
     }
 
-    @NotNull
-    public String asString() { return this.raw().toString(); }
+    public String asString() {
+        return this.raw().toString();
+    }
 
 }

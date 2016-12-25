@@ -15,28 +15,24 @@
  */
 package se.eris.jtype.cache;
 
-import org.jetbrains.annotations.NotNull;
 import se.eris.jtype.type.DyadWrapper;
 
 import java.time.LocalDateTime;
 
 public final class Dated<S> extends DyadWrapper<LocalDateTime, S> {
 
-    @NotNull
-    public static <S> Dated<S> of(@NotNull final LocalDateTime first, @NotNull final S second) {
+    public static <S> Dated<S> of(final LocalDateTime first, final S second) {
         return new Dated<>(first, second);
     }
 
-    private Dated(@NotNull final LocalDateTime first, @NotNull final S second) {
+    private Dated(final LocalDateTime first, final S second) {
         super(first, second);
     }
 
-    @NotNull
     public LocalDateTime getDateTime() {
         return rawFirst();
     }
 
-    @NotNull
     public S getSubject() {
         return rawSecond();
     }

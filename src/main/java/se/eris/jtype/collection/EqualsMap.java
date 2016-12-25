@@ -16,7 +16,6 @@
 package se.eris.jtype.collection;
 
 import org.intellij.lang.annotations.Flow;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import se.eris.jtype.Experimental;
 
@@ -27,6 +26,7 @@ import java.util.stream.Collectors;
 /**
  * An immutable map using the supplied hashcode and equals functions. Note that null keys are
  * not allowed in this map.
+ *
  * @param <K>
  */
 @Experimental
@@ -35,6 +35,7 @@ public class EqualsMap<K, V> implements Map<K, V>, Serializable {
     public static <K, V> EqualsMap<K, V> from(final Map<K, V> map, final HashcodeEquals<K> he) {
         return new EqualsMap<K, V>(map, he);
     }
+
     private final Map<HashcodeEqualsDecorator<K>, V> map;
 
     private final HashcodeEquals<K> he;
@@ -98,19 +99,16 @@ public class EqualsMap<K, V> implements Map<K, V>, Serializable {
         return;
     }
 
-    @NotNull
     @Override
     public Set<K> keySet() {
         return map.keySet().stream().map(HashcodeEqualsDecorator::getSubject).collect(Collectors.toSet());
     }
 
-    @NotNull
     @Override
     public Collection<V> values() {
         return map.values();
     }
 
-    @NotNull
     @Override
     public Set<Entry<K, V>> entrySet() {
         return map.entrySet().stream().map(e -> new AbstractMap.SimpleImmutableEntry<>(e.getKey().getSubject(), e.getValue())).collect(Collectors.toSet());
@@ -120,6 +118,7 @@ public class EqualsMap<K, V> implements Map<K, V>, Serializable {
         throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is immutable");
     }
 
+    @SuppressWarnings("ControlFlowStatementWithoutBraces")
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
@@ -144,7 +143,7 @@ public class EqualsMap<K, V> implements Map<K, V>, Serializable {
     @Override
     public int hashCode() {
         int result = map.hashCode();
-        result = 31 * result + he.hashCode();
+        result = (31 * result) + he.hashCode();
         return result;
     }
 }

@@ -15,8 +15,6 @@
  */
 package se.eris.jtype.limit;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,19 +22,16 @@ import java.util.function.Function;
 
 public abstract class AbstractLimited<T> {
 
-    @NotNull
     private final ValidationBehavior validationBehavior;
 
-    @NotNull
     private final List<Function<T, Optional<ValidationError>>> limits;
 
-    protected AbstractLimited(@NotNull final List<Function<T, Optional<ValidationError>>> limits, @NotNull final ValidationBehavior validationBehavior) {
+    protected AbstractLimited(final List<Function<T, Optional<ValidationError>>> limits, final ValidationBehavior validationBehavior) {
         this.limits = limits;
         this.validationBehavior = validationBehavior;
     }
 
-    @NotNull
-    public T of(@NotNull final T t) {
+    public T of(final T t) {
         final ValidationBehavior behavior = validationBehavior.getInstance();
         for (final Function<T, Optional<ValidationError>> limit : limits) {
             behavior.atValidation(limit.apply(t));
@@ -47,17 +42,16 @@ public abstract class AbstractLimited<T> {
 
     public abstract static class Builder<T> {
 
-        @NotNull
         protected final List<Function<T, Optional<ValidationError>>> limits = new ArrayList<>();
 
-        @NotNull
         protected final ValidationBehavior validationBehavior;
 
-         /**
+        /**
          * Creates a Builder with the specified {@link ValidationBehavior}.
+         *
          * @param validationBehavior the {@link ValidationBehavior} to use.
          */
-        public Builder(@NotNull final ValidationBehavior validationBehavior) {
+        public Builder(final ValidationBehavior validationBehavior) {
             this.validationBehavior = validationBehavior;
         }
 
@@ -68,8 +62,7 @@ public abstract class AbstractLimited<T> {
             this(new ValidationBehaviorThrowImmediately());
         }
 
-        @NotNull
-        public Builder<T> limit(@NotNull final Limit<T> limit) {
+        public Builder<T> limit(final Limit<T> limit) {
             limits.add(limit::validate);
             return this;
         }

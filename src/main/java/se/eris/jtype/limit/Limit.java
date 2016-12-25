@@ -15,8 +15,6 @@
  */
 package se.eris.jtype.limit;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Optional;
 
 @SuppressWarnings("WeakerAccess")
@@ -28,7 +26,6 @@ public interface Limit<T> {
      * @return Optional containing ValidationError if validation failed, empty
      * if validation was successful.
      */
-    @NotNull
-    Optional<ValidationError> validate(@NotNull T item);
+    Optional<ValidationError> validate( T item);
 
 }

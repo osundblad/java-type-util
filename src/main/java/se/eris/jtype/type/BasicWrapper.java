@@ -15,20 +15,16 @@
  */
 package se.eris.jtype.type;
 
-import org.jetbrains.annotations.NotNull;
-
 public abstract class BasicWrapper<T> {
 
-    @NotNull
     private final T item;
 
     @SuppressWarnings("WeakerAccess")
-    protected BasicWrapper(@NotNull final T item) {
+    protected BasicWrapper(final T item) {
         this.item = item;
     }
 
     @SuppressWarnings("WeakerAccess")
-    @NotNull
     public T raw() {
         return item;
     }
@@ -50,7 +46,6 @@ public abstract class BasicWrapper<T> {
     }
 
     @Override
-    @NotNull
     public String toString() {
         return this.getClass().getSimpleName() + "{" + item + "}";
     }

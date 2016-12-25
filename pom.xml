@@ -53,7 +53,7 @@
         <connection>scm:git:git@github.com:osundblad/java-type-util.git</connection>
         <developerConnection>scm:git:git@github.com:osundblad/java-type-util.git</developerConnection>
         <url>https://github.com/osundblad/java-type-util</url>
-        <tag>java-type-util-0.4</tag>
+        <tag>java-type-util-0.4.1</tag>
     </scm>
 
     <dependencies>
@@ -61,6 +61,7 @@
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>15.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

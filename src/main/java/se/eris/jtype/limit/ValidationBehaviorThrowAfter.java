@@ -15,8 +15,6 @@
  */
 package se.eris.jtype.limit;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,17 +24,15 @@ import java.util.Optional;
  */
 public class ValidationBehaviorThrowAfter implements ValidationBehavior {
 
-    @NotNull
     private final List<ValidationError> validationErrors = new ArrayList<>();
 
     @Override
-    @NotNull
     public ValidationBehaviorThrowAfter getInstance() {
         return new ValidationBehaviorThrowAfter();
     }
 
     @Override
-    public void atValidation(@NotNull final Optional<ValidationError> error) {
+    public void atValidation(final Optional<ValidationError> error) {
         error.ifPresent(validationErrors::add);
     }
 

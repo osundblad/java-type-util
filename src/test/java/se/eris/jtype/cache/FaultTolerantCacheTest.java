@@ -15,7 +15,6 @@
  */
 package se.eris.jtype.cache;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -28,6 +27,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -95,7 +95,7 @@ public class FaultTolerantCacheTest {
         assertThat(cache.get("S20000:AB"), is(Optional.of(1)));
     }
 
-    @Test(timeout = 2000)
+    @Test(timeout = 1000)
     public void get_afterRefetchAsyncPeriod_returnCachedValue() {
         final TimeSupplier timeSupplier = new TimeSupplier();
         final FaultTolerantCache<String, Integer> cache = FaultTolerantCache.of(source, CACHE_PARAMETERS, timeSupplier);
@@ -106,7 +106,11 @@ public class FaultTolerantCacheTest {
         assertThat(cache.get(key), is(Optional.of(1)));
         //noinspection StatementWithEmptyBody,OptionalGetWithoutIsPresent
         while (cache.get(key).get() == 1) {
-            Thread.yield();
+            try {
+                TimeUnit.MILLISECONDS.sleep(10);
+            } catch (InterruptedException e) {
+                // ignore
+            }
         }
         assertThat(cache.get(key), is(Optional.of(8)));
     }
@@ -163,7 +167,7 @@ public class FaultTolerantCacheTest {
             return time;
         }
 
-        LocalDateTime step(@NotNull final TemporalAmount temporalAmount) {
+        LocalDateTime step(final TemporalAmount temporalAmount) {
             time = time.plus(temporalAmount);
             return time;
         }

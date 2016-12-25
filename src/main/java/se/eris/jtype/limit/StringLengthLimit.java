@@ -15,8 +15,6 @@
  */
 package se.eris.jtype.limit;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Optional;
 
 @SuppressWarnings("WeakerAccess")
@@ -24,32 +22,32 @@ public class StringLengthLimit implements StringLimit {
 
     public static final int LONGEST_STRING_TO_PRESENT = 80;
 
-    @NotNull
+
     public static StringLengthLimit zeroTo(final int max) {
         return of(0, max);
     }
 
-    @NotNull
+
     public static StringLengthLimit oneTo(final int max) {
         return of(1, max);
     }
 
-    @NotNull
+
     public static StringLengthLimit notEmpty() {
         return of(1, Integer.MAX_VALUE);
     }
 
-    @NotNull
+
     public static StringLengthLimit atLeast(final int min) {
         return of(min, Integer.MAX_VALUE);
     }
 
-    @NotNull
+
     public static StringLengthLimit exactly(final int length) {
         return of(length, length);
     }
 
-    @NotNull
+
     public static StringLengthLimit of(final int min, final int max) {
         return new StringLengthLimit(min, max);
     }
@@ -69,8 +67,8 @@ public class StringLengthLimit implements StringLimit {
     }
 
     @Override
-    @NotNull
-    public Optional<ValidationError> validate(@NotNull final String s) {
+
+    public Optional<ValidationError> validate( final String s) {
         final int length = s.length();
         if (length < min) {
             return Optional.of(ValidationError.of("Length violation: " + quote(shorten(s)) + " is shorter (" + length + ") than the minimum length of " + min + "."));
@@ -81,18 +79,18 @@ public class StringLengthLimit implements StringLimit {
         return Optional.empty();
     }
 
-    @NotNull
-    private String quote(@NotNull final String s) {
+
+    private String quote( final String s) {
         return '\'' + s + '\'';
     }
 
-    @NotNull
-    private String shorten(@NotNull final String s) {
+
+    private String shorten( final String s) {
         return (s.length() > LONGEST_STRING_TO_PRESENT) ? truncate(s) : s;
     }
 
-    @NotNull
-    private String truncate(@NotNull final String s) {
+
+    private String truncate( final String s) {
         return s.substring(0, LONGEST_STRING_TO_PRESENT) + "...' (truncated at " + LONGEST_STRING_TO_PRESENT + " characters)";
     }
 

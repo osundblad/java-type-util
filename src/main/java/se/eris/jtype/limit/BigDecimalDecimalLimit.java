@@ -15,14 +15,11 @@
  */
 package se.eris.jtype.limit;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.math.BigDecimal;
 import java.util.Optional;
 
 public class BigDecimalDecimalLimit implements Limit<BigDecimal> {
 
-    @NotNull
     public static Limit<BigDecimal> of(final int decimals) {
         return new BigDecimalDecimalLimit(decimals);
     }
@@ -33,9 +30,8 @@ public class BigDecimalDecimalLimit implements Limit<BigDecimal> {
         this.decimals = decimals;
     }
 
-    @NotNull
     @Override
-    public Optional<ValidationError> validate(@NotNull final BigDecimal item) {
+    public Optional<ValidationError> validate(final BigDecimal item) {
         if (item.scale() > decimals) {
             return Optional.of(ValidationError.of("Too many decimals " + item.toString() + " (only " + decimals + " allowed)"));
         }
