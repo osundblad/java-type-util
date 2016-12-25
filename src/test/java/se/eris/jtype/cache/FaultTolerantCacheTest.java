@@ -95,7 +95,7 @@ public class FaultTolerantCacheTest {
         assertThat(cache.get("S20000:AB"), is(Optional.of(1)));
     }
 
-    @Test(timeout = 10000)
+    @Test(timeout = 2000)
     public void get_afterRefetchAsyncPeriod_returnCachedValue() {
         final TimeSupplier timeSupplier = new TimeSupplier();
         final FaultTolerantCache<String, Integer> cache = FaultTolerantCache.of(source, CACHE_PARAMETERS, timeSupplier);
@@ -163,7 +163,7 @@ public class FaultTolerantCacheTest {
             return time;
         }
 
-        public LocalDateTime step(@NotNull final TemporalAmount temporalAmount) {
+        LocalDateTime step(@NotNull final TemporalAmount temporalAmount) {
             time = time.plus(temporalAmount);
             return time;
         }

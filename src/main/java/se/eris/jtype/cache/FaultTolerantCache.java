@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDateTime;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -31,7 +32,9 @@ import java.util.stream.Collectors;
 public final class FaultTolerantCache<K, V> {
 
     @NotNull
-    private final Map<K, Dated<V>> cache = new ConcurrentHashMap<>();
+    private final Map<K, Dated<V>> cache = new HashMap<>();
+    @NotNull
+    private final Map<K, LocalDateTime> locks = new ConcurrentHashMap<>();
 
     @NotNull
     private final Function<K, Optional<V>> source;
@@ -75,6 +78,38 @@ public final class FaultTolerantCache<K, V> {
         return syncedFetch(key, dated);
     }
 
+    private void asyncFetch(@NotNull final K key) {
+        if (lock(key)) {
+            CompletableFuture
+                    .supplyAsync(() -> source.apply(key))
+                    .handle((result, e) -> {
+                        try {
+                            if (result.isPresent()) {
+                                return result;
+                            }
+                            throw new RuntimeException(getFetchFaileMessage(key), e);
+                        } finally {
+                            unlock(key);
+                        }
+                    })
+                    .thenAccept(v -> { cache.put(key, Dated.of(timeSupplier.get(), v.get())); });
+        }
+    }
+
+    private synchronized boolean lock(@NotNull final K key) {
+        if (locks.containsKey(key)) {
+            return false;
+        }
+        System.out.println("LOCKED " + key);
+        locks.put(key, timeSupplier.get());
+        return true;
+    }
+
+    private synchronized void unlock(@NotNull final K key) {
+        locks.remove(key);
+        System.out.println("UNLOCKED " +key);
+    }
+
     @NotNull
     private Optional<V> syncedFetch(@NotNull final K key, final Dated<V> dated) {
         try {
@@ -98,16 +133,6 @@ public final class FaultTolerantCache<K, V> {
     @NotNull
     private String getFetchFaileMessage(@NotNull final K key) {
         return "Source " + source + " failed to get key " + key;
-    }
-
-    private void asyncFetch(@NotNull final K key) {
-        final CompletableFuture<Optional<V>> future = CompletableFuture.supplyAsync(() -> source.apply(key));
-        future.handle((result, e) -> {
-            if (result.isPresent()) {
-                return result;
-            }
-            throw new RuntimeException(getFetchFaileMessage(key), e);
-        }).thenAccept(v -> cache.put(key, Dated.of(timeSupplier.get(), v.get())));
     }
 
 
