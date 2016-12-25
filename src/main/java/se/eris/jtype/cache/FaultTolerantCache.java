@@ -79,9 +79,9 @@ public final class FaultTolerantCache<K, V> {
                     .thenAccept(v -> {
                         if (v.isPresent()) {
                             cache.put(key, Dated.of(timeSupplier.get(), v.get()));
-                            return;
+                        } else {
+                            throw new SupplierFailedException(getSupplierFailedMessage(key));
                         }
-                        throw new SupplierFailedException(getSupplierFailedMessage(key));
                     });
         }
     }
