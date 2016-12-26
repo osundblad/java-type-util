@@ -43,7 +43,10 @@ public class FaultTolerantCacheTest {
     private static final Duration REFETCH_SYNC_PERIOD = Duration.ofMinutes(20);
     private static final Duration REFETCH_ASYNC_PERIOD = Duration.ofMinutes(5);
 
-    private static final CacheParameters<String> CACHE_PARAMETERS = CacheParameters.of(REFETCH_SYNC_PERIOD, REFETCH_ASYNC_PERIOD);
+    private static final CacheParameters<String> CACHE_PARAMETERS = CacheParameters.Builder.<String>init()
+            .asyncFetchPeriod(REFETCH_ASYNC_PERIOD)
+            .syncFetchPeriod(REFETCH_SYNC_PERIOD)
+            .build();
 
     private static final Function<String, Optional<Integer>> source =
             (s) -> {

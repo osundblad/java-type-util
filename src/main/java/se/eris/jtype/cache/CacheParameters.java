@@ -24,49 +24,71 @@ import java.util.function.Consumer;
 
 public final class CacheParameters<K> {
 
-    private final Duration refetchSyncPeriod;
-    private final Duration refetchAsyncPeriod;
+    private final Duration asyncFetchPeriod;
+    private final Duration syncFetchPeriod;
     private final Optional<BiConsumer<K, Throwable>> supplierFailedAction;
 
-    public static <K> CacheParameters<K> of(final Duration refetchSyncPeriod, final Duration refetchAsyncPeriod) {
-        return of(refetchSyncPeriod, refetchAsyncPeriod, null);
-    }
-
-    /**
-     * Example:<code>
-     * </code>
-     */
-    public static <K> CacheParameters<K> of(final Duration refetchSyncPeriod, final Duration refetchAsyncPeriod, @Nullable final BiConsumer<K, Throwable> supplierFailedAction) {
-        return new CacheParameters<>(refetchSyncPeriod, refetchAsyncPeriod, supplierFailedAction);
-    }
-
-    /*
-     * Todo: make a CacheParametersBuilder.
-     */
-    private CacheParameters(final Duration refetchSyncPeriod, final Duration refetchAsyncPeriod, @Nullable final BiConsumer<K, Throwable> supplierFailedAction) {
-        this.refetchSyncPeriod = refetchSyncPeriod;
-        this.refetchAsyncPeriod = refetchAsyncPeriod;
+    private CacheParameters(final Duration asyncFetchPeriod, final Duration syncFetchPeriod, @Nullable final BiConsumer<K, Throwable> supplierFailedAction) {
+        this.syncFetchPeriod = syncFetchPeriod;
+        this.asyncFetchPeriod = asyncFetchPeriod;
         this.supplierFailedAction = Optional.ofNullable(supplierFailedAction);
     }
 
-    public Duration getRefetchSyncPeriod() {
-        return refetchSyncPeriod;
-    }
-
     /**
-     * @return the time after which the value is refeteched after returning cached value. To prevent frequent
-     * refetches.
+     * @return the time after which the value is re-fetched after returning current cached value. To
+     * prevent frequent remote calls.
      */
-    public Duration getRefetchAsyncPeriod() {
-        return refetchAsyncPeriod;
+    public Duration getAsyncFetchPeriod() {
+        return asyncFetchPeriod;
     }
 
     /**
-     * @return the {@link Consumer} that is called when the {@link java.util.function.Supplier} throws
+     * @return the time after which the value is fetched synchronously to prevent too old values.
+     */
+    public Duration getSyncFetchPeriod() {
+        return syncFetchPeriod;
+    }
+
+    /**
+     * @return the {@link Consumer} that is called when the cache {@link java.util.function.Supplier} throws
      * an {@link Exception}. Useful for, for example, logging.
      */
     public Optional<BiConsumer<K, Throwable>> getSupplierFailedAction() {
         return supplierFailedAction;
     }
 
+    public static class Builder<K> {
+
+        public static final Duration DEFAULT_ASYNC_REFETCH_TIME = Duration.ofSeconds(10);
+        public static final Duration DEFAUL_SYNC_REFETCH_TIME = Duration.ofMinutes(1);
+
+        public static <K> Builder<K> init() {
+            return new Builder<K>();
+        }
+
+        private Duration asyncFetchPeriod = DEFAULT_ASYNC_REFETCH_TIME;
+        private Duration syncFetchPeriod = DEFAUL_SYNC_REFETCH_TIME;
+        @Nullable
+        private BiConsumer<K, Throwable> supplierFailedAction;
+
+        public Builder<K> asyncFetchPeriod(final Duration asyncFetchPeriod) {
+            this.asyncFetchPeriod = asyncFetchPeriod;
+            return this;
+        }
+
+        public Builder<K> syncFetchPeriod(final Duration syncFetchPeriod) {
+            this.syncFetchPeriod = syncFetchPeriod;
+            return this;
+        }
+
+        public Builder<K> supplierFailedAction(final BiConsumer<K, Throwable> supplierFailedAction) {
+            this.supplierFailedAction = supplierFailedAction;
+            return this;
+        }
+
+        public CacheParameters<K> build() {
+            return new CacheParameters<K>(asyncFetchPeriod, syncFetchPeriod, supplierFailedAction);
+        }
+
+    }
 }

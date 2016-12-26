@@ -61,10 +61,10 @@ public final class FaultTolerantCache<K, V> {
         final Dated<V> dated = opDated.get();
         final LocalDateTime now = timeSupplier.get();
 
-        if (now.isBefore(getEarliestRefetchTime(dated.getDateTime()))) {
+        if (now.isBefore(getAsyncFetchTime(dated.getDateTime()))) {
             return Optional.of(dated.getSubject());
         }
-        if (now.isBefore(getSyncedRefetchTime(dated.getDateTime()))) {
+        if (now.isBefore(getSyncFetchTime(dated.getDateTime()))) {
             asyncFetch(key);
             return Optional.of(dated.getSubject());
         }
@@ -111,12 +111,12 @@ public final class FaultTolerantCache<K, V> {
         }
     }
 
-    private ChronoLocalDateTime getSyncedRefetchTime(final ChronoLocalDateTime dateTime) {
-        return dateTime.plus(cacheParameters.getRefetchSyncPeriod());
+    private ChronoLocalDateTime getSyncFetchTime(final ChronoLocalDateTime dateTime) {
+        return dateTime.plus(cacheParameters.getSyncFetchPeriod());
     }
 
-    private ChronoLocalDateTime getEarliestRefetchTime(final ChronoLocalDateTime dateTime) {
-        return dateTime.plus(cacheParameters.getRefetchAsyncPeriod());
+    private ChronoLocalDateTime getAsyncFetchTime(final ChronoLocalDateTime dateTime) {
+        return dateTime.plus(cacheParameters.getAsyncFetchPeriod());
     }
 
     private String getSupplierFailedMessage(final K key) {
@@ -138,7 +138,7 @@ public final class FaultTolerantCache<K, V> {
     }
 
     public Map<K, V> getPresentFresh(final Collection<K> keys) {
-        final ChronoLocalDateTime fetchedAfter = timeSupplier.get().minus(cacheParameters.getRefetchSyncPeriod());
+        final ChronoLocalDateTime fetchedAfter = timeSupplier.get().minus(cacheParameters.getSyncFetchPeriod());
         return cache.entrySet().stream()
                 .filter(e -> keys.contains(e.getKey()))
                 .filter(e -> e.getValue().getDateTime().isAfter(fetchedAfter))
