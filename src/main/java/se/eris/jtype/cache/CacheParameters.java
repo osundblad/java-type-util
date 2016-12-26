@@ -26,12 +26,20 @@ public final class CacheParameters<K> {
 
     private final Duration asyncFetchPeriod;
     private final Duration syncFetchPeriod;
-    private final Optional<BiConsumer<K, Throwable>> supplierFailedAction;
+    private final Duration fetchTimeoutPeriod;
 
-    private CacheParameters(final Duration asyncFetchPeriod, final Duration syncFetchPeriod, @Nullable final BiConsumer<K, Throwable> supplierFailedAction) {
+    @Nullable
+    private final BiConsumer<K, Throwable> supplierFailedAction;
+
+    private CacheParameters(
+            final Duration asyncFetchPeriod,
+            final Duration syncFetchPeriod,
+            final Duration fetchTimeoutPeriod,
+            @Nullable final BiConsumer<K, Throwable> supplierFailedAction) {
         this.syncFetchPeriod = syncFetchPeriod;
         this.asyncFetchPeriod = asyncFetchPeriod;
-        this.supplierFailedAction = Optional.ofNullable(supplierFailedAction);
+        this.fetchTimeoutPeriod = fetchTimeoutPeriod;
+        this.supplierFailedAction = supplierFailedAction;
     }
 
     /**
@@ -49,12 +57,16 @@ public final class CacheParameters<K> {
         return syncFetchPeriod;
     }
 
+    public Duration getFetchTimeoutPeriod() {
+        return fetchTimeoutPeriod;
+    }
+
     /**
      * @return the {@link Consumer} that is called when the cache {@link java.util.function.Supplier} throws
      * an {@link Exception}. Useful for, for example, logging.
      */
     public Optional<BiConsumer<K, Throwable>> getSupplierFailedAction() {
-        return supplierFailedAction;
+        return Optional.ofNullable(supplierFailedAction);
     }
 
     public static class Builder<K> {
@@ -68,6 +80,7 @@ public final class CacheParameters<K> {
 
         private Duration asyncFetchPeriod = DEFAULT_ASYNC_REFETCH_TIME;
         private Duration syncFetchPeriod = DEFAUL_SYNC_REFETCH_TIME;
+        private Duration fetchTimeoutPeriod = Duration.ofSeconds(10);
         @Nullable
         private BiConsumer<K, Throwable> supplierFailedAction;
 
@@ -81,13 +94,18 @@ public final class CacheParameters<K> {
             return this;
         }
 
-        public Builder<K> supplierFailedAction(final BiConsumer<K, Throwable> supplierFailedAction) {
+        public Builder<K> fetchTimeoutPeriod(final Duration fetchTimeoutPeriod) {
+            this.fetchTimeoutPeriod = fetchTimeoutPeriod;
+            return this;
+        }
+
+        public Builder<K> supplierFailedAction(@Nullable final BiConsumer<K, Throwable> supplierFailedAction) {
             this.supplierFailedAction = supplierFailedAction;
             return this;
         }
 
         public CacheParameters<K> build() {
-            return new CacheParameters<K>(asyncFetchPeriod, syncFetchPeriod, supplierFailedAction);
+            return new CacheParameters<K>(asyncFetchPeriod, syncFetchPeriod, fetchTimeoutPeriod, supplierFailedAction);
         }
 
     }

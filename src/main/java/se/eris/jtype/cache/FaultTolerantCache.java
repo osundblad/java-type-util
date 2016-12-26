@@ -71,7 +71,6 @@ public final class FaultTolerantCache<K, V> {
         return syncFetch(key, dated.getSubject());
     }
 
-
     private void asyncFetch(final K key) {
         if (lock(key)) {
             CompletableFuture
@@ -86,6 +85,7 @@ public final class FaultTolerantCache<K, V> {
         }
         locks.put(key, timeSupplier.get());
         return true;
+
     }
 
     private boolean unlock(final K key) {
@@ -100,6 +100,7 @@ public final class FaultTolerantCache<K, V> {
         }
     }
 
+    // todo: only one active call per key
     private Optional<V> syncFetch(final K key) {
         try {
             final Optional<V> fetched = source.apply(key);
