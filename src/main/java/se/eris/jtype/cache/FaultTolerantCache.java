@@ -56,7 +56,7 @@ public final class FaultTolerantCache<K, V> {
     public Optional<V> get(final K key) {
         final Optional<Dated<V>> opDated = Optional.ofNullable(cache.get(key));
         if (!opDated.isPresent()) {
-            return syncedFetch(key);
+            return syncFetch(key);
         }
         final Dated<V> dated = opDated.get();
         final LocalDateTime now = timeSupplier.get();
@@ -68,21 +68,15 @@ public final class FaultTolerantCache<K, V> {
             asyncFetch(key);
             return Optional.of(dated.getSubject());
         }
-        return syncedFetch(key, dated.getSubject());
+        return syncFetch(key, dated.getSubject());
     }
 
 
     private void asyncFetch(final K key) {
         if (lock(key)) {
             CompletableFuture
-                    .supplyAsync(() -> syncedFetch(key), executorService)
-                    .thenAccept(v -> {
-                        if (v.isPresent()) {
-                            cache.put(key, Dated.of(timeSupplier.get(), v.get()));
-                        } else {
-                            throw new SupplierFailedException(getSupplierFailedMessage(key));
-                        }
-                    });
+                    .supplyAsync(() -> syncFetch(key), executorService)
+                    .handle((Optional<V> v, Throwable e) -> unlock(key));
         }
     }
 
@@ -94,19 +88,19 @@ public final class FaultTolerantCache<K, V> {
         return true;
     }
 
-    private void unlock(final K key) {
-        locks.remove(key);
+    private boolean unlock(final K key) {
+        return locks.remove(key) != null;
     }
 
-    private Optional<V> syncedFetch(final K key, final V defaultValue) {
+    private Optional<V> syncFetch(final K key, final V defaultValue) {
         try {
-            return syncedFetch(key);
+            return syncFetch(key);
         } catch (final Exception e) {
             return Optional.of(defaultValue);
         }
     }
 
-    private Optional<V> syncedFetch(final K key) {
+    private Optional<V> syncFetch(final K key) {
         try {
             final Optional<V> fetched = source.apply(key);
             fetched.ifPresent(v -> put(key, v));
@@ -114,8 +108,6 @@ public final class FaultTolerantCache<K, V> {
         } catch (final RuntimeException e) {
             cacheParameters.getSupplierFailedAction().ifPresent(throwableConsumer -> throwableConsumer.accept(key, e));
             throw new SupplierFailedException(getSupplierFailedMessage(key), e);
-        } finally {
-            unlock(key);
         }
     }
 
