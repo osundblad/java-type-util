@@ -15,6 +15,11 @@
  */
 package se.eris.jtype.cache;
 
+import org.jetbrains.annotations.NotNull;
+import se.eris.jtype.cache.dated.Dated;
+import se.eris.jtype.cache.dated.FetchedAt;
+import se.eris.jtype.cache.dated.NextFetchTime;
+
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDateTime;
 import java.util.Collection;
@@ -61,10 +66,10 @@ public final class FaultTolerantCache<K, V> {
         final Dated<V> dated = opDated.get();
         final LocalDateTime now = timeSupplier.get();
 
-        if (now.isBefore(getAsyncFetchTime(dated.getDateTime()))) {
+        if (dated.isFresh(now)) {
             return Optional.of(dated.getSubject());
         }
-        if (now.isBefore(getSyncFetchTime(dated.getDateTime()))) {
+        if (now.isBefore(nextSyncFetch(dated))) {
             asyncFetch(key);
             return Optional.of(dated.getSubject());
         }
@@ -100,49 +105,68 @@ public final class FaultTolerantCache<K, V> {
         }
     }
 
-    // todo: only one active call per key
+    // fix only one active call per key
     private Optional<V> syncFetch(final K key) {
         try {
             final Optional<V> fetched = source.apply(key);
             fetched.ifPresent(v -> put(key, v));
             return fetched;
         } catch (final RuntimeException e) {
+            updateFailedFetch(key);
             cacheParameters.getSupplierFailedAction().ifPresent(throwableConsumer -> throwableConsumer.accept(key, e));
             throw new SupplierFailedException(getSupplierFailedMessage(key), e);
         }
     }
 
-    private ChronoLocalDateTime getSyncFetchTime(final ChronoLocalDateTime dateTime) {
-        return dateTime.plus(cacheParameters.getSyncFetchPeriod());
+    public void updateFailedFetch(final K key) {
+        final Dated<V> dated = cache.get(key);
+        if (dated != null) {
+            cache.put(key, createFailedDated(dated.getSubject(), timeSupplier.get()));
+        }
     }
 
-    private ChronoLocalDateTime getAsyncFetchTime(final ChronoLocalDateTime dateTime) {
-        return dateTime.plus(cacheParameters.getAsyncFetchPeriod());
+    @NotNull
+    private Dated<V> createFailedDated(final V value, final LocalDateTime now) {
+        return Dated.sucessful(value, FetchedAt.of(now), NextFetchTime.of(now.plus(cacheParameters.getAsyncFetchPeriod())));
+    }
+
+    @SuppressWarnings("TypeMayBeWeakened")
+    private LocalDateTime nextSyncFetch(final Dated dated) {
+        return dated.getFetchTime().asLocalDateTime().plus(cacheParameters.getSyncFetchPeriod());
     }
 
     private String getSupplierFailedMessage(final K key) {
         return "Source " + source + " failed to get key " + key;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public Optional<V> getIfPresent(final K key) {
         return Optional.ofNullable(cache.get(key)).map(Dated::getSubject);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void put(final K key, final V value) {
-        cache.put(key, Dated.of(timeSupplier.get(), value));
+        cache.put(key, createSucessfulDated(value, timeSupplier.get()));
     }
 
+    @NotNull
+    private Dated<V> createSucessfulDated(final V value, final LocalDateTime now) {
+        return Dated.sucessful(value, FetchedAt.of(now), NextFetchTime.of(now.plus(cacheParameters.getAsyncFetchPeriod())));
+    }
+
+    @SuppressWarnings("WeakerAccess")
     public Map<K, V> getPresent(final Collection<K> keys) {
         return cache.entrySet().stream()
                 .filter(e -> keys.contains(e.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getSubject()));
     }
 
+    @SuppressWarnings("WeakerAccess")
     public Map<K, V> getPresentFresh(final Collection<K> keys) {
         final ChronoLocalDateTime fetchedAfter = timeSupplier.get().minus(cacheParameters.getSyncFetchPeriod());
         return cache.entrySet().stream()
                 .filter(e -> keys.contains(e.getKey()))
-                .filter(e -> e.getValue().getDateTime().isAfter(fetchedAfter))
+                .filter(e -> e.getValue().getFetchTime().asLocalDateTime().isAfter(fetchedAfter))
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getSubject()));
     }
 

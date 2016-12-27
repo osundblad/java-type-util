@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -43,10 +44,15 @@ public class FaultTolerantCacheTest {
     private static final Duration REFETCH_SYNC_PERIOD = Duration.ofMinutes(20);
     private static final Duration REFETCH_ASYNC_PERIOD = Duration.ofMinutes(5);
 
-    private static final CacheParameters<String> CACHE_PARAMETERS = CacheParameters.Builder.<String>init()
-            .asyncFetchPeriod(REFETCH_ASYNC_PERIOD)
-            .syncFetchPeriod(REFETCH_SYNC_PERIOD)
+    private static final CacheParameters<String> CACHE_PARAMETERS = getParmaeterBuilder()
             .build();
+
+    private static CacheParameters.Builder<String> getParmaeterBuilder() {
+        return CacheParameters.Builder.<String>init()
+                .asyncFetchPeriod(REFETCH_ASYNC_PERIOD)
+                .syncFetchPeriod(REFETCH_SYNC_PERIOD)
+                .fetchTimeoutPeriod(Duration.ofMinutes(1));
+    }
 
     private static final Function<String, Optional<Integer>> source =
             (s) -> {
@@ -81,6 +87,26 @@ public class FaultTolerantCacheTest {
 
         timeSupplier.step(Duration.ofHours(5));
         assertThat(cache.get("ERROR"), is(Optional.of(1)));
+    }
+
+    @Test
+    public void get_syncFailingSourceWithCache_shouldNotAtemptAgainUntilAfterFetchTimeout() {
+        final TimeSupplier timeSupplier = new TimeSupplier();
+        final CacheParameters.Builder<String> parmaeterBuilder = getParmaeterBuilder();
+        final AtomicInteger failedCounter = new AtomicInteger(0);
+        parmaeterBuilder.supplierFailedAction((s, e) -> failedCounter.incrementAndGet());
+        final FaultTolerantCache<String, Integer> cache = FaultTolerantCache.of(source, parmaeterBuilder.build(), timeSupplier);
+        cache.put("ERROR", 1);
+
+        timeSupplier.step(Duration.ofHours(5));
+        assertThat(cache.get("ERROR"), is(Optional.of(1)));
+        timeSupplier.step(Duration.ofSeconds(10));
+        assertThat(failedCounter.get(), is(1));
+        assertThat(cache.get("ERROR"), is(Optional.of(1)));
+        assertThat(failedCounter.get(), is(1));
+        timeSupplier.step(Duration.ofHours(1));
+        assertThat(cache.get("ERROR"), is(Optional.of(1)));
+        assertThat(failedCounter.get(), is(2));
     }
 
     @Test
@@ -123,12 +149,9 @@ public class FaultTolerantCacheTest {
         cache.put(key, 1);
         timeSupplier.step(Duration.ofMinutes(10));
 
-        System.out.println("Thread.activeCount() = " + Thread.activeCount());
-
         assertThat(cache.get(key), is(Optional.of(1)));
         while (cache.get(key).equals(Optional.of(1))) {
             try {
-                System.out.println("Thread.activeCount() = " + Thread.activeCount());
                 TimeUnit.MILLISECONDS.sleep(100);
             } catch (final InterruptedException e) {
                 // ignore
@@ -199,9 +222,8 @@ public class FaultTolerantCacheTest {
             return time;
         }
 
-        LocalDateTime step(final TemporalAmount temporalAmount) {
+        void step(final TemporalAmount temporalAmount) {
             time = time.plus(temporalAmount);
-            return time;
         }
     }
 

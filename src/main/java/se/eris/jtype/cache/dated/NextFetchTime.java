@@ -13,27 +13,23 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package se.eris.jtype.cache;
+package se.eris.jtype.cache.dated;
 
-import se.eris.jtype.type.DyadWrapper;
+import se.eris.jtype.type.BasicWrapper;
 
 import java.time.LocalDateTime;
 
-public final class Dated<S> extends DyadWrapper<LocalDateTime, S> {
+public class NextFetchTime extends BasicWrapper<LocalDateTime> {
 
-    public static <S> Dated<S> of(final LocalDateTime first, final S second) {
-        return new Dated<>(first, second);
+    public static NextFetchTime of(final LocalDateTime attemptedAt) {
+        return new NextFetchTime(attemptedAt);
     }
 
-    private Dated(final LocalDateTime first, final S second) {
-        super(first, second);
+    private NextFetchTime(final LocalDateTime item) {
+        super(item);
     }
 
-    public LocalDateTime getDateTime() {
-        return rawFirst();
-    }
-
-    public S getSubject() {
-        return rawSecond();
+    public LocalDateTime asLocalDateTime() {
+        return raw();
     }
 }
