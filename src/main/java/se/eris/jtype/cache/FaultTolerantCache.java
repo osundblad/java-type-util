@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 public final class FaultTolerantCache<K, V> {
 
     private final Map<K, Dated<V>> cache = new ConcurrentHashMap<>();
-    private final Map<K, LocalDateTime> locks = new HashMap<>();
+    private final Map<K, LocalDateTime> currentlyFetching = new HashMap<>();
 
     private final Function<K, Optional<V>> source;
     private final CacheParameters<K> cacheParameters;
@@ -80,24 +80,27 @@ public final class FaultTolerantCache<K, V> {
     }
 
     private void asyncFetch(final K key) {
-        if (lock(key)) {
+        if (markAsCurrentlyFetching(key)) {
             CompletableFuture
                     .supplyAsync(() -> syncFetch(key), executorService)
-                    .handle((Optional<V> v, Throwable e) -> unlock(key));
+                    .handle((Optional<V> v, Throwable e) -> unmarkCurrentlyFetching(key));
         }
     }
 
-    private synchronized boolean lock(final K key) {
-        if (locks.containsKey(key)) {
-            return false;
+    private synchronized boolean markAsCurrentlyFetching(final K key) {
+        final LocalDateTime now = timeSupplier.get();
+        final LocalDateTime markedAt = currentlyFetching.get(key);
+        if (markedAt != null) {
+            if (now.isBefore(markedAt.plus(cacheParameters.getFetchTimeoutPeriod()))) {
+                return false;
+            }
         }
-        locks.put(key, timeSupplier.get());
+        currentlyFetching.put(key, now);
         return true;
-
     }
 
-    private boolean unlock(final K key) {
-        return locks.remove(key) != null;
+    private boolean unmarkCurrentlyFetching(final K key) {
+        return currentlyFetching.remove(key) != null;
     }
 
     private Optional<V> syncFetch(final K key, final V defaultValue) {
