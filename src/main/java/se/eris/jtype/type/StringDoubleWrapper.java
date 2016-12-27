@@ -15,21 +15,18 @@
  */
 package se.eris.jtype.type;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * Useful for user entered floating point values, where you don't want float/double precision
  * change user input.
  */
 public abstract class StringDoubleWrapper extends BasicWrapper<String> {
 
-    protected StringDoubleWrapper(@NotNull final String s) {
+    protected StringDoubleWrapper(final String s) {
         super(s);
         //noinspection ResultOfMethodCallIgnored
         Double.parseDouble(s);
     }
 
-    @NotNull
     public Double asDouble() {
         return Double.parseDouble(raw());
     }
@@ -38,7 +35,6 @@ public abstract class StringDoubleWrapper extends BasicWrapper<String> {
         return Double.parseDouble(raw());
     }
 
-    @NotNull
     public String asString() {
         return super.raw();
     }

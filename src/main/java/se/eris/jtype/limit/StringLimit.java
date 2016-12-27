@@ -15,13 +15,10 @@
  */
 package se.eris.jtype.limit;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Optional;
 
 public interface StringLimit extends Limit<String> {
 
-    @NotNull
-    Optional<ValidationError> validate(@NotNull String item);
+    Optional<ValidationError> validate(String item);
 
 }

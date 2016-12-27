@@ -15,7 +15,6 @@
  */
 package se.eris.jtype.type;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 import se.eris.test.SerializeUtil;
 
@@ -68,22 +67,22 @@ public class BasicWrapperTest {
 
     private static class BasicWrapperA extends BasicWrapper<String> {
 
-        private static BasicWrapperA of(@NotNull final String s) {
+        private static BasicWrapperA of(final String s) {
             return new BasicWrapperA(s);
         }
 
-        private BasicWrapperA(@NotNull final String s) {
+        private BasicWrapperA(final String s) {
             super(s);
         }
     }
 
     private static class BasicWrapperB extends BasicWrapper<String> {
 
-        private static BasicWrapperB of(@NotNull final String s) {
+        private static BasicWrapperB of(final String s) {
             return new BasicWrapperB(s);
         }
 
-        private BasicWrapperB(@NotNull final String s) {
+        private BasicWrapperB(final String s) {
             super(s);
         }
     }

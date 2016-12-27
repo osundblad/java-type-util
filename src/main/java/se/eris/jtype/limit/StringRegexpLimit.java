@@ -15,33 +15,27 @@
  */
 package se.eris.jtype.limit;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class StringRegexpLimit implements StringLimit {
 
-    @NotNull
-    public static StringRegexpLimit of(@NotNull final Pattern pattern) {
+    public static StringRegexpLimit of(final Pattern pattern) {
         return new StringRegexpLimit(pattern);
     }
 
-    @NotNull
-    public static StringRegexpLimit of(@NotNull final String regexp) {
+    public static StringRegexpLimit of(final String regexp) {
         return of(Pattern.compile(regexp));
     }
 
-    @NotNull
     private final Pattern pattern;
 
-    private StringRegexpLimit(@NotNull final Pattern pattern) {
+    private StringRegexpLimit(final Pattern pattern) {
         this.pattern = pattern;
     }
 
     @Override
-    @NotNull
-    public Optional<ValidationError> validate(@NotNull final String s) {
+    public Optional<ValidationError> validate(final String s) {
         if (!pattern.matcher(s).matches()) {
             return Optional.of(ValidationError.of("'" + s + "' does not match " + pattern));
         }

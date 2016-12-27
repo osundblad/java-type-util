@@ -15,7 +15,6 @@
  */
 package se.eris.jtype.io;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDate;
@@ -34,7 +33,6 @@ public final class IoString {
     private IoString() {
     }
 
-    @NotNull
     public static Optional<Double> toDouble(@Nullable final String s) {
         if (s == null) {
             return Optional.empty();
@@ -46,7 +44,6 @@ public final class IoString {
         }
     }
 
-    @NotNull
     public static Optional<Integer> toInteger(@Nullable final String s) {
         if (s == null) {
             return Optional.empty();
@@ -58,7 +55,6 @@ public final class IoString {
         }
     }
 
-    @NotNull
     public static Optional<Short> toShort(@Nullable final String s) {
         if (s == null) {
             return Optional.empty();
@@ -70,7 +66,6 @@ public final class IoString {
         }
     }
 
-    @NotNull
     public static Optional<Boolean> toBoolean(@Nullable final String s) {
         if (s == null) {
             return Optional.empty();
@@ -84,7 +79,6 @@ public final class IoString {
         throw new IllegalArgumentException(s + " is not a Boolean");
     }
 
-    @NotNull
     public static Optional<UUID> toUUID(@Nullable final String s) {
         if (s == null) {
             return Optional.empty();
@@ -96,7 +90,6 @@ public final class IoString {
         }
     }
 
-    @NotNull
     public static Optional<LocalDate> toLocalDate(@Nullable final CharSequence s) {
         if (s == null) {
             return Optional.empty();

@@ -15,7 +15,6 @@
  */
 package se.eris.jtype.type;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
@@ -50,7 +49,7 @@ public class DoubleWrapperTest {
 
     private static class Subject extends DoubleWrapper {
 
-        Subject(@NotNull final Double i) {
+        Subject(final Double i) {
             super(i);
         }
 

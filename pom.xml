@@ -53,7 +53,7 @@
         <connection>scm:git:git@github.com:osundblad/java-type-util.git</connection>
         <developerConnection>scm:git:git@github.com:osundblad/java-type-util.git</developerConnection>
         <url>https://github.com/osundblad/java-type-util</url>
-        <tag>java-type-util-0.4</tag>
+        <tag>java-type-util-0.4.1</tag>
     </scm>
 
     <dependencies>
@@ -70,6 +70,13 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -15,8 +15,6 @@
  */
 package se.eris.jtype.type;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
 import java.util.Optional;
@@ -26,30 +24,25 @@ import java.util.Optional;
  */
 public class OpenDatePeriod extends PairWrapper<SOptional<LocalDate>> {
 
-    @NotNull
-    public static OpenDatePeriod of(@NotNull final Optional<LocalDate> startDate, @NotNull final Optional<LocalDate> endDate) {
+    public static OpenDatePeriod of(final Optional<LocalDate> startDate, final Optional<LocalDate> endDate) {
         return new OpenDatePeriod(startDate, endDate);
     }
 
-    @NotNull
-    public static OpenDatePeriod from(@NotNull final LocalDate startDate) {
+    public static OpenDatePeriod from(final LocalDate startDate) {
         return of(Optional.of(startDate), Optional.empty());
     }
 
-    @NotNull
-    public static OpenDatePeriod to(@NotNull final LocalDate endDate) {
+    public static OpenDatePeriod to(final LocalDate endDate) {
         return new OpenDatePeriod(Optional.empty(), Optional.of(endDate));
     }
 
-    @NotNull
-    public static OpenDatePeriod between(@NotNull final LocalDate startDate, @NotNull final LocalDate endDate) {
+    public static OpenDatePeriod between(final LocalDate startDate, final LocalDate endDate) {
         return of(Optional.of(startDate), Optional.of(endDate));
     }
 
-    @NotNull
     public static final OpenDatePeriod ALWAYS = of(Optional.empty(), Optional.empty());
 
-    private OpenDatePeriod(@NotNull final Optional<LocalDate> startDate, @NotNull final Optional<LocalDate> endDate) {
+    private OpenDatePeriod(final Optional<LocalDate> startDate, final Optional<LocalDate> endDate) {
         super(SOptional.from(startDate), SOptional.from(endDate));
         validate();
     }
@@ -68,7 +61,6 @@ public class OpenDatePeriod extends PairWrapper<SOptional<LocalDate>> {
         return rawFirst().isPresent();
     }
 
-    @NotNull
     public LocalDate getStartDate() {
         return rawFirst().get();
     }
@@ -77,12 +69,11 @@ public class OpenDatePeriod extends PairWrapper<SOptional<LocalDate>> {
         return rawSecond().isPresent();
     }
 
-    @NotNull
     public LocalDate getEndDate() {
         return rawSecond().get();
     }
 
-    public boolean isInPeriod(@NotNull final ChronoLocalDate localDate) {
+    public boolean isInPeriod(final ChronoLocalDate localDate) {
         if (hasStart() && localDate.isBefore(getStartDate())) {
             return false;
         }
@@ -94,7 +85,6 @@ public class OpenDatePeriod extends PairWrapper<SOptional<LocalDate>> {
     }
 
     @Override
-    @NotNull
     public String toString() {
         final String from = hasStart() ? getStartDate().toString() : "";
         final String to = hasEnd() ? getEndDate().toString() : "";

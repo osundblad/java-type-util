@@ -15,11 +15,9 @@
  */
 package se.eris.jtype.type;
 
-import org.jetbrains.annotations.NotNull;
-
 public abstract class StringWrapper extends BasicWrapper<String> {
 
-    protected StringWrapper(@NotNull final String s) {
+    protected StringWrapper(final String s) {
         super(s);
     }
 
@@ -27,7 +25,6 @@ public abstract class StringWrapper extends BasicWrapper<String> {
         return super.raw().isEmpty();
     }
 
-    @NotNull
     public String asString() {
         return super.raw();
     }

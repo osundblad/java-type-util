@@ -15,14 +15,12 @@
  */
 package se.eris.jtype.limit;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
  * This limit will validate most email addresses that are in use today.
- *
+ * <p>
  * Note though, it does not follow the RFC 5322 specification.
  * Why this pattern see: http://www.regular-expressions.info/email.html
  */
@@ -31,22 +29,18 @@ public class StringEmailLimit implements StringLimit {
     /**
      * Why this pattern see: http://www.regular-expressions.info/email.html
      */
-    @NotNull
     public static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]++@(?:[A-Z0-9-]++\\.)++[A-Z]{2,}+$", Pattern.CASE_INSENSITIVE);
 
     private static final StringEmailLimit INSTANCE = new StringEmailLimit();
 
-    @NotNull
     public static StringEmailLimit getInstance() {
         return INSTANCE;
     }
 
-    @NotNull
     private final StringLimit emailLimit = StringRegexpLimit.of(EMAIL_PATTERN);
 
     @Override
-    @NotNull
-    public Optional<ValidationError> validate(@NotNull final String emailAddress) {
+    public Optional<ValidationError> validate(final String emailAddress) {
         if (emailLimit.validate(emailAddress).isPresent()) {
             return Optional.of(ValidationError.of("'" + emailAddress + "' is not a valid email address"));
         }

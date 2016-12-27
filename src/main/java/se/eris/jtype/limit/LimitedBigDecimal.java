@@ -15,8 +15,6 @@
  */
 package se.eris.jtype.limit;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -25,45 +23,39 @@ import java.util.function.Function;
 @SuppressWarnings("WeakerAccess")
 public class LimitedBigDecimal extends AbstractLimited<BigDecimal> {
 
-    @NotNull
     public static LimitedBigDecimal.Builder init() {
         return new Builder();
     }
 
-    @NotNull
     @Override
-    public BigDecimal of(@NotNull final BigDecimal bigDecimal) {
+    public BigDecimal of( final BigDecimal bigDecimal) {
         return super.of(bigDecimal);
     }
 
-    private LimitedBigDecimal(@NotNull final Builder builder) {
+    private LimitedBigDecimal( final Builder builder) {
         this(builder.limits, builder.validationBehavior);
     }
 
-    private LimitedBigDecimal(@NotNull final List<Function<BigDecimal, Optional<ValidationError>>> limits, @NotNull final ValidationBehavior validationBehavior) {
+    private LimitedBigDecimal( final List<Function<BigDecimal, Optional<ValidationError>>> limits,  final ValidationBehavior validationBehavior) {
         super(limits, validationBehavior);
     }
 
     public static class Builder extends AbstractLimited.Builder<BigDecimal> {
 
-        @NotNull
-        public Builder limit(@NotNull final Limit<BigDecimal> limit) {
+        public Builder limit( final Limit<BigDecimal> limit) {
             return (Builder) super.limit(limit);
         }
 
-        @NotNull
         public Builder decimals(final int decimals) {
             limit(BigDecimalDecimalLimit.of(decimals));
             return this;
         }
 
-        @NotNull
-        public Builder range(@NotNull final String min, @NotNull final String max) {
+        public Builder range( final String min,  final String max) {
             limit(BigDecimalRangeLimit.of(new BigDecimal(min), new BigDecimal(max)));
             return this;
         }
 
-        @NotNull
         public LimitedBigDecimal build() {
             return new LimitedBigDecimal(this);
         }

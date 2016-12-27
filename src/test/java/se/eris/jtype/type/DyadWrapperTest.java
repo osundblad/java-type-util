@@ -37,7 +37,7 @@ public class DyadWrapperTest {
     }
 
     private static class Subject extends DyadWrapper<String, Integer> {
-        Subject(@NotNull final String first, @NotNull final Integer second) {
+        Subject(final String first, @NotNull final Integer second) {
             super(first, second);
         }
     }

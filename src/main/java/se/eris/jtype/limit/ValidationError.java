@@ -15,16 +15,15 @@
  */
 package se.eris.jtype.limit;
 
-import org.jetbrains.annotations.NotNull;
 import se.eris.jtype.type.StringWrapper;
 
 public class ValidationError extends StringWrapper {
 
-    public static @NotNull ValidationError of(@NotNull final String s) {
+    public static ValidationError of(final String s) {
         return new ValidationError(s);
     }
 
-    private ValidationError(@NotNull final String s) {
+    private ValidationError(final String s) {
         super(s);
     }
 

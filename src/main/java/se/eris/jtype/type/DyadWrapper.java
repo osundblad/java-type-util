@@ -15,8 +15,6 @@
  */
 package se.eris.jtype.type;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.Serializable;
 
 /**
@@ -24,27 +22,22 @@ import java.io.Serializable;
  *
  * @param <T> the first type
  * @param <U> the second type
- *
  * @see PairWrapper
  */
 public abstract class DyadWrapper<T, U> implements Serializable {
 
-    @NotNull
     private final T first;
-    @NotNull
     private final U second;
 
-    protected DyadWrapper(@NotNull final T first, @NotNull final U second) {
+    protected DyadWrapper(final T first, final U second) {
         this.first = first;
         this.second = second;
     }
 
-    @NotNull
     public T rawFirst() {
         return first;
     }
 
-    @NotNull
     public U rawSecond() {
         return second;
     }
@@ -55,7 +48,7 @@ public abstract class DyadWrapper<T, U> implements Serializable {
         if (this == o) return true;
         if ((o == null) || (getClass() != o.getClass())) return false;
 
-        final DyadWrapper<?,?> that = (DyadWrapper<?,?>) o;
+        final DyadWrapper<?, ?> that = (DyadWrapper<?, ?>) o;
 
         return first.equals(that.first) && second.equals(that.second);
     }
@@ -68,7 +61,6 @@ public abstract class DyadWrapper<T, U> implements Serializable {
     }
 
     @Override
-    @NotNull
     public String toString() {
         return this.getClass().getSimpleName() + "{" + first + ", " + second + "}";
     }

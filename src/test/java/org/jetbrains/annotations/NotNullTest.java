@@ -37,8 +37,8 @@ public class NotNullTest {
         notNullArgument(null);
     }
 
-    @SuppressWarnings({"EmptyMethod", "SameParameterValue", "NullableProblems"})
-    private void notNullArgument(@NotNull final String s) {
+    @SuppressWarnings("SameParameterValue")
+    private void notNullArgument(final String s) {
     }
 
     @Test
@@ -48,8 +48,7 @@ public class NotNullTest {
         notNullReturnValue();
     }
 
-    @SuppressWarnings({"UnusedReturnValue", "SameReturnValue", "ReturnOfNull"})
-    @NotNull
+    @SuppressWarnings("UnusedReturnValue")
     private String notNullReturnValue() {
         return null;
     }

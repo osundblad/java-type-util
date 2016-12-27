@@ -15,7 +15,6 @@
  */
 package se.eris.jtype.type;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -60,22 +59,22 @@ public class PairWrapperTest {
 
     private static class PairWrapperA extends PairWrapper<String> {
 
-        private static PairWrapperA of(@NotNull final String s1, @NotNull final String s2) {
+        private static PairWrapperA of(final String s1, final String s2) {
             return new PairWrapperA(s1, s2);
         }
 
-        private PairWrapperA(@NotNull final String s1, @NotNull final String s2) {
+        private PairWrapperA(final String s1, final String s2) {
             super(s1, s2);
         }
     }
 
     private static class PairWrapperB extends PairWrapper<String> {
 
-        private static PairWrapperB of(@NotNull final String s1, @NotNull final String s2) {
+        private static PairWrapperB of(final String s1, final String s2) {
             return new PairWrapperB(s1, s2);
         }
 
-        private PairWrapperB(@NotNull final String s1, @NotNull final String s2) {
+        private PairWrapperB(final String s1, final String s2) {
             super(s1, s2);
         }
     }
