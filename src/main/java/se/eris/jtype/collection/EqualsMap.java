@@ -37,14 +37,13 @@ public class EqualsMap<K, V> implements Map<K, V>, Serializable {
     }
 
     private final Map<HashcodeEqualsDecorator<K>, V> map;
-
     private final HashcodeEquals<K> he;
 
     private EqualsMap(final Map<K, V> map, final HashcodeEquals<K> he) {
         this.map = Collections.unmodifiableMap(
-                map.entrySet().stream().filter(e -> e.getKey() != null).collect(Collectors.toMap(
-                        e -> HashcodeEqualsDecorator.of(e.getKey(), he),
-                        Map.Entry::getValue)));
+                map.entrySet().stream()
+                        .filter(e -> e.getKey() != null)
+                        .collect(Collectors.toMap(e -> he.decorate(e.getKey()), Map.Entry::getValue)));
         this.he = he;
     }
 
@@ -60,10 +59,11 @@ public class EqualsMap<K, V> implements Map<K, V>, Serializable {
 
     @Override
     public boolean containsKey(@Nullable final Object key) {
-        if (key == null) {
-            throw new NullPointerException("null keys not allowed in EqualsMap");
+        try {
+            return map.containsKey(he.decorate((K) key));
+        } catch (final ClassCastException e) {
+            return false;
         }
-        return map.keySet().contains(HashcodeEqualsDecorator.of((K) key, he));
     }
 
     @Override
@@ -71,32 +71,38 @@ public class EqualsMap<K, V> implements Map<K, V>, Serializable {
         return map.containsValue(value);
     }
 
+    @Nullable
     @Override
     public V get(final Object key) {
-        return map.get(HashcodeEqualsDecorator.of((K) key, he));
+        try {
+            return map.get(he.decorate((K) key));
+        } catch (final ClassCastException e) {
+            return null;
+        }
     }
 
     @Override
     public V put(@Flow(target = "this.keys", targetIsContainer = true) final K key, @Flow(target = "this.values", targetIsContainer = true) final V value) {
         unsupportedOperationImmutable();
+        //noinspection ReturnOfNull
         return null;
     }
 
     @Override
     public V remove(final Object o) {
         unsupportedOperationImmutable();
+        //noinspection ReturnOfNull
         return null;
     }
 
     @Override
-    public void putAll(final Map<? extends K, ? extends V> m) {
+    public void putAll(final Map<? extends K, ? extends V> map) {
         unsupportedOperationImmutable();
     }
 
     @Override
     public void clear() {
         unsupportedOperationImmutable();
-        return;
     }
 
     @Override
@@ -111,7 +117,9 @@ public class EqualsMap<K, V> implements Map<K, V>, Serializable {
 
     @Override
     public Set<Entry<K, V>> entrySet() {
-        return map.entrySet().stream().map(e -> new AbstractMap.SimpleImmutableEntry<>(e.getKey().getSubject(), e.getValue())).collect(Collectors.toSet());
+        return map.entrySet().stream()
+                .map(e -> new AbstractMap.SimpleImmutableEntry<>(e.getKey().getSubject(), e.getValue()))
+                .collect(Collectors.toSet());
     }
 
     private void unsupportedOperationImmutable() {

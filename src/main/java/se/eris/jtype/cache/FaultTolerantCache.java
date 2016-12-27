@@ -53,7 +53,7 @@ public final class FaultTolerantCache<K, V> {
         this.source = source;
         this.cacheParameters = cacheParameters;
         this.timeSupplier = timeSupplier;
-        currentlyFetching = new SingleFetchTracker<K>(cacheParameters.getFetchTimeoutPeriod());
+        currentlyFetching = new SingleFetchTracker<>(cacheParameters.getFetchTimeoutPeriod());
     }
 
     public Optional<V> get(final K key) {

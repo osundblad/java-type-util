@@ -53,6 +53,7 @@ public class EqualsSetTest {
         assertThat(equalsSet.contains(s1_1), is(true));
         assertThat(equalsSet.contains(s1_2), is(true));
         assertThat(equalsSet.contains(s2_2), is(false));
+        assertThat(equalsSet.contains("a"), is(false));
     }
 
     @Test

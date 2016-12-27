@@ -45,7 +45,7 @@ public class EqualsSet<T> implements Set<T>, Serializable {
     private final HashcodeEquals<T> he;
 
     private EqualsSet(final HashcodeEquals<T> he, final Collection<T> collection) {
-        this.set = collection.stream().map(o -> HashcodeEqualsDecorator.of(o, he)).collect(Collectors.toSet());
+        this.set = collection.stream().map(he::decorate).collect(Collectors.toSet());
         this.he = he;
     }
 
@@ -62,7 +62,7 @@ public class EqualsSet<T> implements Set<T>, Serializable {
     @Override
     public boolean contains(final Object o) {
         try {
-            return set.contains(HashcodeEqualsDecorator.of((T) o, he));
+            return set.contains(he.decorate((T) o));
         } catch (final ClassCastException e) {
             return false;
         }
