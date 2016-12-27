@@ -21,7 +21,6 @@ import se.eris.jtype.cache.dated.FetchedAt;
 import se.eris.jtype.cache.dated.NextFetchTime;
 
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDateTime;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -76,6 +75,11 @@ public final class FaultTolerantCache<K, V> {
         return syncFetch(key, dated.getSubject());
     }
 
+    @SuppressWarnings("TypeMayBeWeakened")
+    private LocalDateTime nextSyncFetch(final Dated dated) {
+        return dated.getFetchTime().plus(cacheParameters.getSyncFetchPeriod());
+    }
+
     private void asyncFetch(final K key) {
         if (lock(key)) {
             CompletableFuture
@@ -112,13 +116,13 @@ public final class FaultTolerantCache<K, V> {
             fetched.ifPresent(v -> put(key, v));
             return fetched;
         } catch (final RuntimeException e) {
-            updateFailedFetch(key);
+            updateNextFetchTime(key);
             cacheParameters.getSupplierFailedAction().ifPresent(throwableConsumer -> throwableConsumer.accept(key, e));
             throw new SupplierFailedException(getSupplierFailedMessage(key), e);
         }
     }
 
-    public void updateFailedFetch(final K key) {
+    private void updateNextFetchTime(final K key) {
         final Dated<V> dated = cache.get(key);
         if (dated != null) {
             cache.put(key, createFailedDated(dated.getSubject(), timeSupplier.get()));
@@ -130,13 +134,8 @@ public final class FaultTolerantCache<K, V> {
         return Dated.sucessful(value, FetchedAt.of(now), NextFetchTime.of(now.plus(cacheParameters.getAsyncFetchPeriod())));
     }
 
-    @SuppressWarnings("TypeMayBeWeakened")
-    private LocalDateTime nextSyncFetch(final Dated dated) {
-        return dated.getFetchTime().asLocalDateTime().plus(cacheParameters.getSyncFetchPeriod());
-    }
-
     private String getSupplierFailedMessage(final K key) {
-        return "Source " + source + " failed to get key " + key;
+        return "Source failed to get key " + key;
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -146,11 +145,11 @@ public final class FaultTolerantCache<K, V> {
 
     @SuppressWarnings("WeakerAccess")
     public void put(final K key, final V value) {
-        cache.put(key, createSucessfulDated(value, timeSupplier.get()));
+        cache.put(key, createSuccessfulDated(value, timeSupplier.get()));
     }
 
     @NotNull
-    private Dated<V> createSucessfulDated(final V value, final LocalDateTime now) {
+    private Dated<V> createSuccessfulDated(final V value, final LocalDateTime now) {
         return Dated.sucessful(value, FetchedAt.of(now), NextFetchTime.of(now.plus(cacheParameters.getAsyncFetchPeriod())));
     }
 
@@ -163,10 +162,10 @@ public final class FaultTolerantCache<K, V> {
 
     @SuppressWarnings("WeakerAccess")
     public Map<K, V> getPresentFresh(final Collection<K> keys) {
-        final ChronoLocalDateTime fetchedAfter = timeSupplier.get().minus(cacheParameters.getSyncFetchPeriod());
+        final LocalDateTime now = timeSupplier.get();
         return cache.entrySet().stream()
                 .filter(e -> keys.contains(e.getKey()))
-                .filter(e -> e.getValue().getFetchTime().asLocalDateTime().isAfter(fetchedAfter))
+                .filter(e -> e.getValue().isFresh(now))
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getSubject()));
     }
 

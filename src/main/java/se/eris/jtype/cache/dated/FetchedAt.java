@@ -18,6 +18,7 @@ package se.eris.jtype.cache.dated;
 import se.eris.jtype.type.BasicWrapper;
 
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAmount;
 
 public class FetchedAt extends BasicWrapper<LocalDateTime> {
 
@@ -31,6 +32,10 @@ public class FetchedAt extends BasicWrapper<LocalDateTime> {
 
     public LocalDateTime asLocalDateTime() {
         return raw();
+    }
+
+    public LocalDateTime plus(final TemporalAmount period) {
+        return asLocalDateTime().plus(period);
     }
 
 }

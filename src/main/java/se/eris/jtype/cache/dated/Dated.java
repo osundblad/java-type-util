@@ -29,22 +29,23 @@ public final class Dated<S> extends DyadWrapper<S, FetchTimes> {
         super(subject, fetchTimes);
     }
 
-    public FetchedAt getFetchTime() {
-        return getFetchTimes().getFetchedAt();
-    }
-
     public S getSubject() {
         return rawFirst();
     }
 
-    public FetchTimes getFetchTimes() {
+    private FetchTimes getFetchTimes() {
         return rawSecond();
     }
 
-    private NextFetchTime getNextFetchTime() {
-        return rawSecond().getNextFetchTime();
+    public FetchedAt getFetchTime() {
+        return getFetchTimes().getFetchedAt();
     }
 
+    private NextFetchTime getNextFetchTime() {
+        return getFetchTimes().getNextFetchTime();
+    }
+
+    @SuppressWarnings("TypeMayBeWeakened")
     public boolean isFresh(final LocalDateTime now) {
         return now.isBefore(getNextFetchTime().asLocalDateTime());
     }
