@@ -15,7 +15,6 @@
  */
 package se.eris.jtype.type;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
@@ -67,7 +66,6 @@ public abstract class OneOfBaseWrapper<T, U> implements Serializable {
     }
 
     @Override
-    @NotNull
     public String toString() {
         return this.getClass().getSimpleName() + "{" + first.orNull() + ", " + second.orNull() + "}";
     }

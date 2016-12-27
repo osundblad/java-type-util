@@ -42,7 +42,7 @@ public class OpenDatePeriod extends PairWrapper<SOptional<LocalDate>> {
 
     public static final OpenDatePeriod ALWAYS = of(Optional.empty(), Optional.empty());
 
-    private OpenDatePeriod(final Optional<LocalDate> startDate, @NotNull final Optional<LocalDate> endDate) {
+    private OpenDatePeriod(final Optional<LocalDate> startDate, final Optional<LocalDate> endDate) {
         super(SOptional.from(startDate), SOptional.from(endDate));
         validate();
     }

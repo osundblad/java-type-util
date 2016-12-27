@@ -48,6 +48,7 @@ public class NotNullTest {
         notNullReturnValue();
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     private String notNullReturnValue() {
         return null;
     }

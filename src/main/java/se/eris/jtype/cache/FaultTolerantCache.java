@@ -15,7 +15,6 @@
  */
 package se.eris.jtype.cache;
 
-import org.jetbrains.annotations.NotNull;
 import se.eris.jtype.cache.dated.Dated;
 import se.eris.jtype.cache.dated.FetchedAt;
 import se.eris.jtype.cache.dated.NextFetchTime;
@@ -129,7 +128,6 @@ public final class FaultTolerantCache<K, V> {
         }
     }
 
-    @NotNull
     private Dated<V> createFailedDated(final V value, final LocalDateTime now) {
         return Dated.sucessful(value, FetchedAt.of(now), NextFetchTime.of(now.plus(cacheParameters.getAsyncFetchPeriod())));
     }
@@ -148,7 +146,6 @@ public final class FaultTolerantCache<K, V> {
         cache.put(key, createSuccessfulDated(value, timeSupplier.get()));
     }
 
-    @NotNull
     private Dated<V> createSuccessfulDated(final V value, final LocalDateTime now) {
         return Dated.sucessful(value, FetchedAt.of(now), NextFetchTime.of(now.plus(cacheParameters.getAsyncFetchPeriod())));
     }

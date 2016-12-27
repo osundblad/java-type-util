@@ -21,7 +21,6 @@ import java.io.*;
 
 public class SerializeUtil {
 
-    @NotNull
     public static <T extends Serializable> byte[] toBytes(final T obj) throws IOException {
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try (ObjectOutput objectOutput = new ObjectOutputStream(outputStream)) {
@@ -30,7 +29,6 @@ public class SerializeUtil {
         }
     }
 
-    @NotNull
     public static <T extends Serializable> T fromBytes(final byte[] b, final Class<T> cl) throws IOException, ClassNotFoundException {
         final ByteArrayInputStream inputStream = new ByteArrayInputStream(b);
         try (ObjectInput objectInput = new ObjectInputStream(inputStream)) {
@@ -38,8 +36,7 @@ public class SerializeUtil {
         }
     }
 
-    @NotNull
-    public static <T extends Serializable> T roundtrip(@NotNull final T obj, @NotNull final Class<T> cl) throws IOException, ClassNotFoundException {
+    public static <T extends Serializable> T roundtrip(final T obj, @NotNull final Class<T> cl) throws IOException, ClassNotFoundException {
         return SerializeUtil.fromBytes(SerializeUtil.toBytes(obj), cl);
     }
 
