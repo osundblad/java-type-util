@@ -15,7 +15,6 @@
  */
 package se.eris.jtype.type;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -37,7 +36,7 @@ public class DyadWrapperTest {
     }
 
     private static class Subject extends DyadWrapper<String, Integer> {
-        Subject(final String first, @NotNull final Integer second) {
+        Subject(final String first, final Integer second) {
             super(first, second);
         }
     }

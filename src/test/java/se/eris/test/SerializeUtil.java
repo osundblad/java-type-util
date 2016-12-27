@@ -15,8 +15,6 @@
  */
 package se.eris.test;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.*;
 
 public class SerializeUtil {
@@ -36,7 +34,7 @@ public class SerializeUtil {
         }
     }
 
-    public static <T extends Serializable> T roundtrip(final T obj, @NotNull final Class<T> cl) throws IOException, ClassNotFoundException {
+    public static <T extends Serializable> T roundtrip(final T obj, final Class<T> cl) throws IOException, ClassNotFoundException {
         return SerializeUtil.fromBytes(SerializeUtil.toBytes(obj), cl);
     }
 
