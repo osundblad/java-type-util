@@ -18,7 +18,9 @@ package se.eris.jtype.type;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import se.eris.test.SerializeUtil;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -61,5 +63,10 @@ public class OpenDatePeriodTest {
         assertThat(OpenDatePeriod.to(endDate).toString(), is("OpenDatePeriod{ - 2015-12-31}"));
     }
 
+    @Test
+    public void serializable_shouldBeSerializable() throws IOException, ClassNotFoundException {
+        final OpenDatePeriod datePeriod = OpenDatePeriod.between(DATE_2000_01_01, DATE_2000_01_01.plusYears(1));
+        assertThat(SerializeUtil.roundtrip(datePeriod, OpenDatePeriod.class), is(datePeriod));
+    }
 
 }

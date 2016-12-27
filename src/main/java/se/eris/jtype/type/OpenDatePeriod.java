@@ -22,7 +22,7 @@ import java.util.Optional;
 /**
  * Inclusive date period [from - to]. Both from and to are optional missing value means no limit.
  */
-public class OpenDatePeriod extends PairWrapper<Optional<LocalDate>> {
+public class OpenDatePeriod extends PairWrapper<SOptional<LocalDate>> {
 
     public static OpenDatePeriod of(final Optional<LocalDate> startDate, final Optional<LocalDate> endDate) {
         return new OpenDatePeriod(startDate, endDate);
@@ -42,8 +42,8 @@ public class OpenDatePeriod extends PairWrapper<Optional<LocalDate>> {
 
     public static final OpenDatePeriod ALWAYS = of(Optional.empty(), Optional.empty());
 
-    private OpenDatePeriod(final Optional<LocalDate> startDate, final Optional<LocalDate> endDate) {
-        super(startDate, endDate);
+    private OpenDatePeriod(final Optional<LocalDate> startDate, @NotNull final Optional<LocalDate> endDate) {
+        super(SOptional.from(startDate), SOptional.from(endDate));
         validate();
     }
 
@@ -90,4 +90,5 @@ public class OpenDatePeriod extends PairWrapper<Optional<LocalDate>> {
         final String to = hasEnd() ? getEndDate().toString() : "";
         return "OpenDatePeriod{" + from + " - " + to + "}";
     }
+
 }

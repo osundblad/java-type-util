@@ -15,10 +15,15 @@
  */
 package org.jetbrains.annotations;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+/**
+ * Enable this test to verify that NotNull instrumentation works.
+ */
+@Ignore
 @SuppressWarnings("ConstantConditions")
 public class NotNullTest {
 

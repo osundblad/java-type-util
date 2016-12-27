@@ -15,23 +15,29 @@
  */
 package se.eris.jtype.limit;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public abstract class AbstractLimited<T> {
+public abstract class AbstractLimited<T> implements Serializable {
 
+    @NotNull
     private final ValidationBehavior validationBehavior;
 
+    @NotNull
     private final List<Function<T, Optional<ValidationError>>> limits;
 
-    protected AbstractLimited(final List<Function<T, Optional<ValidationError>>> limits, final ValidationBehavior validationBehavior) {
+    protected AbstractLimited(@NotNull final List<Function<T, Optional<ValidationError>>> limits, @NotNull final ValidationBehavior validationBehavior) {
         this.limits = limits;
         this.validationBehavior = validationBehavior;
     }
 
-    public T of(final T t) {
+    @NotNull
+    public T of(@NotNull final T t) {
         final ValidationBehavior behavior = validationBehavior.getInstance();
         for (final Function<T, Optional<ValidationError>> limit : limits) {
             behavior.atValidation(limit.apply(t));

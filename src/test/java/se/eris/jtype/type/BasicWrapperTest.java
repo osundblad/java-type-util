@@ -16,6 +16,9 @@
 package se.eris.jtype.type;
 
 import org.junit.Test;
+import se.eris.test.SerializeUtil;
+
+import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -54,6 +57,12 @@ public class BasicWrapperTest {
     @Test
     public void toString_showsClassName() {
         assertThat(BasicWrapperA.of("a").toString(), is("BasicWrapperA{a}"));
+    }
+
+    @Test
+    public void serializable_shouldBeSerializable() throws IOException, ClassNotFoundException {
+        final BasicWrapperA a = BasicWrapperA.of("a");
+        assertThat(SerializeUtil.roundtrip(a, BasicWrapperA.class), is(a));
     }
 
     private static class BasicWrapperA extends BasicWrapper<String> {

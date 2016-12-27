@@ -15,7 +15,9 @@
  */
 package se.eris.jtype.type;
 
-public abstract class BasicWrapper<T> {
+import java.io.Serializable;
+
+public abstract class BasicWrapper<T> implements Serializable {
 
     private final T item;
 
