@@ -21,7 +21,6 @@ import se.eris.jtype.cache.dated.NextFetchTime;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -35,7 +34,7 @@ import java.util.stream.Collectors;
 public final class FaultTolerantCache<K, V> {
 
     private final Map<K, Dated<V>> cache = new ConcurrentHashMap<>();
-    private final Map<K, LocalDateTime> currentlyFetching = new HashMap<>();
+    private final SingleFetchTracker<K> currentlyFetching;
 
     private final Function<K, Optional<V>> source;
     private final CacheParameters<K> cacheParameters;
@@ -54,6 +53,7 @@ public final class FaultTolerantCache<K, V> {
         this.source = source;
         this.cacheParameters = cacheParameters;
         this.timeSupplier = timeSupplier;
+        currentlyFetching = new SingleFetchTracker<K>(cacheParameters.getFetchTimeoutPeriod());
     }
 
     public Optional<V> get(final K key) {
@@ -80,27 +80,11 @@ public final class FaultTolerantCache<K, V> {
     }
 
     private void asyncFetch(final K key) {
-        if (markAsCurrentlyFetching(key)) {
+        if (currentlyFetching.mark(key, timeSupplier.get())) {
             CompletableFuture
                     .supplyAsync(() -> syncFetch(key), executorService)
-                    .handle((Optional<V> v, Throwable e) -> unmarkCurrentlyFetching(key));
+                    .handle((Optional<V> v, Throwable e) -> currentlyFetching.unmark(key));
         }
-    }
-
-    private synchronized boolean markAsCurrentlyFetching(final K key) {
-        final LocalDateTime now = timeSupplier.get();
-        final LocalDateTime markedAt = currentlyFetching.get(key);
-        if (markedAt != null) {
-            if (now.isBefore(markedAt.plus(cacheParameters.getFetchTimeoutPeriod()))) {
-                return false;
-            }
-        }
-        currentlyFetching.put(key, now);
-        return true;
-    }
-
-    private boolean unmarkCurrentlyFetching(final K key) {
-        return currentlyFetching.remove(key) != null;
     }
 
     private Optional<V> syncFetch(final K key, final V defaultValue) {
