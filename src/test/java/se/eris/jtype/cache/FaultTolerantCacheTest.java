@@ -209,7 +209,7 @@ public class FaultTolerantCacheTest {
         cache.put("A", 2);
         timeSupplier.step(REFETCH_SYNC_PERIOD);
         cache.put("B", 2);
-        timeSupplier.step(REFETCH_ASYNC_PERIOD.plusMinutes(1));
+        timeSupplier.step(REFETCH_ASYNC_PERIOD.minusMinutes(1));
         return cache;
     }
 
