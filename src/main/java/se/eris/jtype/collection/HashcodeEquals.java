@@ -29,8 +29,23 @@ public class HashcodeEquals<T> extends DyadWrapper<ToIntFunction<T>, BiPredicate
         return new HashcodeEquals<T>(hashcode, equals);
     }
 
-    public static <T> HashcodeEquals<T> of(final ToIntFunction<T> hashcode) {
-        return new HashcodeEquals<T>(hashcode, (o1, o2) -> hashcode.applyAsInt(o1) == hashcode.applyAsInt(o2));
+    /**
+     * Uses the supplied function for both hashcode and equals.
+     */
+    public static <T> HashcodeEquals<T> ofFunction(final ToIntFunction<T> function) {
+        return new HashcodeEquals<T>(function, (o1, o2) -> function.applyAsInt(o1) == function.applyAsInt(o2));
+    }
+
+    /**
+     * Uses only the objects hashcode function to determine equality (the equals method is replaced by
+     * hashcode == hashcode).
+     */
+    public static <T> HashcodeEquals<T> ofHashcode() {
+        return new HashcodeEquals<T>(Object::hashCode, (o1, o2) -> o1.hashCode() == o2.hashCode());
+    }
+
+    public static <T> HashcodeEquals<T> ofObject() {
+        return new HashcodeEquals<T>(Object::hashCode, Object::equals);
     }
 
     private HashcodeEquals(final ToIntFunction<T> hashcode, final BiPredicate<T, T> equals) {
@@ -47,14 +62,6 @@ public class HashcodeEquals<T> extends DyadWrapper<ToIntFunction<T>, BiPredicate
 
     public HashcodeEqualsDecorator<T> decorate(final T value) {
         return HashcodeEqualsDecorator.of(value, this);
-    }
-
-    @Override
-    public String toString() {
-        return "HashcodeEquals{" +
-                rawFirst() + ", " +
-                rawSecond() +
-                "}";
     }
 
 }

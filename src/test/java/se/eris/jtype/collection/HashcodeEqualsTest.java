@@ -26,8 +26,20 @@ import static org.junit.Assert.assertThat;
 public class HashcodeEqualsTest {
 
     @Test
-    public void of_hashcode() {
-        final HashcodeEquals<Subject> hashcodeEquals = HashcodeEquals.of(Subject.hashcodeFunction);
+    public void ofFunction() {
+        final HashcodeEquals<Subject> hashcodeEquals = HashcodeEquals.ofFunction(s -> Integer.valueOf(s.name) % 2);
+
+        final Subject s12 = new Subject(1, "2");
+        final Subject s24 = new Subject(2, "4");
+        assertThat(s12, not(s24));
+        final HashcodeEqualsDecorator<Subject> of12 = HashcodeEqualsDecorator.of(s12, hashcodeEquals);
+        final HashcodeEqualsDecorator<Subject> of13 = HashcodeEqualsDecorator.of(s24, hashcodeEquals);
+        assertThat(of12, is(of13));
+    }
+
+    @Test
+    public void ofHashcode() {
+        final HashcodeEquals<Subject> hashcodeEquals = HashcodeEquals.ofHashcode();
 
         final Subject s12 = new Subject(1, "2");
         final Subject s13 = new Subject(1, "3");
@@ -35,6 +47,22 @@ public class HashcodeEqualsTest {
         final HashcodeEqualsDecorator<Subject> of12 = HashcodeEqualsDecorator.of(s12, hashcodeEquals);
         final HashcodeEqualsDecorator<Subject> of13 = HashcodeEqualsDecorator.of(s13, hashcodeEquals);
         assertThat(of12, is(of13));
+    }
+
+    @Test
+    public void ofObject() {
+        final HashcodeEquals<Subject> ofObject = HashcodeEquals.ofObject();
+
+        final Subject s12 = new Subject(1, "2");
+        final Subject s12_new = new Subject(1, "2");
+        final Subject s13 = new Subject(1, "3");
+        assertThat(s12, not(s13));
+        final HashcodeEqualsDecorator<Subject> of12 = HashcodeEqualsDecorator.of(s12, ofObject);
+        final HashcodeEqualsDecorator<Subject> of12_new = HashcodeEqualsDecorator.of(s12, ofObject);
+        final HashcodeEqualsDecorator<Subject> of13 = HashcodeEqualsDecorator.of(s13, ofObject);
+        assertThat(of12, is(of12));
+        assertThat(of12_new, is(of12));
+        assertThat(of12, not(of13));
     }
 
     private static class Subject {
@@ -58,13 +86,13 @@ public class HashcodeEqualsTest {
             final Subject subject = (Subject) o;
 
             if (id != subject.id) return false;
-            return (name != null) ? name.equals(subject.name) : (subject.name == null);
+            return name.equals(subject.name);
         }
 
         @Override
         public int hashCode() {
             int result = id;
-            result = (31 * result) + ((name != null) ? name.hashCode() : 0);
+            result = (31 * result) + name.length();
             return result;
         }
     }

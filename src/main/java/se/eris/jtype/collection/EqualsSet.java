@@ -28,9 +28,6 @@ import java.util.stream.Collectors;
  * not allowed in this set.
  *
  * @param <T> the type of the Set.
- *
- * idea(s):
- *  - since equals/hashcode are overridden a get method seems useful
  */
 @Experimental
 public class EqualsSet<T> implements Set<T>, Serializable {
@@ -67,6 +64,15 @@ public class EqualsSet<T> implements Set<T>, Serializable {
     public boolean contains(@Nullable final Object o) {
         //noinspection SuspiciousMethodCalls
         return data.containsKey(o);
+    }
+
+    /**
+     * @param o the object to get, since we override equals this may or may not be the supplied object.
+     * @return the object stored in this Set for that key.
+     */
+    @Nullable
+    public T get(@Nullable final T o) {
+        return data.get(o);
     }
 
     @Override

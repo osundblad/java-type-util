@@ -44,7 +44,7 @@ public class EqualsMapTest {
         final Map<String, Integer> map = new HashMap<>();
         map.put("A", 1);
         map.put("AA", 2);
-        final EqualsMap<String, Integer> equalsMap = EqualsMap.from(map, HashcodeEquals.of(String::length));
+        final EqualsMap<String, Integer> equalsMap = EqualsMap.from(map, HashcodeEquals.ofFunction(String::length));
 
         assertThat(equalsMap, is(map));
     }
@@ -54,7 +54,7 @@ public class EqualsMapTest {
         final Map<String, Integer> map = new HashMap<>();
         map.put("A", 1);
         map.put("AA", 2);
-        final EqualsMap<String, Integer> equalsMap = EqualsMap.from(map, HashcodeEquals.of(String::length));
+        final EqualsMap<String, Integer> equalsMap = EqualsMap.from(map, HashcodeEquals.ofFunction(String::length));
         map.put("null", null);
 
         assertThat(equalsMap, not(map));

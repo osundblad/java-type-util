@@ -16,6 +16,7 @@
 package se.eris.jtype.collection;
 
 import org.intellij.lang.annotations.Flow;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import se.eris.jtype.Experimental;
 
@@ -40,14 +41,19 @@ public class EqualsMap<K, V> implements Map<K, V>, Serializable {
     private final HashcodeEquals<K> he;
 
     private EqualsMap(final Map<K, V> map, final HashcodeEquals<K> he) {
-        final Map<HashcodeEqualsDecorator<K>, V> collect = new HashMap<>();
+        this.map = Collections.unmodifiableMap(removeDuplicateAndNullKeys(map, he));
+        this.he = he;
+    }
+
+    @NotNull
+    private Map<HashcodeEqualsDecorator<K>, V> removeDuplicateAndNullKeys(final Map<K, V> map, final HashcodeEquals<K> he) {
+        final Map<HashcodeEqualsDecorator<K>, V> withourDuplicateOrNullKeys = new HashMap<>();
         for (final Entry<K, V> e : map.entrySet()) {
             if (e.getKey() != null) {
-                collect.put(he.decorate(e.getKey()), e.getValue());
+                withourDuplicateOrNullKeys.put(he.decorate(e.getKey()), e.getValue());
             }
         }
-        this.map = Collections.unmodifiableMap(collect);
-        this.he = he;
+        return withourDuplicateOrNullKeys;
     }
 
     @Override
