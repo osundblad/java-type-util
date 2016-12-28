@@ -40,10 +40,13 @@ public class EqualsMap<K, V> implements Map<K, V>, Serializable {
     private final HashcodeEquals<K> he;
 
     private EqualsMap(final Map<K, V> map, final HashcodeEquals<K> he) {
-        this.map = Collections.unmodifiableMap(
-                map.entrySet().stream()
-                        .filter(e -> e.getKey() != null)
-                        .collect(Collectors.toMap(e -> he.decorate(e.getKey()), Map.Entry::getValue)));
+        final Map<HashcodeEqualsDecorator<K>, V> collect = new HashMap<>();
+        for (final Entry<K, V> e : map.entrySet()) {
+            if (e.getKey() != null) {
+                collect.put(he.decorate(e.getKey()), e.getValue());
+            }
+        }
+        this.map = Collections.unmodifiableMap(collect);
         this.he = he;
     }
 

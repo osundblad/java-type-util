@@ -20,6 +20,7 @@ import se.eris.jtype.Experimental;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -35,46 +36,56 @@ import java.util.stream.Collectors;
 public class EqualsSet<T> implements Set<T>, Serializable {
 
     public static <T> EqualsSet<T> from(final HashcodeEquals<T> he, final Collection<T> collection) {
-        return new EqualsSet<T>(he, collection);
+        return new EqualsSet<>(he, collection);
     }
 
+    @SafeVarargs
     public static <T> EqualsSet<T> from(final HashcodeEquals<T> he, final T... items) {
-        return new EqualsSet<T>(he, Arrays.asList(items));
+        return new EqualsSet<>(he, Arrays.asList(items));
     }
-    private final Set<HashcodeEqualsDecorator<T>> set;
+    private final EqualsMap<T, T> data;
 
     private final HashcodeEquals<T> he;
 
     private EqualsSet(final HashcodeEquals<T> he, final Collection<T> collection) {
-        this.set = collection.stream().map(he::decorate).collect(Collectors.toSet());
         this.he = he;
+        final Map<T, T> map = collection.stream().collect(Collectors.toMap(Function.identity(), Function.identity()));
+        this.data = EqualsMap.from(map, he);
     }
 
     @Override
     public int size() {
-        return set.size();
+        return data.size();
     }
 
     @Override
     public boolean isEmpty() {
-        return set.isEmpty();
+        return data.isEmpty();
     }
 
     @Override
     public boolean contains(@Nullable final Object o) {
-        if (o == null) {
-            return false;
+        //noinspection SuspiciousMethodCalls
+        return data.containsKey(o);
+    }
+
+    @Override
+    public boolean containsAll(final Collection c) {
+        //noinspection ObjectEquality
+        if (this == c) {
+            return true;
         }
-        try {
-            return set.contains(he.decorate((T) o));
-        } catch (final ClassCastException e) {
-            return false;
+        for (final Object o : c) {
+            if (!contains(o)) {
+                return false;
+            }
         }
+        return true;
     }
 
     @Override
     public Iterator<T> iterator() {
-        return set.stream().map(HashcodeEqualsDecorator::getSubject).iterator();
+        return data.values().iterator();
     }
 
     @Override
@@ -98,7 +109,6 @@ public class EqualsSet<T> implements Set<T>, Serializable {
     @Override
     public void clear() {
         unsupportedOperationImmutable();
-        return;
     }
 
     @Override
@@ -169,32 +179,18 @@ public class EqualsSet<T> implements Set<T>, Serializable {
 
 
     @Override
-    public boolean containsAll(final Collection c) {
-        //noinspection ObjectEquality
-        if (this == c) {
-            return true;
-        }
-        for (final Object o : c) {
-            if (!contains(o)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
     public Object[] toArray() {
-        return set.stream().map(HashcodeEqualsDecorator::getSubject).toArray();
+        return data.values().toArray();
     }
 
     @Override
-    public Object[] toArray(final Object[] a) {
-        return set.stream().map(HashcodeEqualsDecorator::getSubject).collect(Collectors.toList()).toArray(a);
+    public <A> A[] toArray(final A[] a) {
+        return data.values().toArray(a);
     }
 
     @Override
-    public Spliterator spliterator() {
-        return set.stream().map(HashcodeEqualsDecorator::getSubject).spliterator();
+    public Spliterator<T> spliterator() {
+        return data.values().spliterator();
     }
 
     private void unsupportedOperationImmutable() {
@@ -205,7 +201,7 @@ public class EqualsSet<T> implements Set<T>, Serializable {
      * @return returns the Set as a Set without the overridden equals and hashcode.
      */
     public Set<T> asSet() {
-        return set.stream().map(HashcodeEqualsDecorator::getSubject).collect(Collectors.toSet());
+        return new HashSet<>(data.values());
     }
 
     @SuppressWarnings("ControlFlowStatementWithoutBraces")
@@ -216,22 +212,18 @@ public class EqualsSet<T> implements Set<T>, Serializable {
 
         final Collection<?> that = (Collection<?>) o;
 
-        return (set.size() == that.size()) && containsAll(that);
+        return (data.size() == that.size()) && containsAll(that);
     }
 
     @Override
     public int hashCode() {
-        int code = 0;
-        for (final HashcodeEqualsDecorator<T> adapter : set) {
-            code += adapter.hashCode();
-        }
-        return code;
+        return data.values().hashCode();
     }
 
     @Override
     public String toString() {
         return "EqualsSet{" +
-                "set=" + set +
+                "set=" + data.values() +
                 ", he=" + he +
                 '}';
     }

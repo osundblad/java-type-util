@@ -39,7 +39,7 @@ public class EqualsSetTest {
 
     @Test
     public void size() {
-        final Set<Subject> hashSet = new HashSet<>(Arrays.asList(s1_1, s1_2, s2_2));
+        final Set<Subject> hashSet = new HashSet<>(Arrays.asList(s1_1, s1_1, s1_2, s2_2));
         assertThat(hashSet.size(), is(3));
 
         final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, hashSet);

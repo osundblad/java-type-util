@@ -45,8 +45,8 @@ public class HashcodeEquals<T> extends DyadWrapper<ToIntFunction<T>, BiPredicate
         return rawSecond();
     }
 
-    public HashcodeEqualsDecorator<T> decorate(final T key) {
-        return HashcodeEqualsDecorator.of(key, this);
+    public HashcodeEqualsDecorator<T> decorate(final T value) {
+        return HashcodeEqualsDecorator.of(value, this);
     }
 
     @Override
