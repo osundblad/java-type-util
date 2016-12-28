@@ -21,19 +21,27 @@ import se.eris.jtype.type.DyadWrapper;
 import java.io.Serializable;
 import java.util.function.BiPredicate;
 import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
 
 @Experimental
 public class HashcodeEquals<T> extends DyadWrapper<ToIntFunction<T>, BiPredicate<T, T>> implements Serializable {
 
     public static <T> HashcodeEquals<T> of(final ToIntFunction<T> hashcode, final BiPredicate<T, T> equals) {
-        return new HashcodeEquals<T>(hashcode, equals);
+        return new HashcodeEquals<>(hashcode, equals);
     }
 
     /**
      * Uses the supplied function for both hashcode and equals.
      */
     public static <T> HashcodeEquals<T> ofFunction(final ToIntFunction<T> function) {
-        return new HashcodeEquals<T>(function, (o1, o2) -> function.applyAsInt(o1) == function.applyAsInt(o2));
+        return new HashcodeEquals<>(function, (o1, o2) -> function.applyAsInt(o1) == function.applyAsInt(o2));
+    }
+
+    /**
+     * Uses the supplied function for both hashcode and equals.
+     */
+    public static <T> HashcodeEquals<T> ofFunction(final ToLongFunction<T> function) {
+        return new HashcodeEquals<>(o -> (int) function.applyAsLong(o), (o1, o2) -> function.applyAsLong(o1) == function.applyAsLong(o2));
     }
 
     /**
@@ -41,11 +49,11 @@ public class HashcodeEquals<T> extends DyadWrapper<ToIntFunction<T>, BiPredicate
      * hashcode == hashcode).
      */
     public static <T> HashcodeEquals<T> ofHashcode() {
-        return new HashcodeEquals<T>(Object::hashCode, (o1, o2) -> o1.hashCode() == o2.hashCode());
+        return new HashcodeEquals<>(Object::hashCode, (o1, o2) -> o1.hashCode() == o2.hashCode());
     }
 
     public static <T> HashcodeEquals<T> ofObject() {
-        return new HashcodeEquals<T>(Object::hashCode, Object::equals);
+        return new HashcodeEquals<>(Object::hashCode, Object::equals);
     }
 
     private HashcodeEquals(final ToIntFunction<T> hashcode, final BiPredicate<T, T> equals) {
