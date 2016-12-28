@@ -72,6 +72,9 @@ public class EqualsSet<T> implements Set<T>, Serializable {
      */
     @Nullable
     public T get(@Nullable final T o) {
+        if (o == null) {
+            throw new IllegalArgumentException(getClass().getSimpleName() + " does not support null objects");
+        }
         return data.get(o);
     }
 

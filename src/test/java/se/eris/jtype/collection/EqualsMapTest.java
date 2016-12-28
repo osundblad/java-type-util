@@ -44,7 +44,7 @@ public class EqualsMapTest {
         final Map<String, Integer> map = new HashMap<>();
         map.put("A", 1);
         map.put("AA", 2);
-        final EqualsMap<String, Integer> equalsMap = EqualsMap.from(map, HashcodeEquals.ofFunction(String::length));
+        final EqualsMap<String, Integer> equalsMap = EqualsMap.from(map, HashcodeEquals.ofIntFunction(String::length));
 
         assertThat(equalsMap, is(map));
     }
@@ -54,19 +54,20 @@ public class EqualsMapTest {
         final Map<String, Integer> map = new HashMap<>();
         map.put("A", 1);
         map.put("AA", 2);
-        final EqualsMap<String, Integer> equalsMap = EqualsMap.from(map, HashcodeEquals.ofFunction(String::length));
+        final EqualsMap<String, Integer> equalsMap = EqualsMap.from(map, HashcodeEquals.ofIntFunction(String::length));
         map.put("null", null);
 
         assertThat(equalsMap, not(map));
     }
 
     @Test
-    public void containsKey_() {
+    public void containsKey_shouldBehaveAsMap() {
         final EqualsMap<Subject, Integer> equalsMap = EqualsMap.from(Collections.singletonMap(s1_1, 1), Subject.he);
 
         assertThat(equalsMap.containsKey(s1_1), is(true));
         assertThat(equalsMap.containsKey(s1_2), is(true));
         assertThat(equalsMap.containsKey(s2_2), is(false));
+        //noinspection SuspiciousMethodCalls
         assertThat(equalsMap.containsKey("a"), is(false));
         assertThat(equalsMap.containsKey(null), is(false));
     }
@@ -79,14 +80,38 @@ public class EqualsMapTest {
         assertThat(equalsSet.contains("a string"), is(false));
     }
 
+    @Test
+    public void values_immutable() {
+        final EqualsMap<Subject, Integer> equalsMap = EqualsMap.from(Collections.singletonMap(s1_1, 1), Subject.he);
+
+        exception.expect(UnsupportedOperationException.class);
+        equalsMap.values().add(3);
+    }
+
+    @Test
+    public void put_immutable() {
+        final EqualsMap<Subject, Integer> equalsMap = EqualsMap.from(Collections.singletonMap(s1_1, 1), Subject.he);
+
+        exception.expect(UnsupportedOperationException.class);
+        equalsMap.put(new Subject(3, "add"), 3);
+    }
+
+    @Test
+    public void putAll_immutable() {
+        final EqualsMap<Subject, Integer> equalsMap = EqualsMap.from(Collections.singletonMap(s1_1, 1), Subject.he);
+
+        exception.expect(UnsupportedOperationException.class);
+        equalsMap.putAll(Collections.singletonMap(new Subject(3, "add"), 3));
+    }
+
 
     private static class Subject {
 
-        static final ToIntFunction<Subject> hashcodeFunction = o -> o.id;
+        static final ToIntFunction<Subject> hashcodeFunction = o -> (int) o.id;
         static final BiPredicate<Subject, Subject> equalsFunction = (o1, o2) -> o1.id == o2.id;
         static final HashcodeEquals<Subject> he = HashcodeEquals.of(hashcodeFunction, equalsFunction);
 
-        private final int id;
+        private final long id;
         private final String name;
 
         private Subject(final int id, final String name) {
@@ -108,7 +133,7 @@ public class EqualsMapTest {
 
         @Override
         public int hashCode() {
-            int result = id;
+            int result = (int) id;
             result = (31 * result) + name.hashCode();
             return result;
         }

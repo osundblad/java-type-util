@@ -27,7 +27,7 @@ public class HashcodeEqualsTest {
 
     @Test
     public void ofFunction() {
-        final HashcodeEquals<Subject> hashcodeEquals = HashcodeEquals.ofFunction(s -> Integer.valueOf(s.name) % 2);
+        final HashcodeEquals<Subject> hashcodeEquals = HashcodeEquals.ofIntFunction(s -> Integer.valueOf(s.name) % 2);
 
         final Subject s12 = new Subject(1, "2");
         final Subject s24 = new Subject(2, "4");

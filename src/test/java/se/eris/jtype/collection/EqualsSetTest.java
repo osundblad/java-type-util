@@ -67,6 +67,20 @@ public class EqualsSetTest {
     }
 
     @Test
+    public void get_shouldReturnObject() {
+        final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Collections.singletonList(s1_1));
+        assertThat(equalsSet.get(s1_2), is(s1_1));
+    }
+
+    @Test
+    public void get_null_throwIllegalArgumentException() {
+        final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Collections.singletonList(s1_1));
+
+        exception.expect(IllegalArgumentException.class);
+        equalsSet.get(null);
+    }
+
+    @Test
     public void iterator() {
         final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Arrays.asList(s1_1, s1_2, s2_2));
 
@@ -85,7 +99,7 @@ public class EqualsSetTest {
     }
 
     @Test
-    public void add() {
+    public void add_immutable() {
         final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Collections.emptySet());
 
         exception.expect(UnsupportedOperationException.class);
@@ -93,7 +107,7 @@ public class EqualsSetTest {
     }
 
     @Test
-    public void remove() {
+    public void remove_immutable() {
         final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Collections.emptySet());
 
         exception.expect(UnsupportedOperationException.class);
@@ -101,7 +115,7 @@ public class EqualsSetTest {
     }
 
     @Test
-    public void addAll() {
+    public void addAll_immutable() {
         final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Collections.emptySet());
 
         exception.expect(UnsupportedOperationException.class);
@@ -109,7 +123,7 @@ public class EqualsSetTest {
     }
 
     @Test
-    public void clear() {
+    public void clear_immutable() {
         final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Collections.emptySet());
 
         exception.expect(UnsupportedOperationException.class);
@@ -118,7 +132,7 @@ public class EqualsSetTest {
     }
 
     @Test
-    public void removeAll() {
+    public void removeAll_immutable() {
         final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Collections.emptySet());
 
         exception.expect(UnsupportedOperationException.class);
@@ -126,7 +140,7 @@ public class EqualsSetTest {
     }
 
     @Test
-    public void retainAll() {
+    public void retainAll_immutable() {
         final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Collections.emptySet());
 
         exception.expect(UnsupportedOperationException.class);

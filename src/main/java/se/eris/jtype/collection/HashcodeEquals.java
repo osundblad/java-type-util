@@ -33,14 +33,14 @@ public class HashcodeEquals<T> extends DyadWrapper<ToIntFunction<T>, BiPredicate
     /**
      * Uses the supplied function for both hashcode and equals.
      */
-    public static <T> HashcodeEquals<T> ofFunction(final ToIntFunction<T> function) {
+    public static <T> HashcodeEquals<T> ofIntFunction(final ToIntFunction<T> function) {
         return new HashcodeEquals<>(function, (o1, o2) -> function.applyAsInt(o1) == function.applyAsInt(o2));
     }
 
     /**
      * Uses the supplied function for both hashcode and equals.
      */
-    public static <T> HashcodeEquals<T> ofFunction(final ToLongFunction<T> function) {
+    public static <T> HashcodeEquals<T> ofLongFunction(final ToLongFunction<T> function) {
         return new HashcodeEquals<>(o -> (int) function.applyAsLong(o), (o1, o2) -> function.applyAsLong(o1) == function.applyAsLong(o2));
     }
 
