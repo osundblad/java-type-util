@@ -15,6 +15,7 @@
  */
 package se.eris.jtype.collection;
 
+import org.jetbrains.annotations.Nullable;
 import se.eris.jtype.Experimental;
 
 import java.io.Serializable;
@@ -60,7 +61,10 @@ public class EqualsSet<T> implements Set<T>, Serializable {
     }
 
     @Override
-    public boolean contains(final Object o) {
+    public boolean contains(@Nullable final Object o) {
+        if (o == null) {
+            return false;
+        }
         try {
             return set.contains(he.decorate((T) o));
         } catch (final ClassCastException e) {

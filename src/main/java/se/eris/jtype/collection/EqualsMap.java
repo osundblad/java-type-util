@@ -59,6 +59,9 @@ public class EqualsMap<K, V> implements Map<K, V>, Serializable {
 
     @Override
     public boolean containsKey(@Nullable final Object key) {
+        if (key == null) {
+            return false;
+        }
         try {
             return map.containsKey(he.decorate((K) key));
         } catch (final ClassCastException e) {
@@ -154,4 +157,15 @@ public class EqualsMap<K, V> implements Map<K, V>, Serializable {
         result = (31 * result) + he.hashCode();
         return result;
     }
+
+    public Map<K, V> asMap() {
+        return map.entrySet().stream()
+                .collect(Collectors.toMap(entry -> entry.getKey().getSubject(), Map.Entry::getValue));
+    }
+
+    @Override
+    public String toString() {
+        return asMap().toString();
+    }
+
 }

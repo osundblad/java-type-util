@@ -47,13 +47,15 @@ public class EqualsSetTest {
     }
 
     @Test
-    public void contains_() {
+    public void contains_shouldBehaveAsSet() {
         final EqualsSet<Subject> equalsSet = EqualsSet.from(Subject.he, Collections.singletonList(s1_1));
 
         assertThat(equalsSet.contains(s1_1), is(true));
         assertThat(equalsSet.contains(s1_2), is(true));
         assertThat(equalsSet.contains(s2_2), is(false));
+        //noinspection SuspiciousMethodCalls
         assertThat(equalsSet.contains("a"), is(false));
+        assertThat(equalsSet.contains(null), is(false));
     }
 
     @Test
@@ -62,7 +64,6 @@ public class EqualsSetTest {
 
         //noinspection SuspiciousMethodCalls
         assertThat(equalsSet.contains("a string"), is(false));
-
     }
 
     @Test
@@ -220,13 +221,13 @@ public class EqualsSetTest {
             final Subject subject = (Subject) o;
 
             if (id != subject.id) return false;
-            return (name != null) ? name.equals(subject.name) : (subject.name == null);
+            return name.equals(subject.name);
         }
 
         @Override
         public int hashCode() {
             int result = id;
-            result = (31 * result) + ((name != null) ? name.hashCode() : 0);
+            result = (31 * result) + name.hashCode();
             return result;
         }
     }
