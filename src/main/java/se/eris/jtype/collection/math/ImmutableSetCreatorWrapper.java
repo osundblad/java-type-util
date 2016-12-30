@@ -15,25 +15,28 @@
  */
 package se.eris.jtype.collection.math;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
-public class ImmutableSetCreator<E> implements SetCreator<E> {
+public class ImmutableSetCreatorWrapper<T> implements SetCreator<T> {
 
-    @SafeVarargs
-    public static <T> Set<T> of(final T... items) {
-        return immutable(Arrays.asList(items));
+    public static <T> SetCreator<T> of(final SetCreator<T> creator) {
+        return new ImmutableSetCreatorWrapper<>(creator);
     }
 
-    public static <T> Set<T> of(final Collection<T> collection) {
-        return immutable(collection);
+    private final SetCreator<T> creator;
+
+    private ImmutableSetCreatorWrapper(final SetCreator<T> creator) {
+        this.creator = creator;
     }
 
-    private static <T> Set<T> immutable(final Collection<T> collection) {
-        return Collections.<T>unmodifiableSet(new HashSet<>(collection));
+    private Set<T> immutable(final Collection<T> collection) {
+        return Collections.unmodifiableSet(creator.from(collection));
     }
 
     @Override
-    public Set<E> from(final Collection<E> collection) {
+    public Set<T> from(final Collection<T> collection) {
         return immutable(collection);
     }
 

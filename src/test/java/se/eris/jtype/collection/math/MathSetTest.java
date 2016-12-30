@@ -24,9 +24,10 @@ import java.util.Set;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+@SuppressWarnings("CollectionAddedToSelf")
 public class MathSetTest {
 
-    private final SetCreator<String> creator = new HashSetCreator<>();
+    private final SetCreator<String> creator = HashSetCreator.immutable();
 
     private Set<String> toSet(final String... items) {
         return creator.from(Arrays.asList(items));

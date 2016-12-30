@@ -15,24 +15,32 @@
  */
 package se.eris.jtype.collection.math;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class HashSetCreator<T> implements SetCreator<T> {
+public class HashSetCreator<E> implements SetCreator<E> {
 
-    @SafeVarargs
-    public static <E> HashSet<E> of(final E... items) {
-        return new HashSet<>(Arrays.asList(items));
+    private static final HashSetCreator<?> mutable = new HashSetCreator<>();
+    private static final SetCreator<?> immutable = ImmutableSetCreatorWrapper.of(new HashSetCreator<>());
+
+    public static <T> HashSet<T> newHashSet(final Collection<T> collection) {
+        return new HashSet<>(collection);
     }
 
-    public static <E> HashSet<E> of(final Collection<E> collection) {
-        return new HashSet<>(collection);
+    public static <T> SetCreator<T> mutable() {
+        return (SetCreator<T>) mutable;
+    }
+
+    public static <T> SetCreator<T> immutable() {
+        return (SetCreator<T>) immutable;
+    }
+
+    private HashSetCreator() {
     }
 
     @Override
-    public HashSet<T> from(final Collection<T> collection) {
-        return new HashSet<>(collection);
+    public HashSet<E> from(final Collection<E> collection) {
+        return newHashSet(collection);
     }
 
 }
