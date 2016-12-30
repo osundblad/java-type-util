@@ -13,13 +13,11 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package se.eris.jtype.collection;
+package se.eris.jtype.collection.math;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.*;
 
-public class HashSetCreator<T> implements SetCreator<T> {
+public class ImmutableSetCreator<T> implements SetCreator<T> {
 
     @SafeVarargs
     public static <E> HashSet<E> of(final E... items) {
@@ -31,8 +29,8 @@ public class HashSetCreator<T> implements SetCreator<T> {
     }
 
     @Override
-    public HashSet<T> from(final Collection<T> collection) {
-        return new HashSet<>(collection);
+    public Set<T> from(final Collection<T> collection) {
+        return Collections.<T>unmodifiableSet(new HashSet<>(collection));
     }
 
 }

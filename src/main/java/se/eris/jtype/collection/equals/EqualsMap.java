@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package se.eris.jtype.collection;
+package se.eris.jtype.collection.equals;
 
 import org.intellij.lang.annotations.Flow;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 public class EqualsMap<K, V> implements Map<K, V>, Serializable {
 
     public static <K, V> EqualsMap<K, V> from(final Map<K, V> map, final HashcodeEquals<K> he) {
-        return new EqualsMap<K, V>(map, he);
+        return new EqualsMap<>(map, he);
     }
 
     private final Map<HashcodeEqualsDecorator<K>, V> map;
@@ -148,12 +148,12 @@ public class EqualsMap<K, V> implements Map<K, V>, Serializable {
         if (that.size() != this.size())
             return false;
 
-        for (final Entry<?, ?> entry : that.entrySet()) {
-            final Object entryKey = entry.getKey();
-            if (!containsKey(entryKey)) {
+        for (final Entry<?, ?> thatEntry : that.entrySet()) {
+            final Object thatEntryKey = thatEntry.getKey();
+            if (!containsKey(thatEntryKey)) {
                 return false;
             }
-            if (!Objects.equals(get(entryKey), entry.getValue())) {
+            if (!Objects.equals(this.get(thatEntryKey), thatEntry.getValue())) {
                 return false;
             }
         }

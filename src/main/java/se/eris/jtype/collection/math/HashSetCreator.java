@@ -13,22 +13,26 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package se.eris.jtype.collection;
+package se.eris.jtype.collection.math;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Set;
+import java.util.HashSet;
 
-public class EqualsSetCreator<T> implements SetCreator<T> {
+public class HashSetCreator<T> implements SetCreator<T> {
 
-    private final HashcodeEquals<T> he;
+    @SafeVarargs
+    public static <E> HashSet<E> of(final E... items) {
+        return new HashSet<>(Arrays.asList(items));
+    }
 
-    public EqualsSetCreator(final HashcodeEquals<T> he) {
-        this.he = he;
+    public static <E> HashSet<E> of(final Collection<E> collection) {
+        return new HashSet<>(collection);
     }
 
     @Override
-    public Set<T> from(final Collection<T> collection) {
-        return EqualsSet.from(he, collection);
+    public HashSet<T> from(final Collection<T> collection) {
+        return new HashSet<>(collection);
     }
 
 }

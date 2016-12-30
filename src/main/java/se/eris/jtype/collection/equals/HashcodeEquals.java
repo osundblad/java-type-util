@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package se.eris.jtype.collection;
+package se.eris.jtype.collection.equals;
 
 import se.eris.jtype.Experimental;
 import se.eris.jtype.type.DyadWrapper;
