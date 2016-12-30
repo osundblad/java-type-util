@@ -46,7 +46,8 @@ public class EqualsSet<T> implements Set<T>, Serializable {
 
     private EqualsSet(final HashcodeEquals<T> he, final Collection<T> collection) {
         this.he = he;
-        final Map<T, T> map = collection.stream().collect(Collectors.toMap(Function.identity(), Function.identity()));
+        final Map<T, T> map = collection.stream()
+                .collect(Collectors.toMap(Function.identity(), Function.identity()));
         this.data = EqualsMap.from(map, he);
     }
 
@@ -67,7 +68,7 @@ public class EqualsSet<T> implements Set<T>, Serializable {
     }
 
     /**
-     * @param o the object to get, since we override equals this may or may not be the supplied object.
+     * @param o the object to get, since we override equals this may another object than this supplied.
      * @return the object stored in this Set for that key.
      */
     @Nullable
@@ -132,60 +133,6 @@ public class EqualsSet<T> implements Set<T>, Serializable {
         return false;
     }
 
-    /**
-     * <p>The relative complement.</p>
-     *
-     * <p>Examples:
-     * <pre>
-     *     {1, 2} \ {1, 2} = ∅
-     *     {1, 2, 3, 4} \ {1, 3} = {2, 4}</pre>
-     * </p>
-     * @see #removeAll(Collection)
-      */
-    public EqualsSet<T> complement(final Collection<T> remove) {
-        final Collection<T> newSet = new HashSet<>(this);
-        newSet.removeAll(remove);
-        return EqualsSet.from(he, newSet);
-    }
-
-    /**
-     * @see #complement(Collection)
-      */
-    @SafeVarargs
-    public final EqualsSet<T> complement(final T... remove) {
-        return complement(Arrays.asList(remove));
-    }
-
-    /**
-     * <p>Examples:
-     * <pre>
-     *     {1, 2} ∩ {1, 2} = {1, 2}
-     *     {1, 2} ∩ {2, 3} = {2}
-     * </pre>
-     * </p>
-     * @see #retainAll(Collection)
-     */
-    public EqualsSet<T> intersection(final Collection<T> keep) {
-        final Collection<T> newSet = new HashSet<>(this);
-        newSet.retainAll(keep);
-        return EqualsSet.from(he, newSet);
-    }
-
-    /**
-     * @see #intersection(Collection)
-     */
-    @SafeVarargs
-    public final EqualsSet<T> intersection(final T... keep) {
-        return intersection(Arrays.asList(keep));
-    }
-
-    public EqualsSet<T> union(final Collection<T> add) {
-        final Collection<T> newSet = new HashSet<>(2 * (this.size() + add.size()));
-        newSet.addAll(this);
-        newSet.addAll(add);
-        return EqualsSet.from(he, newSet);
-    }
-
 
     @Override
     public Object[] toArray() {
@@ -202,15 +149,15 @@ public class EqualsSet<T> implements Set<T>, Serializable {
         return data.values().spliterator();
     }
 
-    private void unsupportedOperationImmutable() {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is immutable");
-    }
-
     /**
      * @return returns the Set as a Set without the overridden equals and hashcode.
      */
-    public Set<T> asSet() {
+    public Set<T> asHashSet() {
         return new HashSet<>(data.values());
+    }
+
+    private void unsupportedOperationImmutable() {
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + " is immutable");
     }
 
     @SuppressWarnings("ControlFlowStatementWithoutBraces")
@@ -231,10 +178,7 @@ public class EqualsSet<T> implements Set<T>, Serializable {
 
     @Override
     public String toString() {
-        return "EqualsSet{" +
-                "set=" + data.values() +
-                ", he=" + he +
-                '}';
+        return data.values().toString();
     }
 
 }

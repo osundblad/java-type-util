@@ -36,6 +36,8 @@ public class EqualsSetTest {
     private static final Subject s1_1 = new Subject(1, "1");
     private static final Subject s1_2 = new Subject(1, "2");
     private static final Subject s2_2 = new Subject(2, "2");
+    private static final Subject s3_3 = new Subject(3, "3");
+    private static final Subject s4_4 = new Subject(4, "4");
 
     @Test
     public void size() {
