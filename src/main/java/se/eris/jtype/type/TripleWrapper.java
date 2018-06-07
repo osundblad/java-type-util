@@ -16,14 +16,14 @@
 package se.eris.jtype.type;
 
 /**
- * Two things that are the same type and are meant to be used together.
+ * Three things that are the same type and are meant to be used together.
  *
- * @param <T> the type the the pair consists of
+ * @param <T> the type the the triple consists of
  */
-public abstract class PairWrapper<T> extends DyadWrapper<T, T> {
+public abstract class TripleWrapper<T> extends TriadWrapper<T, T, T> {
 
-    protected PairWrapper(final T first, final T second) {
-        super(first, second);
+    protected TripleWrapper(final T first, final T second, final T third) {
+        super(first, second, third);
     }
 
 }
